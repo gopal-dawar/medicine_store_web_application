@@ -13,8 +13,7 @@ const categories = [
 
 const ProductCategorySidebar = () => {
   return (
-    <div className="bg-emerald-600 text-white rounded-lg overflow-hidden">
-      
+    <div className="bg-emerald-600 text-white rounded overflow-hidden">
       {/* Header */}
       <h3 className="bg-emerald-700 px-5 py-4 font-semibold text-sm tracking-wide">
         PRODUCT CATEGORIES

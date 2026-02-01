@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import ProductCard from "./ProductCard";
 import ProductTabs from "./ProductTabs";
 import { MedicineContext } from "../../context/MedicineData";
+import arrivImg from "../../assets/arrivoffer.jpg";
 
 const ProductGrid = () => {
   const products = useContext(MedicineContext);
@@ -29,7 +30,7 @@ const ProductGrid = () => {
       <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="flex flex-col items-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
           {paginatedProducts.map((item) => (
             <ProductCard key={item.id} product={item} />
           ))}
@@ -61,6 +62,41 @@ const ProductGrid = () => {
           >
             Next
           </button>
+        </div>
+        <div className="w-full overflow-hidden group relative">
+          {/* Image */}
+          <img className="w-full block" src={arrivImg} alt="Arrival Offer" />
+
+          {/* Overlay Container */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Top */}
+            <div
+              className="absolute top-0 left-0 w-full h-1/2 bg-black/10 
+      transform -translate-y-full group-hover:translate-y-0 
+      transition duration-500"
+            />
+
+            {/* Bottom */}
+            <div
+              className="absolute bottom-0 left-0 w-full h-1/2 bg-black/10 
+      transform translate-y-full group-hover:translate-y-0 
+      transition duration-500"
+            />
+
+            {/* Left */}
+            <div
+              className="absolute top-0 left-0 w-1/2 h-full bg-black/10 
+      transform -translate-x-full group-hover:translate-x-0 
+      transition duration-500"
+            />
+
+            {/* Right */}
+            <div
+              className="absolute top-0 right-0 w-1/2 h-full bg-black/10 
+      transform translate-x-full group-hover:translate-x-0 
+      transition duration-500"
+            />
+          </div>
         </div>
       </div>
     </>
