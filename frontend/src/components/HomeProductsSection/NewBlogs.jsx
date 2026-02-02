@@ -22,7 +22,7 @@ const NewBlogs = () => {
         {blogs.slice(0, 3).map((blog) => (
           <div key={blog.id} className="bg-white">
             {/* Image */}
-            <div className="relative overflow-hidden h-48 p-2">
+            <div className="relative overflow-hidden h-52 p-2">
               <img
                 src={blog.img}
                 alt={blog.title}

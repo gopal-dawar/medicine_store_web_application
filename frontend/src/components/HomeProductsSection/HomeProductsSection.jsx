@@ -5,6 +5,7 @@ import ProductGrid from "./ProductGrid";
 import HotDealSlider from "../slider/HotDealSlider";
 import SubscribeEmail from "./SubscribeEmail";
 import NewBlogs from "./NewBlogs";
+import Testimonial from "./Testimonial";
 
 const HomeProductsSection = () => {
   return (
@@ -14,6 +15,7 @@ const HomeProductsSection = () => {
           <ProductCategorySidebar />
           <HotDealSlider />
           <SubscribeEmail />
+          <Testimonial />
         </div>
         <div className="lg:col-span-3 space-y-8">
           <PromoBannerSection />
