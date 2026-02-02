@@ -12,7 +12,6 @@ const NewBlogs = () => {
         <div className="relative w-full">
           {/* Gray full width line */}
           <div className="w-full h-[3px] bg-gray-300"></div>
-
           {/* Green accent line */}
           <div className="absolute top-0 left-0 w-20 h-[3px] bg-emerald-600"></div>
         </div>
@@ -23,11 +22,11 @@ const NewBlogs = () => {
         {blogs.slice(0, 3).map((blog) => (
           <div key={blog.id} className="bg-white">
             {/* Image */}
-            <div className="relative h-48 p-2">
+            <div className="relative overflow-hidden h-48 p-2">
               <img
                 src={blog.img}
                 alt={blog.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full hover:scale-110 transition-all ease-in-out duration-300  object-cover"
               />
 
               {/* Date Badge */}
