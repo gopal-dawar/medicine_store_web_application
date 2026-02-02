@@ -15,7 +15,7 @@ const NewBlogs = () => {
           {/* Green accent line */}
           <div className="absolute top-0 left-0 w-20 h-[3px] bg-emerald-600"></div>
         </div>
-      </div>
+      </div>  
 
       {/* Cards */}
       <div className="grid grid-cols-3 gap-6">
