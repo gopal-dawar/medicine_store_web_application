@@ -1,16 +1,42 @@
-# React + Vite
+# 🏥 Medicine Store – Full Stack Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application developed using **React + Vite** for the frontend and **Spring Boot** for the backend.  
+The project allows users to browse medicines, place orders, and helps admins manage medicines efficiently.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Project Overview
 
-## React Compiler
+The **Medicine Store** application is designed to simulate an online medical shop where:
+- Users can view available medicines
+- Admin can manage medicines (add, update, delete)
+- Backend APIs are built using Spring Boot
+- Frontend communicates with backend using REST APIs
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🚀 Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Frontend
+- React (Vite)
+- JavaScript (ES6+)
+- Tailwind CSS
+- React Router DOM
+- Axios
+- React-Icon
+- AOS (for animation)
+
+### Backend
+- Java
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- MySQL
+- Swagger (API Documentation)
+
+### Tools & Platforms
+- Git & GitHub
+- VS Code
+- Postman
+
+---

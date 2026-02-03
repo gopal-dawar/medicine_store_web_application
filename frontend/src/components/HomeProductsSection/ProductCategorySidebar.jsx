@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const categories = [
   "Accessories",
@@ -12,6 +12,8 @@ const categories = [
 ];
 
 const ProductCategorySidebar = () => {
+  const [active, setActive] = useState(categories[0]);
+
   return (
     <div className="bg-emerald-600 text-white rounded overflow-hidden">
       {/* Header */}
@@ -21,10 +23,17 @@ const ProductCategorySidebar = () => {
 
       {/* Category List */}
       <ul className="divide-y divide-emerald-500">
-        {categories.map((cat, index) => (
+        {categories.map((cat) => (
           <li
-            key={index}
-            className="px-5 py-3 text-sm cursor-pointer hover:bg-white hover:text-emerald-600 transition"
+            key={cat}
+            onClick={() => setActive(cat)}
+            className={`px-5 py-3 text-sm cursor-pointer transition-all duration-300
+              ${
+                active === cat
+                  ? "bg-white text-emerald-600 font-semibold"
+                  : "hover:bg-white hover:text-emerald-600"
+              }
+            `}
           >
             {cat}
           </li>
