@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./components/Headers/Header";
 import Slider from "./components/slider/Slider";
 import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
@@ -6,8 +6,17 @@ import { MedicineProvider } from "./context/MedicineData";
 import FeatureSection from "./components/FeatureSection/FeatureSection";
 import TopBrandsSlider from "./components/slider/TopBrandsSlider";
 import Footer from "./components/Footer";
+import AOS from "aos";
 
 const App = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-in-out",
+    });
+  }, []);
+
   return (
     <div>
       <Header />
