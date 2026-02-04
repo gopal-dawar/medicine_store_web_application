@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import TopRatingSlider from "./TopRatingSlider";
-import { mostview, toprating } from "../../data/featuresdata";
+import { MedicineContext } from "../../context/MedicineData";
 
 const FeatureGroup = () => {
+  const { mostview, toprating } = useContext(MedicineContext);
+
   return (
     <div className="max-w-7xl mx-auto px-4  flex gap-10 justify-center">
       <TopRatingSlider data={mostview} dataheading="Most View" />
