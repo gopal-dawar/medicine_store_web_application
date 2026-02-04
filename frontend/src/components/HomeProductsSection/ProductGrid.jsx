@@ -6,12 +6,12 @@ import arrivImg from "../../assets/arrivoffer.jpg";
 import AOS from "aos";
 
 const ProductGrid = () => {
-  const products = useContext(MedicineContext);
+  const { medicine } = useContext(MedicineContext);
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const filteredProducts = products.filter((item) => {
+  const filteredProducts = medicine.filter((item) => {
     if (activeTab === "all") return true;
     if (activeTab === "new") return item.category === "new arrivals";
     if (activeTab === "hot") return item.category === "hot product";
@@ -24,7 +24,7 @@ const ProductGrid = () => {
 
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const ProductGrid = () => {
           ))}
         </div>
 
-        {/* pagination */}
         <div className="p-10 flex justify-center gap-5">
           <button
             className="px-4 py-2 border rounded transition-all duration-300

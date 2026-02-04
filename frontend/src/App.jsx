@@ -1,12 +1,40 @@
 import React, { useEffect } from "react";
-import Header from "./components/Headers/Header";
+import { Routes, Route } from "react-router-dom";
+import AOS from "aos";
+
+/* HEADER & FOOTER */
+import Header from "./components/headers/Header";
+import Footer from "./components/Footer";
+
+/* HOME PAGE COMPONENTS */
 import Slider from "./components/slider/Slider";
 import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
-import { MedicineProvider } from "./context/MedicineData";
 import FeatureSection from "./components/FeatureSection/FeatureSection";
 import TopBrandsSlider from "./components/slider/TopBrandsSlider";
-import Footer from "./components/Footer";
-import AOS from "aos";
+
+/* OTHER ROUTES */
+import NewBlogs from "./components/HomeProductsSection/NewBlogs";
+import ShopCard from "./components/ShopCard";
+
+const Home = () => (
+  <>
+    <div className="h-[600px] overflow-hidden">
+      <Slider />
+    </div>
+
+    <div className="bg-[#efefef]">
+      <HomeProductsSection />
+      <FeatureSection />
+      <TopBrandsSlider />
+    </div>
+  </>
+);
+
+const Shop = () => (
+  <div className="max-w-7xl mx-auto p-6 grid grid-cols-4 gap-6">
+    <ShopCard />
+  </div>
+);
 
 const App = () => {
   useEffect(() => {
@@ -18,22 +46,25 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <>
+      {/* Always visible */}
       <Header />
-      <div className="h-[600px] overflow-hidden">
-        <Slider />
-      </div>
-      <div className="bg-[#efefef]">
-        <MedicineProvider>
-          <HomeProductsSection />
-          <FeatureSection />
-          <TopBrandsSlider />
-        </MedicineProvider>
-      </div>
-      <div>
-        <Footer />
-      </div>
-    </div>
+
+      {/* ROUTES */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/blog" element={<NewBlogs />} />
+        <Route path="/features" element={<FeatureSection />} />
+        <Route
+          path="/contact"
+          element={<div className="p-10">Contact Page</div>}
+        />
+      </Routes>
+
+      {/* Always visible */}
+      <Footer />
+    </>
   );
 };
 

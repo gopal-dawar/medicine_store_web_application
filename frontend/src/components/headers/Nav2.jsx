@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar";
 import { BiSearch } from "react-icons/bi";
 
 const Nav2 = () => {
   const [searchbar, setSearchbar] = useState(false);
+  const navigate = useNavigate();
   const activecss = {
     borderBottom: "2px solid white",
   };
@@ -89,7 +90,10 @@ const Nav2 = () => {
             </div>
           </div>
 
-          <div className="border border-white text-white px-5 py-2 cursor-pointer font-semibold">
+          <div
+            onClick={() => navigate("/cart")}
+            className="border border-white text-white px-5 py-2 cursor-pointer font-semibold"
+          >
             0 ITEM - $0.00
           </div>
         </div>

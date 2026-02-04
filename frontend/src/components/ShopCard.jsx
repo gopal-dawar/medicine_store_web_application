@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaShoppingCart, FaEye } from "react-icons/fa";
+import { MedicineContext } from "../context/MedicineData";
 
 const ShopCard = ({ product }) => {
+  const { addToCart } = useContext(MedicineContext);
+
   return (
     <div
       className="bg-white border border-gray-200 rounded overflow-hidden group
@@ -11,15 +14,13 @@ const ShopCard = ({ product }) => {
       {/* Image Section */}
       <div className="relative h-52 bg-gray-100 flex items-center justify-center overflow-hidden">
         <img
-          src={product.image}
+          src={product.img}
           alt={product.name}
           className="object-contain transition-transform duration-500 group-hover:scale-110"
         />
 
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300"></div>
 
-        {/* Quick View */}
         <button
           className="absolute opacity-0 translate-y-4
           group-hover:opacity-100 group-hover:translate-y-0
@@ -42,15 +43,11 @@ const ShopCard = ({ product }) => {
           <span className="text-emerald-600 font-semibold">
             ₹{product.price}
           </span>
-          {product.oldPrice && (
-            <span className="text-gray-400 text-sm line-through">
-              ₹{product.oldPrice}
-            </span>
-          )}
         </div>
 
-        {/* Add to Cart */}
+        {/* ✅ ADD TO CART */}
         <button
+          onClick={() => addToCart(product)}
           className="mt-4 w-full bg-emerald-600 text-white py-2 text-sm
           font-medium flex items-center justify-center gap-2
           hover:bg-emerald-700 transition"
