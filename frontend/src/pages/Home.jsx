@@ -1,18 +1,16 @@
 import React from "react";
-
+import { Route, Routes } from "react-router-dom";
+import HomeProductsSection from "../components/HomeProductsSection/HomeProductsSection";
+import Header from "../components/headers/Header";
+import Footer from "../components/Footer";
 const Home = () => {
   return (
     <>
-      <Route path="/" element={<Home />} />
-      <Route path="/shop" element={<Shop />} />
-      <Route path="/blog" element={<NewBlogs />} />
-      <Route path="/features" element={<FeatureSection />} />
-      <Route
-        path="/contact"
-        element={<div className="p-10">Contact Page</div>}
-      />
-
-      {/* DASHBOARD ROUTES */}
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomeProductsSection />} />
+      </Routes>
+      <Footer />
     </>
   );
 };
