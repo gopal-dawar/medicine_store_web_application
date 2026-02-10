@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
 import AOS from "aos";
 
 /* HEADER & FOOTER */
@@ -13,8 +12,9 @@ import FeatureSection from "./components/FeatureSection/FeatureSection";
 import TopBrandsSlider from "./components/slider/TopBrandsSlider";
 
 /* OTHER ROUTES */
-import NewBlogs from "./components/HomeProductsSection/NewBlogs";
 import ShopCard from "./components/ShopCard";
+import Dashboard from "./pages/Dashboard";
+import { Route, Routes } from "react-router-dom";
 
 const Home = () => (
   <>
@@ -47,19 +47,11 @@ const App = () => {
 
   return (
     <>
-      {/* Always visible */}
       <Header />
 
-      {/* ROUTES */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/blog" element={<NewBlogs />} />
-        <Route path="/features" element={<FeatureSection />} />
-        <Route
-          path="/contact"
-          element={<div className="p-10">Contact Page</div>}
-        />
+        <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
 
       {/* Always visible */}
