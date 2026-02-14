@@ -1,15 +1,42 @@
 import React from "react";
+import { Route, Routes } from "react-router-dom";
+
+import Login from "./static/Login";
+import Register from "./static/Register";
+
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
-import { Route, Routes } from "react-router-dom";
-import Apicheck from "./Apicheck";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
-      <Route path="/apicheck" element={<Apicheck />} />
+      {/* Public routes */}
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Protected Home */}
+      <Route
+        path="/home/*"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<HomeProductsSection />} />
+      </Route>
+
+      {/* Protected Dashboard (separate) */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };
