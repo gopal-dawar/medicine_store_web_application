@@ -52,31 +52,6 @@ This project allows users to browse medicines, add products to cart, and manage 
 
 ---
 
-## 📂 Project Structure
-
-### 📦 Backend (Spring Boot)
-```
-medicine_store_backend
- ├── controller
- ├── service
- ├── repository
- ├── entity
- ├── exception
- └── configuration
-```
-
-### 🎨 Frontend (React + Vite)
-```
-medicine_store_frontend
- ├── components
- ├── pages
- ├── context
- ├── assets
- └── services
-```
-
----
-
 ## ⚙️ How To Run The Project
 
 ### 🔹 Backend Setup
