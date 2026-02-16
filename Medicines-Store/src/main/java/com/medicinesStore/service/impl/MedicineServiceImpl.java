@@ -1,45 +1,63 @@
 package com.medicinesStore.service.impl;
 
 import com.medicinesStore.entity.Medicines;
+import com.medicinesStore.exception.MedicineNotFoundException;
 import com.medicinesStore.repository.MedicineRepo;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class MedicineServiceImpl implements MedicineService {
+
     @Autowired
     private MedicineRepo medicineRepo;
 
-    private final String uploadDir = "uploads/";
+    @Override
+    public Medicines addMedicine(Medicines medicine) {
+        return medicineRepo.save(medicine);
+    }
 
     @Override
-    public Medicines saveMedicine(Medicines medicine, MultipartFile file) throws IOException {
+    public Medicines updateMedicine(Long id, Medicines medicine) {
+        Medicines medi = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
 
-        if (file != null && !file.isEmpty()) {
+        medi.setName(medicine.getName());
+        medi.setBrand(medicine.getBrand());
+        medi.setCategory(medicine.getCategory());
+        medi.setDescription(medicine.getDescription());
+        medi.setPrice(medicine.getPrice());
+        medi.setStock(medicine.getStock());
+        medi.setImageUrl(medicine.getImageUrl());
+        medi.setDosage(medicine.getDosage());
+        medi.setPrescriptionRequired(medicine.getPrescriptionRequired());
 
-            File uploadPath = new File(uploadDir);
-            if (!uploadPath.exists()) {
-                uploadPath.mkdirs();
-            }
+        return medicineRepo.save(medi);
+    }
 
+    @Override
+    public Medicines getMedicineById(Long id) {
+        return medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
+    }
 
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File destination = new File(uploadDir + fileName);
+    @Override
+    public List<Medicines> getAllMedicines() {
+        return medicineRepo.findAll();
+    }
 
-            file.transferTo(destination);
+    @Override
+    public List<Medicines> searchMedicineByName(String name) {
+        List<Medicines> medicines = medicineRepo.searchByMedicineName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
 
-            medicine.setImageUrl("http://localhost:8080/uploads/" + fileName);
-        }
+        return medicines;
+    }
 
-        medicine.setCreatedAt(LocalDateTime.now());
+    @Override
+    public void deleteMedicine(Long id) {
+        Medicines medicines = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
+        medicineRepo.deleteById(id);
 
-        return medicineRepo.save(medicine);
     }
 }

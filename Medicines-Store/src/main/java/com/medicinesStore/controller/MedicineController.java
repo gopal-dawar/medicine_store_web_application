@@ -3,26 +3,51 @@ package com.medicinesStore.controller;
 import com.medicinesStore.entity.Medicines;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 @RestController
-
+@RequestMapping("/medicine")
 public class MedicineController {
-
 
     @Autowired
     private MedicineService medicineService;
 
-    @PostMapping(consumes = "multipart/form-data")
-    public Medicines createMedicine(
-            @ModelAttribute Medicines medicine,
-            @RequestParam(value = "image", required = false) MultipartFile file
-    ) throws IOException {
+    @PostMapping
+    public ResponseEntity<Medicines> addMedicine(@RequestBody Medicines medicine) {
+        return new ResponseEntity<>(medicineService.addMedicine(medicine), HttpStatus.OK);
+    }
 
-        return medicineService.saveMedicine(medicine, file);
+    //
+    @PutMapping("/{id}")
+    public ResponseEntity<Medicines> updateMedicine(@PathVariable Long id, @RequestBody Medicines medicine) {
+        return new ResponseEntity<>(medicineService.updateMedicine(id, medicine), HttpStatus.OK);
+    }
+
+    //
+    @GetMapping("/{id}")
+    public ResponseEntity<Medicines> getMedicineById(@PathVariable Long id) {
+        return new ResponseEntity<>(medicineService.getMedicineById(id), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Medicines>> getAllMedicines() {
+        return new ResponseEntity<>(medicineService.getAllMedicines(), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Medicines>> searchMedicineByName(@RequestParam String name) {
+        return new ResponseEntity<>(medicineService.searchMedicineByName(name), HttpStatus.OK);
+    }
+//    deleteMedicine(Long id);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMedicine(@PathVariable long id) {
+        medicineService.deleteMedicine(id);
+        return new ResponseEntity<>("Successfully Deleted!", HttpStatus.OK);
     }
 
 }
