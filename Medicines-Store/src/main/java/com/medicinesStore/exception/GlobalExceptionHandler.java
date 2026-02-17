@@ -11,6 +11,13 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler extends RuntimeException {
 
 
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> categoryNotFoundExceptionHandler(CategoryNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse("Category Not Found!", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler(MedicineNotFoundException.class)
     public ResponseEntity<ErrorResponse> medicineNotFoundExceptionHandler(MedicineNotFoundException ex) {
         ErrorResponse error = new ErrorResponse("Medicine not found", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
