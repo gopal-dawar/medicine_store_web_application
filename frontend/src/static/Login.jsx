@@ -1,7 +1,8 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SuccessPopup from "../components/SuccessPopup";
+import { loginUser } from "../service/authService";
+import { setAuth } from "../utils/tokenService";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,16 +23,9 @@ const Login = () => {
     setSuccessMsg("");
 
     try {
-      const re = await axios.post(
-        "http://localhost:8080/auth/login",
-        userInfo,
-        {
-          withCredentials: true,
-        },
-      );
+      const re = await loginUser(userInfo);
 
-      console.log(re.data);
-      localStorage.setItem("authToken", re.data.token);
+      setAuth(re.data.token, re.data.role);
 
       setSuccessMsg("Login successful 🎉");
 
@@ -39,10 +33,17 @@ const Login = () => {
         username: "",
         password: "",
       });
+
       setShowLoginSuccessPopup(true);
+
       setTimeout(() => {
         setShowLoginSuccessPopup(false);
-        navigate("/home", { replace: true });
+
+        if (re.data.role === "ADMIN") {
+          navigate("/dashboard", { replace: true });
+        } else {
+          navigate("/home", { replace: true });
+        }
       }, 2000);
     } catch (error) {
       setErrorMsg("Invalid username or password");

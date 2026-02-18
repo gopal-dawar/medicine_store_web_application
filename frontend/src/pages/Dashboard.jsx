@@ -9,7 +9,7 @@ import AddMedicine from "../components/dashboard/AddMedicine";
 const Dashboard = () => {
   return (
     <Routes>
-      <Route path="/" element={<DashboardHome />}>
+      <Route element={<DashboardHome />}>
         <Route index element={<DashBoardlayout />} />
         <Route path="medicines" element={<Medicines />} />
         <Route path="addmedicine" element={<AddMedicine />} />

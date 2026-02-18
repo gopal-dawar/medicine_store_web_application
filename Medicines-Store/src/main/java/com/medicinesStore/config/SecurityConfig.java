@@ -1,20 +1,19 @@
 package com.medicinesStore.config;
 
 import com.medicinesStore.repository.UserRepo;
+import com.medicinesStore.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -26,9 +25,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final UserRepo userRepo;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(UserRepo userRepo) {
+    public SecurityConfig(UserRepo userRepo, JwtFilter jwtFilter) {
         this.userRepo = userRepo;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -36,21 +37,21 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // 🔥 MUST HAVE (custom login ke liye)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/login", "/register").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/delete").authenticated()
+                        .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                        .requestMatchers("/home/**").hasRole("USER")
                         .anyRequest().authenticated()
-                );
+                )
+
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -61,20 +62,13 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-        config.setAllowCredentials(true); // 🔥 VERY IMPORTANT
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-
-    @Bean
-    public UserDetailsService detailsService(UserRepo userRepo) {
-        return username -> userRepo.findByUsername(username).map(user -> User.withUsername(user.getUsername()).password(user.getPassword()).roles("USER").build()).orElseThrow();
-    }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

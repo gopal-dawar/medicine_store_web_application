@@ -14,8 +14,8 @@ const App = () => {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} /> {/* ✅ ADD THIS */}
       <Route path="/register" element={<Register />} />
-
       {/* Protected Home */}
       <Route
         path="/home/*"
@@ -27,10 +27,9 @@ const App = () => {
       >
         <Route index element={<HomeProductsSection />} />
       </Route>
-
-      {/* Protected Dashboard (separate) */}
+      {/* Protected Dashboard */}
       <Route
-        path="/dashboard"
+        path="/dashboard/*"
         element={
           <ProtectedRoute>
             <Dashboard />

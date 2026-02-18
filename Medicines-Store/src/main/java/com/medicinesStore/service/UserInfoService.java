@@ -1,5 +1,6 @@
 package com.medicinesStore.service;
 
+import com.medicinesStore.entity.Role;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.repository.UserRepo;
 import jakarta.transaction.Transactional;
@@ -17,23 +18,30 @@ public class UserInfoService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public String register(UserInfo userInfo) {
-        UserInfo user = new UserInfo();
 
+        if (userRepo.findByUsername(userInfo.getUsername()).isPresent()) {
+            System.err.println("System error");
+            throw new RuntimeException("Username already exists");
+        }
+
+        UserInfo user = new UserInfo();
         user.setFullName(userInfo.getFullName());
         user.setEmail(userInfo.getEmail());
         user.setUsername(userInfo.getUsername());
         user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        user.setRole(Role.USER);
         userRepo.save(user);
-        return "Successfully Register";
+        return "Successfully Registered";
+    }
+
+    public UserInfo getByUsername(String username) {
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
     public void removeAccount(String username) {
-        UserInfo user = userRepo.findByUsername(username).orElseThrow();
-        userRepo.delete(user);
+        userRepo.deleteByUsername(username);
     }
-
-
 }
