@@ -11,7 +11,7 @@ const DashboardHome = () => {
 
         <div className="flex-1 flex flex-col">
           {/* Header */}
-          <div className="p-5">
+          <div>
             <DashboardHeader />
           </div>
 

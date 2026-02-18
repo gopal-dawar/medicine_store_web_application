@@ -1,4 +1,4 @@
-import publicApi from "../api/publicApi";
+import publicApi from '../api/publicApi'
 
 export const loginUser = (data) => {
   return publicApi.post("/auth/login", data);
