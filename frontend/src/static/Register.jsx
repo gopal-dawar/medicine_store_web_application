@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../service/authService";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +15,6 @@ const Register = () => {
     username: "",
     email: "",
     password: "",
-    role: "USER",
   });
 
   const handleRegister = async (e) => {
@@ -23,33 +22,35 @@ const Register = () => {
     setSuccessMsg("");
     setErrorMsg("");
 
-    // ✅ confirm password check
+    // public API → no old auth
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
     if (userInfo.password !== confirmPassword) {
       setErrorMsg("Passwords do not match");
       return;
     }
 
     try {
-      await axios.post("http://localhost:8080/register", userInfo, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await registerUser(userInfo); 
 
       setSuccessMsg("Registration successful 🎉");
 
-      // reset form
       setUserInfo({
         fullName: "",
         username: "",
         email: "",
         password: "",
-        role: "USER",
       });
       setConfirmPassword("");
+
       navigate("/login");
     } catch (error) {
-      setErrorMsg(error.response?.data || "Registration failed");
+      if (error.response?.data?.message) {
+        setErrorMsg(error.response.data.message);
+      } else {
+        setErrorMsg("Registration failed");
+      }
     }
   };
 
@@ -100,10 +101,7 @@ const Register = () => {
                 placeholder="Enter email"
                 value={userInfo.email}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    email: e.target.value,
-                  })
+                  setUserInfo({ ...userInfo, email: e.target.value })
                 }
                 className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 required
@@ -123,10 +121,7 @@ const Register = () => {
                 placeholder="Choose username"
                 value={userInfo.username}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    username: e.target.value,
-                  })
+                  setUserInfo({ ...userInfo, username: e.target.value })
                 }
                 className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 required
@@ -146,10 +141,7 @@ const Register = () => {
                 placeholder="Create password"
                 value={userInfo.password}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    password: e.target.value,
-                  })
+                  setUserInfo({ ...userInfo, password: e.target.value })
                 }
                 className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                 required

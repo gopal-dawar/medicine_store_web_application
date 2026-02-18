@@ -21,13 +21,14 @@ public class UserInfo {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role = "USER";
+    private Role role = Role.USER;
 
     public UserInfo() {
     }
 
-    public UserInfo(Long id, String fullName, String username, String email, String password, String role) {
+    public UserInfo(Long id, String fullName, String username, String email, String password, Role role) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
@@ -76,11 +77,11 @@ public class UserInfo {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

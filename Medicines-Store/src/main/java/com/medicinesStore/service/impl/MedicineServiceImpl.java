@@ -48,15 +48,12 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicines> searchMedicineByName(String name) {
-        List<Medicines> medicines = medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
-
-        return medicines;
+        return medicines = medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
     }
 
     @Override
     public void deleteMedicine(Long id) {
-        Medicines medicines = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
+        medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
         medicineRepo.deleteById(id);
-
     }
 }

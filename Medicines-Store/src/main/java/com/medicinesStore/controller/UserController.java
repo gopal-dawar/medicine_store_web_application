@@ -6,8 +6,6 @@ import com.medicinesStore.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,29 +26,31 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
+    // ✅ REGISTER
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserInfo userInfo) {
         return ResponseEntity.ok(userInfoService.register(userInfo));
     }
 
+    // ✅ LOGIN (JWT)
     @PostMapping("/auth/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserInfo userInfo) {
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
-        String token = jwtUtil.generateToken(userInfo.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name() // ✅ FIXED
+        );
 
-        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token));
+        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name() // ✅ FIXED
+        ));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteAccount(Authentication authentication) {
 
-        if (authentication == null) {
-            return ResponseEntity.status(401).body("Not Authenticated");
-        }
+    // ✅ DELETE ACCOUNT (JWT Protected)
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteAccount(org.springframework.security.core.Authentication authentication) {
 
         String username = authentication.getName();
         userInfoService.removeAccount(username);

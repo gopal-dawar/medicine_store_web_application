@@ -16,6 +16,7 @@ const HomeProductsSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
             <ProductCategorySidebar />
+          
             <HotDealSlider />
             <SubscribeEmail />
             <Testimonial />
