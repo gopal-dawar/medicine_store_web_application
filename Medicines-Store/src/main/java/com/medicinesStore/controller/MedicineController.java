@@ -1,12 +1,17 @@
 package com.medicinesStore.controller;
 
+import com.medicinesStore.entity.Category;
 import com.medicinesStore.entity.Medicines;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -49,5 +54,27 @@ public class MedicineController {
         medicineService.deleteMedicine(id);
         return new ResponseEntity<>("Successfully Deleted!", HttpStatus.OK);
     }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Medicines> addMedicine(@RequestParam String name, @RequestParam(required = false) String brand, @RequestParam String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam(required = false) String dosage, @RequestParam(defaultValue = "false") Boolean prescriptionRequired, @RequestParam Long categoryId, @RequestParam MultipartFile image) throws IOException {
+
+        Category category = new Category();
+        category.setId(categoryId);
+
+        Medicines medicine = new Medicines();
+        medicine.setName(name);
+        medicine.setBrand(brand);
+        medicine.setDescription(description);
+        medicine.setPrice(price);
+        medicine.setStock(stock);
+        medicine.setDosage(dosage);
+        medicine.setPrescriptionRequired(prescriptionRequired);
+        medicine.setCategory(category);
+
+        Medicines saved = medicineService.addMedicineWithImage(medicine, image);
+
+        return ResponseEntity.ok(saved);
+    }
+
 
 }

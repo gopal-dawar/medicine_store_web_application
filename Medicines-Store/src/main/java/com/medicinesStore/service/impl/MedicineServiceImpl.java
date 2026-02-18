@@ -3,10 +3,13 @@ package com.medicinesStore.service.impl;
 import com.medicinesStore.entity.Medicines;
 import com.medicinesStore.exception.MedicineNotFoundException;
 import com.medicinesStore.repository.MedicineRepo;
+import com.medicinesStore.service.ImageService;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -14,6 +17,10 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Autowired
     private MedicineRepo medicineRepo;
+
+
+    @Autowired
+    private ImageService imageService;
 
     @Override
     public Medicines addMedicine(Medicines medicine) {
@@ -48,7 +55,7 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicines> searchMedicineByName(String name) {
-        return medicines = medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
+        return medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
     }
 
     @Override
@@ -56,4 +63,17 @@ public class MedicineServiceImpl implements MedicineService {
         medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
         medicineRepo.deleteById(id);
     }
+
+    @Override
+    public Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException {
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = imageService.uploadImage(image);
+            medicine.setImageUrl(imageUrl);
+        }
+
+        return medicineRepo.save(medicine);
+    }
+
+
 }
