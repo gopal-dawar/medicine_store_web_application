@@ -23,7 +23,6 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public Medicines updateMedicine(Long id, Medicines medicine) {
         Medicines medi = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
-
         medi.setName(medicine.getName());
         medi.setBrand(medicine.getBrand());
         medi.setCategory(medicine.getCategory());
@@ -49,7 +48,7 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicines> searchMedicineByName(String name) {
-        return medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
+        return medicines = medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
     }
 
     @Override

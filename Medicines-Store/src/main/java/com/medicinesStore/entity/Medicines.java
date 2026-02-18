@@ -17,7 +17,10 @@ public class Medicines {
     private String name;
 
     private String brand;
-    private String category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -38,6 +41,7 @@ public class Medicines {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
 
     @PrePersist
     protected void onCreate() {
@@ -68,14 +72,6 @@ public class Medicines {
         this.brand = brand;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -83,6 +79,7 @@ public class Medicines {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
     public BigDecimal getPrice() {
         return price;
@@ -102,6 +99,14 @@ public class Medicines {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public void setImageUrl(String imageUrl) {
