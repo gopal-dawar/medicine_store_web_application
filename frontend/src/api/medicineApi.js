@@ -1,5 +1,6 @@
 import privateApi from "./privateApi";
 
+// add medicine
 export const addMedicine = (formData) => {
   return privateApi.post("/medicine", formData, {
     headers: {
@@ -8,8 +9,9 @@ export const addMedicine = (formData) => {
   });
 };
 
-export const updateMedicine = (id, medicine) => {
-  return privateApi.put(`/medicine/${id}`, medicine);
+// update medicine
+export const updateMedicine = (id, medicines) => {
+  return privateApi.put(`/medicines/${id}`, medicines);
 };
 
 export const getMedicineById = (id) => {
@@ -20,6 +22,7 @@ export const getAllMedicines = () => {
   return privateApi.get("/medicine");
 };
 
+// search medicine by name
 export const searchMedicineByName = (name) => {
   return privateApi.get(`/medicine/search?name=${name}`);
 };

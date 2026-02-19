@@ -26,13 +26,13 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ REGISTER
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserInfo userInfo) {
         return ResponseEntity.ok(userInfoService.register(userInfo));
     }
 
-    // ✅ LOGIN (JWT)
+
     @PostMapping("/auth/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserInfo userInfo) {
 
@@ -40,15 +40,14 @@ public class UserController {
 
         UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name() // ✅ FIXED
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name()
         );
 
-        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name() // ✅ FIXED
+        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name()
         ));
     }
 
 
-    // ✅ DELETE ACCOUNT (JWT Protected)
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(org.springframework.security.core.Authentication authentication) {
 

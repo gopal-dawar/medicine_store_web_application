@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("JWT expired. Please login again.");
-                return; // ⛔ stop filter chain
+                return;
             }
         }
 

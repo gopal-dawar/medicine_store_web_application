@@ -1,6 +1,9 @@
 package com.medicinesStore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Category {
@@ -12,8 +15,17 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @JsonIgnoreProperties("category")
+    @OneToMany(mappedBy = "category")
+    private List<Medicines> medicines;
+
+    public List<Medicines> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(List<Medicines> medicines) {
+        this.medicines = medicines;
+    }
 
     public long getId() {
         return id;
@@ -31,11 +43,5 @@ public class Category {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

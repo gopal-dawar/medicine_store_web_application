@@ -1,14 +1,16 @@
 package com.medicinesStore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "medicines")
 public class Medicines {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,12 +20,18 @@ public class Medicines {
 
     private String brand;
 
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    private String dosage;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -34,14 +42,24 @@ public class Medicines {
     @Column(name = "image_url")
     private String imageUrl;
 
-    private String dosage;
-
     @Column(name = "prescription_required", nullable = false)
     private Boolean prescriptionRequired = false;
 
+    @Column(name = "batch_number")
+    private String batchNumber;
+
+    @Column(name = "manufacture_date")
+    private LocalDate manufactureDate;
+
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+
+    @Column(nullable = false)
+    private Boolean active = true;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-
 
     @PrePersist
     protected void onCreate() {
@@ -72,6 +90,22 @@ public class Medicines {
         this.brand = brand;
     }
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -80,6 +114,13 @@ public class Medicines {
         this.description = description;
     }
 
+    public String getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
+    }
 
     public BigDecimal getPrice() {
         return price;
@@ -101,24 +142,8 @@ public class Medicines {
         return imageUrl;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getDosage() {
-        return dosage;
-    }
-
-    public void setDosage(String dosage) {
-        this.dosage = dosage;
     }
 
     public Boolean getPrescriptionRequired() {
@@ -129,11 +154,39 @@ public class Medicines {
         this.prescriptionRequired = prescriptionRequired;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getBatchNumber() {
+        return batchNumber;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
+    }
+
+    public LocalDate getManufactureDate() {
+        return manufactureDate;
+    }
+
+    public void setManufactureDate(LocalDate manufactureDate) {
+        this.manufactureDate = manufactureDate;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

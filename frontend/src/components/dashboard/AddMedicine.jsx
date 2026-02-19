@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addMedicine } from "../../api/medicineApi";
+import {
+  addMedicine,
+  searchMedicineByName,
+  updateMedicine,
+} from "../../api/medicineApi";
 import { getAllCategories } from "../../api/categoryApi";
 
-const AddMedicine = () => {
-  const [medicines, setMedicines] = useState({
-    name: "",
-    brand: "",
-    category: null,
-    description: "",
-    price: 0,
-    stock: 0,
-    imageUrl: "", // backend will set this
-    dosage: "",
-    prescriptionRequired: false,
-  });
+const initialMedicineState = {
+  name: "",
+  brand: "",
+  manufacturer: "",
+  batchNumber: "",
+  manufactureDate: "",
+  expiryDate: "",
+  category: null,
+  description: "",
+  price: 0,
+  stock: 0,
+  imageUrl: "",
+  dosage: "",
+};
 
-  const [image, setImage] = useState(null); // 👈 NEW
+const AddMedicine = () => {
+  const [medicines, setMedicines] = useState(initialMedicineState);
+
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedMedicineId, setSelectedMedicineId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -37,23 +50,99 @@ const AddMedicine = () => {
 
       formData.append("name", medicines.name);
       formData.append("brand", medicines.brand);
+      formData.append("manufacturer", medicines.manufacturer);
+      formData.append("batchNumber", medicines.batchNumber);
+      formData.append("manufactureDate", medicines.manufactureDate);
+      formData.append("expiryDate", medicines.expiryDate);
       formData.append("description", medicines.description);
       formData.append("price", medicines.price);
       formData.append("stock", medicines.stock);
       formData.append("dosage", medicines.dosage);
-      formData.append("prescriptionRequired", medicines.prescriptionRequired);
+
+      if (!medicines.category) {
+        alert("Please select a category");
+        return;
+      }
+
       formData.append("categoryId", medicines.category.id);
 
       if (image) {
         formData.append("image", image);
       }
 
-      await addMedicine(formData);
+      if (selectedMedicineId) {
+        await updateMedicine(selectedMedicineId, formData);
+        alert("Medicine updated successfully");
+      } else {
+        await addMedicine(formData);
+        alert("Medicine added successfully");
+      }
+
       navigate("/dashboard");
     } catch (err) {
       console.error("ADD MEDICINE ERROR:", err.response?.data || err.message);
       alert("Failed to add medicine");
     }
+  };
+
+  const handleNameChange = async (e) => {
+    const value = e.target.value;
+
+    if (value.trim() === "") {
+      setMedicines(initialMedicineState);
+      setSelectedMedicineId(null);
+      setIsUpdateMode(false);
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    // Normal typing
+    setMedicines((prev) => ({
+      ...prev,
+      name: value,
+    }));
+
+    // Switch back to ADD mode
+    setSelectedMedicineId(null);
+    setIsUpdateMode(false);
+
+    if (value.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    try {
+      const res = await searchMedicineByName(value);
+      const list = Array.isArray(res.data) ? res.data : [];
+      setSuggestions(list);
+      setShowSuggestions(list.length > 0);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSelectMedicine = (med) => {
+    setMedicines({
+      name: med.name || "",
+      brand: med.brand || "",
+      manufacturer: med.manufacturer || "",
+      batchNumber: med.batchNumber || "",
+      manufactureDate: med.manufactureDate
+        ? med.manufactureDate.split("T")[0]
+        : "",
+      expiryDate: med.expiryDate ? med.expiryDate.split("T")[0] : "",
+      description: med.description || "",
+      price: med.price ?? "",
+      stock: med.stock ?? "",
+      dosage: med.dosage || "",
+      category: { id: med.category?.id || "" },
+    });
+
+    setSelectedMedicineId(med.id);
+    setIsUpdateMode(true);
+    setShowSuggestions(false);
   };
 
   return (
@@ -82,16 +171,34 @@ const AddMedicine = () => {
           <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <input
-              type="text"
-              placeholder="Medicine Name"
-              value={medicines.name}
-              onChange={(e) =>
-                setMedicines({ ...medicines, name: e.target.value })
-              }
-              className="border px-4 py-2 rounded"
-              required
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Medicine Name"
+                value={medicines.name}
+                onChange={handleNameChange}
+                className="border px-4 py-2 rounded w-full"
+                required
+              />
+
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="absolute z-20 bg-white border w-full rounded shadow max-h-48 overflow-auto">
+                  {suggestions.map((med) => (
+                    <li
+                      key={med.id}
+                      onClick={() => handleSelectMedicine(med)}
+                      className="px-4 py-2 hover:bg-sky-100 cursor-pointer"
+                    >
+                      <strong>{med.name}</strong>
+                      <span className="text-sm text-gray-500">
+                        {" "}
+                        ({med.brand})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <input
               type="text"
@@ -130,44 +237,114 @@ const AddMedicine = () => {
           {/* Pricing & Stock */}
           <h3 className="text-lg font-semibold mb-4">Pricing & Stock</h3>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <input
-              type="number"
-              placeholder="Price"
-              value={medicines.price}
-              onChange={(e) =>
-                setMedicines({
-                  ...medicines,
-                  price: Number(e.target.value),
-                })
-              }
-              className="border px-4 py-2 rounded"
-              required
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            {/* Price */}
+            <div>
+              <label className="block mb-1 font-medium">Price</label>
+              <input
+                type="number"
+                placeholder="Price"
+                value={medicines.price}
+                onChange={(e) =>
+                  setMedicines({
+                    ...medicines,
+                    price: Number(e.target.value),
+                  })
+                }
+                className="border px-4 py-2 rounded w-full"
+                required
+              />
+            </div>
 
+            {/* Quantity */}
+            <div>
+              <label className="block mb-1 font-medium">Quantity</label>
+              <input
+                type="number"
+                placeholder="Stock"
+                value={medicines.stock}
+                onChange={(e) =>
+                  setMedicines({
+                    ...medicines,
+                    stock: Number(e.target.value),
+                  })
+                }
+                className="border px-4 py-2 rounded w-full"
+                required
+              />
+            </div>
+
+            {/* Dosage */}
+            <div>
+              <label className="block mb-1 font-medium">Dosage</label>
+              <input
+                type="text"
+                placeholder="Dosage (e.g. 500mg)"
+                value={medicines.dosage}
+                onChange={(e) =>
+                  setMedicines({ ...medicines, dosage: e.target.value })
+                }
+                className="border px-4 py-2 rounded w-full"
+              />
+            </div>
+          </div>
+
+          {/* Manufacturer Details */}
+          <h3 className="text-lg font-semibold mb-4">Manufacturer Details</h3>
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <input
-              type="number"
-              placeholder="Stock"
-              value={medicines.stock}
+              type="text"
+              placeholder="Manufacturer Name"
+              value={medicines.manufacturer}
               onChange={(e) =>
-                setMedicines({
-                  ...medicines,
-                  stock: Number(e.target.value),
-                })
+                setMedicines({ ...medicines, manufacturer: e.target.value })
               }
               className="border px-4 py-2 rounded"
-              required
             />
 
             <input
               type="text"
-              placeholder="Dosage (e.g. 500mg)"
-              value={medicines.dosage}
+              placeholder="Batch Number"
+              value={medicines.batchNumber}
               onChange={(e) =>
-                setMedicines({ ...medicines, dosage: e.target.value })
+                setMedicines({ ...medicines, batchNumber: e.target.value })
               }
               className="border px-4 py-2 rounded"
             />
+          </div>
+
+          {/* Manufacturer Expirery date */}
+          <h3 className="text-lg font-semibold mb-4">Dates</h3>
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label className="block mb-1 font-medium">Manufacture Date</label>
+              <input
+                type="date"
+                value={medicines.manufactureDate}
+                onChange={(e) =>
+                  setMedicines({
+                    ...medicines,
+                    manufactureDate: e.target.value,
+                  })
+                }
+                className="border px-4 py-2 rounded w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1 font-medium">
+                Expiry Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                value={medicines.expiryDate}
+                onChange={(e) =>
+                  setMedicines({ ...medicines, expiryDate: e.target.value })
+                }
+                className="border px-4 py-2 rounded w-full"
+                required
+              />
+            </div>
           </div>
 
           {/* Description */}
@@ -184,7 +361,6 @@ const AddMedicine = () => {
             className="border w-full px-4 py-2 rounded mb-8"
             required
           />
-
           {/* Image */}
           <div className="mb-8">
             <label className="block mb-1 font-medium">Medicine Image</label>
@@ -193,23 +369,8 @@ const AddMedicine = () => {
               accept="image/*"
               onChange={(e) => setImage(e.target.files[0])}
               className="border px-4 py-2 rounded w-full"
-              required
+              required={!selectedMedicineId}
             />
-          </div>
-
-          {/* Prescription */}
-          <div className="mb-8 flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={medicines.prescriptionRequired}
-              onChange={(e) =>
-                setMedicines({
-                  ...medicines,
-                  prescriptionRequired: e.target.checked,
-                })
-              }
-            />
-            <label className="font-medium">Prescription Required</label>
           </div>
 
           {/* Buttons */}
@@ -224,9 +385,11 @@ const AddMedicine = () => {
 
             <button
               type="submit"
-              className="px-6 py-2 bg-sky-600 text-white rounded"
+              className={`px-6 py-2 rounded text-white ${
+                isUpdateMode ? "bg-green-600" : "bg-sky-600"
+              }`}
             >
-              Save Medicine
+              {isUpdateMode ? "Update Medicine" : "Add Medicine"}
             </button>
           </div>
         </form>

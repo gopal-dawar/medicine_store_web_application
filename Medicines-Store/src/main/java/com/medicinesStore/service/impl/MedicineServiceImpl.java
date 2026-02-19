@@ -1,5 +1,6 @@
 package com.medicinesStore.service.impl;
 
+import com.medicinesStore.entity.Category;
 import com.medicinesStore.entity.Medicines;
 import com.medicinesStore.exception.MedicineNotFoundException;
 import com.medicinesStore.repository.MedicineRepo;
@@ -18,31 +19,51 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     private MedicineRepo medicineRepo;
 
-
     @Autowired
     private ImageService imageService;
 
+    // ✅ ADD MEDICINE WITH IMAGE
     @Override
-    public Medicines addMedicine(Medicines medicine) {
+    public Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException {
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = imageService.uploadImage(image);
+            medicine.setImageUrl(imageUrl);
+        }
+
         return medicineRepo.save(medicine);
     }
 
+    // ✅ UPDATE MEDICINE WITH OPTIONAL IMAGE
     @Override
-    public Medicines updateMedicine(Long id, Medicines medicine) {
+    public Medicines updateMedicineWithImage(Long id, String name, String brand, String manufacturer, String batchNumber, String dosage, String description, java.math.BigDecimal price, Integer stock, Long categoryId, MultipartFile image) throws IOException {
+
         Medicines medi = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
-        medi.setName(medicine.getName());
-        medi.setBrand(medicine.getBrand());
-        medi.setCategory(medicine.getCategory());
-        medi.setDescription(medicine.getDescription());
-        medi.setPrice(medicine.getPrice());
-        medi.setStock(medicine.getStock());
-        medi.setImageUrl(medicine.getImageUrl());
-        medi.setDosage(medicine.getDosage());
-        medi.setPrescriptionRequired(medicine.getPrescriptionRequired());
+
+        medi.setName(name);
+        medi.setBrand(brand);
+        medi.setManufacturer(manufacturer);
+        medi.setBatchNumber(batchNumber);
+        medi.setDosage(dosage);
+        medi.setDescription(description);
+        medi.setPrice(price);
+        medi.setStock(stock);
+
+        // category
+        Category category = new Category();
+        category.setId(categoryId);
+        medi.setCategory(category);
+
+        // image (only if new image uploaded)
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = imageService.uploadImage(image);
+            medi.setImageUrl(imageUrl);
+        }
 
         return medicineRepo.save(medi);
     }
 
+    // ✅ READ
     @Override
     public Medicines getMedicineById(Long id) {
         return medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
@@ -55,25 +76,13 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicines> searchMedicineByName(String name) {
-        return medicineRepo.searchByName(name).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + name));
+        return medicineRepo.findByNameContainingIgnoreCase(name);
     }
 
+    // ✅ DELETE
     @Override
     public void deleteMedicine(Long id) {
-        medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
-        medicineRepo.deleteById(id);
+        Medicines medicine = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
+        medicineRepo.delete(medicine);
     }
-
-    @Override
-    public Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException {
-
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = imageService.uploadImage(image);
-            medicine.setImageUrl(imageUrl);
-        }
-
-        return medicineRepo.save(medicine);
-    }
-
-
 }

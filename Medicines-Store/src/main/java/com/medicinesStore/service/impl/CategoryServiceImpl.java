@@ -41,7 +41,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Long id, Category category) {
         Category cat = categoryRepo.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found : " + id));
         cat.setName(category.getName());
-        cat.setDescription(category.getDescription());
         return categoryRepo.save(cat);
     }
 
