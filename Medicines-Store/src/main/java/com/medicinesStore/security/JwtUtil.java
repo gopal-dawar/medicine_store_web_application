@@ -17,20 +17,19 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final long EXPIRATION_TIME = 10 * 60 * 1000; // 10 minutes
+    private final long EXPIRATION_TIME = 10 * 60 * 1000;
 
-    // 🔐 SINGLE source of truth for signing key
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ✅ Generate Token
+
     public String generateToken(String username, String role) {
-        return Jwts.builder().setSubject(username).claim("role", role) // ADMIN / USER
-                .setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+        return Jwts.builder().setSubject(username).claim("role", role).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
-    // ✅ Extract Claims
+
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }

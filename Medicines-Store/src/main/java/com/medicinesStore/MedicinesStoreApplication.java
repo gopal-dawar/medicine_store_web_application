@@ -9,3 +9,4 @@ public class MedicinesStoreApplication {
 		SpringApplication.run(MedicinesStoreApplication.class, args);
 	}
 }
+    

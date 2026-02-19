@@ -8,17 +8,31 @@ import java.util.List;
 
 public interface MedicineService {
 
-    Medicines addMedicine(Medicines medicine);
+    // ✅ ADD with image
+    Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException;
 
-    Medicines updateMedicine(Long medicineId, Medicines medicine);
+    // ✅ UPDATE with optional image
+    Medicines updateMedicineWithImage(
+            Long medicineId,
+            String name,
+            String brand,
+            String manufacturer,
+            String batchNumber,
+            String dosage,
+            String description,
+            java.math.BigDecimal price,
+            Integer stock,
+            Long categoryId,
+            MultipartFile image
+    ) throws IOException;
 
+    // ✅ READ
     Medicines getMedicineById(Long medicineId);
 
     List<Medicines> getAllMedicines();
 
     List<Medicines> searchMedicineByName(String name);
 
+    // ✅ DELETE
     void deleteMedicine(Long medicineId);
-
-    Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException;
 }

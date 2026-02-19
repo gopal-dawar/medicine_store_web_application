@@ -21,60 +21,59 @@ public class MedicineController {
     @Autowired
     private MedicineService medicineService;
 
-    @PostMapping
-    public ResponseEntity<Medicines> addMedicine(@RequestBody Medicines medicine) {
-        return new ResponseEntity<>(medicineService.addMedicine(medicine), HttpStatus.OK);
-    }
-
-    //
-    @PutMapping("/{id}")
-    public ResponseEntity<Medicines> updateMedicine(@PathVariable Long id, @RequestBody Medicines medicine) {
-        return new ResponseEntity<>(medicineService.updateMedicine(id, medicine), HttpStatus.OK);
-    }
-
-    //
-    @GetMapping("/{id}")
-    public ResponseEntity<Medicines> getMedicineById(@PathVariable Long id) {
-        return new ResponseEntity<>(medicineService.getMedicineById(id), HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Medicines>> getAllMedicines() {
-        return new ResponseEntity<>(medicineService.getAllMedicines(), HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Medicines>> searchMedicineByName(@RequestParam String name) {
-        return new ResponseEntity<>(medicineService.searchMedicineByName(name), HttpStatus.OK);
-    }
-//    deleteMedicine(Long id);
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMedicine(@PathVariable long id) {
-        medicineService.deleteMedicine(id);
-        return new ResponseEntity<>("Successfully Deleted!", HttpStatus.OK);
-    }
-
+    // ✅ ADD MEDICINE (with image)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Medicines> addMedicine(@RequestParam String name, @RequestParam(required = false) String brand, @RequestParam String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam(required = false) String dosage, @RequestParam(defaultValue = "false") Boolean prescriptionRequired, @RequestParam Long categoryId, @RequestParam MultipartFile image) throws IOException {
-
-        Category category = new Category();
-        category.setId(categoryId);
+    public ResponseEntity<Medicines> addMedicine(@RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
 
         Medicines medicine = new Medicines();
         medicine.setName(name);
         medicine.setBrand(brand);
+        medicine.setManufacturer(manufacturer);
+        medicine.setBatchNumber(batchNumber);
+        medicine.setDosage(dosage);
         medicine.setDescription(description);
         medicine.setPrice(price);
         medicine.setStock(stock);
-        medicine.setDosage(dosage);
-        medicine.setPrescriptionRequired(prescriptionRequired);
+
+        Category category = new Category();
+        category.setId(categoryId);
         medicine.setCategory(category);
 
         Medicines saved = medicineService.addMedicineWithImage(medicine, image);
-
-        return ResponseEntity.ok(saved);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
+    // ✅ UPDATE MEDICINE (image optional)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Medicines> updateMedicine(@PathVariable Long id, @RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
 
+        Medicines updated = medicineService.updateMedicineWithImage(id, name, brand, manufacturer, batchNumber, dosage, description, price, stock, categoryId, image);
+
+        return ResponseEntity.ok(updated);
+    }
+
+    // ✅ GET BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Medicines> getMedicineById(@PathVariable Long id) {
+        return ResponseEntity.ok(medicineService.getMedicineById(id));
+    }
+
+    // ✅ GET ALL
+    @GetMapping
+    public ResponseEntity<List<Medicines>> getAllMedicines() {
+        return ResponseEntity.ok(medicineService.getAllMedicines());
+    }
+
+    // ✅ SEARCH
+    @GetMapping("/search")
+    public ResponseEntity<List<Medicines>> searchMedicineByName(@RequestParam String name) {
+        return ResponseEntity.ok(medicineService.searchMedicineByName(name));
+    }
+
+    // ✅ DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMedicine(@PathVariable Long id) {
+        medicineService.deleteMedicine(id);
+        return ResponseEntity.ok("Successfully Deleted!");
+    }
 }
