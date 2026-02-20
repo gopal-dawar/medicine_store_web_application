@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,7 +24,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     private ImageService imageService;
 
-    // ✅ ADD MEDICINE WITH IMAGE
+    // ADD MEDICINE WITH IMAGE
     @Override
     public Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException {
 
@@ -34,12 +36,13 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineRepo.save(medicine);
     }
 
-    // ✅ UPDATE MEDICINE WITH OPTIONAL IMAGE
+    // UPDATE MEDICINE WITH OPTIONAL IMAGE
     @Override
-    public Medicines updateMedicineWithImage(Long id, String name, String brand, String manufacturer, String batchNumber, String dosage, String description, java.math.BigDecimal price, Integer stock, Long categoryId, MultipartFile image) throws IOException {
+    public Medicines updateMedicineWithImage(Long id, String name, String brand, String manufacturer, String batchNumber, String dosage, String description, BigDecimal price, Integer stock, LocalDate manufactureDate, LocalDate expiryDate, Boolean prescriptionRequired, Boolean active, Long categoryId, MultipartFile image) throws IOException {
 
         Medicines medi = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
 
+        // 🔹 BASIC FIELDS (you already have these)
         medi.setName(name);
         medi.setBrand(brand);
         medi.setManufacturer(manufacturer);
@@ -49,21 +52,28 @@ public class MedicineServiceImpl implements MedicineService {
         medi.setPrice(price);
         medi.setStock(stock);
 
-        // category
+        medi.setManufactureDate(manufactureDate);
+        medi.setExpiryDate(expiryDate);
+
+        if (prescriptionRequired != null) {
+            medi.setPrescriptionRequired(prescriptionRequired);
+        }
+
+        if (active != null) {
+            medi.setActive(active);
+        }
+
         Category category = new Category();
         category.setId(categoryId);
         medi.setCategory(category);
 
-        // image (only if new image uploaded)
         if (image != null && !image.isEmpty()) {
             String imageUrl = imageService.uploadImage(image);
             medi.setImageUrl(imageUrl);
         }
-
         return medicineRepo.save(medi);
     }
 
-    // ✅ READ
     @Override
     public Medicines getMedicineById(Long id) {
         return medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));

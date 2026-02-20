@@ -11,7 +11,11 @@ export const addMedicine = (formData) => {
 
 // update medicine
 export const updateMedicine = (id, medicines) => {
-  return privateApi.put(`/medicines/${id}`, medicines);
+  return privateApi.put(`/medicine/${id}`, medicines, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const getMedicineById = (id) => {

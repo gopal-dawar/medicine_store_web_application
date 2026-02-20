@@ -1,56 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getAllMedicines } from "../../api/medicineApi";
 
 const Medicines = () => {
+  const [medicine, setMedicine] = useState([]);
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      const re = await getAllMedicines();
+      setMedicine(re.data);
+      console.log(re.data);
+    };
+    fetchdata();
+  }, []);
+
   return (
-    <div>
-      <div className="bg-white rounded shadow overflow-x-auto mx-10">
+    <div className="mx-10 mt-6">
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="w-full border-collapse">
-          <thead className="bg-gray-200">
+          <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="p-3 text-left">ID</th>
               <th className="p-3 text-left">Medicine</th>
-              <th className="p-3 text-left">Company</th>
+              <th className="p-3 text-left">Manufacturer</th>
+              <th className="p-3 text-left">Category</th>
               <th className="p-3 text-left">Price</th>
               <th className="p-3 text-left">Stock</th>
               <th className="p-3 text-left">Expiry</th>
+              <th className="p-3 text-left">Status</th>
               <th className="p-3 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {[
-              {
-                id: 1,
-                name: "Paracetamol",
-                company: "Cipla",
-                price: 25,
-                stock: 120,
-                expiry: "2026-05-10",
-              },
-              {
-                id: 2,
-                name: "Amoxicillin",
-                company: "Sun Pharma",
-                price: 80,
-                stock: 60,
-                expiry: "2025-11-20",
-              },
-              {
-                id: 3,
-                name: "Vitamin C",
-                company: "Himalaya",
-                price: 45,
-                stock: 200,
-                expiry: "2027-01-15",
-              },
-            ].map((med) => (
-              <tr key={med.id} className="border-t hover:bg-gray-50">
+            {medicine.map((med) => (
+              <tr key={med.id} className="border-t hover:bg-gray-50 transition">
                 <td className="p-3">{med.id}</td>
-                <td className="p-3 font-medium">{med.name}</td>
-                <td className="p-3">{med.company}</td>
-                <td className="p-3">₹{med.price}</td>
-                <td className="p-3">{med.stock}</td>
-                <td className="p-3">{med.expiry}</td>
+
+                <td className="p-3 flex items-center gap-3">
+                  <img
+                    src={med.imageUrl || "/placeholder.png"}
+                    alt={med.name}
+                    className="w-10 h-10 rounded object-cover border"
+                  />
+                  <span className="font-medium">{med.name}</span>
+                </td>
+
+                <td className="p-3">{med.manufacturer}</td>
+
+                <td className="p-3">{med.category?.name || "N/A"}</td>
+
+                <td className="p-3 font-semibold text-green-600">
+                  ₹{med.price}
+                </td>
+
+                <td className="p-3">
+                  <span
+                    className={`px-2 py-1 rounded text-sm font-medium ${
+                      med.stock > 0
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {med.stock}
+                  </span>
+                </td>
+
+                <td className="p-3">{med.expiryDate}</td>
+
+                <td className="p-3">
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-semibold ${
+                      med.active
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {med.active ? "Active" : "Inactive"}
+                  </span>
+                </td>
+
                 <td className="p-3 text-center space-x-2">
                   <button className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500">
                     Edit

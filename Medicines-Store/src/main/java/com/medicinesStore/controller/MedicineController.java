@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,11 +22,18 @@ public class MedicineController {
     @Autowired
     private MedicineService medicineService;
 
-    // ✅ ADD MEDICINE (with image)
+    // ADD MEDICINE
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Medicines> addMedicine(@RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
+    public ResponseEntity<Medicines> addMedicine(@RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description,
+
+                                                 @RequestParam BigDecimal price, @RequestParam Integer stock,
+
+                                                 @RequestParam(required = false) LocalDate manufactureDate, @RequestParam(required = false) LocalDate expiryDate,
+
+                                                 @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
 
         Medicines medicine = new Medicines();
+
         medicine.setName(name);
         medicine.setBrand(brand);
         medicine.setManufacturer(manufacturer);
@@ -35,6 +43,10 @@ public class MedicineController {
         medicine.setPrice(price);
         medicine.setStock(stock);
 
+
+        medicine.setManufactureDate(manufactureDate);
+        medicine.setExpiryDate(expiryDate);
+
         Category category = new Category();
         category.setId(categoryId);
         medicine.setCategory(category);
@@ -43,11 +55,22 @@ public class MedicineController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    // ✅ UPDATE MEDICINE (image optional)
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Medicines> updateMedicine(@PathVariable Long id, @RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam Integer stock, @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
+    public ResponseEntity<Medicines> updateMedicine(@PathVariable Long id,
 
-        Medicines updated = medicineService.updateMedicineWithImage(id, name, brand, manufacturer, batchNumber, dosage, description, price, stock, categoryId, image);
+                                                    @RequestParam String name, @RequestParam(required = false) String brand, @RequestParam(required = false) String manufacturer, @RequestParam(required = false) String batchNumber, @RequestParam(required = false) String dosage, @RequestParam(required = false) String description,
+
+                                                    @RequestParam BigDecimal price, @RequestParam Integer stock,
+
+
+                                                    @RequestParam(required = false) LocalDate manufactureDate, @RequestParam(required = false) LocalDate expiryDate,
+
+                                                    @RequestParam(required = false) Boolean prescriptionRequired, @RequestParam(required = false) Boolean active,
+
+                                                    @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
+        System.out.println("🔥 UPDATE CONTROLLER HIT 🔥" + id);
+
+        Medicines updated = medicineService.updateMedicineWithImage(id, name, brand, manufacturer, batchNumber, dosage, description, price, stock, manufactureDate, expiryDate, prescriptionRequired, active, categoryId, image);
 
         return ResponseEntity.ok(updated);
     }

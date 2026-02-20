@@ -4,6 +4,8 @@ import com.medicinesStore.entity.Medicines;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MedicineService {
@@ -12,19 +14,7 @@ public interface MedicineService {
     Medicines addMedicineWithImage(Medicines medicine, MultipartFile image) throws IOException;
 
     // ✅ UPDATE with optional image
-    Medicines updateMedicineWithImage(
-            Long medicineId,
-            String name,
-            String brand,
-            String manufacturer,
-            String batchNumber,
-            String dosage,
-            String description,
-            java.math.BigDecimal price,
-            Integer stock,
-            Long categoryId,
-            MultipartFile image
-    ) throws IOException;
+    public Medicines updateMedicineWithImage(Long id, String name, String brand, String manufacturer, String batchNumber, String dosage, String description, BigDecimal price, Integer stock, LocalDate manufactureDate, LocalDate expiryDate, Boolean prescriptionRequired, Boolean active, Long categoryId, MultipartFile image) throws IOException;
 
     // ✅ READ
     Medicines getMedicineById(Long medicineId);

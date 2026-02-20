@@ -52,8 +52,16 @@ const AddMedicine = () => {
       formData.append("brand", medicines.brand);
       formData.append("manufacturer", medicines.manufacturer);
       formData.append("batchNumber", medicines.batchNumber);
-      formData.append("manufactureDate", medicines.manufactureDate);
-      formData.append("expiryDate", medicines.expiryDate);
+      if (
+        medicines.manufactureDate &&
+        medicines.manufactureDate.trim() !== ""
+      ) {
+        formData.append("manufactureDate", medicines.manufactureDate);
+      }
+
+      if (medicines.expiryDate && medicines.expiryDate.trim() !== "") {
+        formData.append("expiryDate", medicines.expiryDate);
+      }
       formData.append("description", medicines.description);
       formData.append("price", medicines.price);
       formData.append("stock", medicines.stock);
@@ -72,6 +80,7 @@ const AddMedicine = () => {
 
       if (selectedMedicineId) {
         await updateMedicine(selectedMedicineId, formData);
+
         alert("Medicine updated successfully");
       } else {
         await addMedicine(formData);
@@ -89,14 +98,16 @@ const AddMedicine = () => {
     const value = e.target.value;
 
     if (value.trim() === "") {
-      setMedicines(initialMedicineState);
+      setMedicines((prev) => ({
+        ...prev,
+        name: "",
+      }));
       setSelectedMedicineId(null);
       setIsUpdateMode(false);
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
-
     // Normal typing
     setMedicines((prev) => ({
       ...prev,
@@ -128,16 +139,19 @@ const AddMedicine = () => {
       name: med.name || "",
       brand: med.brand || "",
       manufacturer: med.manufacturer || "",
-      batchNumber: med.batchNumber || "",
-      manufactureDate: med.manufactureDate
-        ? med.manufactureDate.split("T")[0]
-        : "",
-      expiryDate: med.expiryDate ? med.expiryDate.split("T")[0] : "",
       description: med.description || "",
+      dosage: med.dosage || "",
       price: med.price ?? "",
       stock: med.stock ?? "",
-      dosage: med.dosage || "",
-      category: { id: med.category?.id || "" },
+      batchNumber: med.batchNumber || "",
+      manufactureDate: med.manufactureDate
+        ? med.manufactureDate.substring(0, 10)
+        : "",
+      expiryDate: med.expiryDate ? med.expiryDate.substring(0, 10) : "",
+      imageUrl: med.imageUrl || "",
+      prescriptionRequired: med.prescriptionRequired ?? false,
+      active: med.active ?? true,
+      category: med.category ? { id: med.category.id } : { id: "" },
     });
 
     setSelectedMedicineId(med.id);
