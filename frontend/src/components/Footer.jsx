@@ -5,17 +5,17 @@ const Footer = () => {
   return (
     <footer className="bg-[#1b1b1b] text-gray-400 pt-14">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Top Grid */}
+     
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-gray-700">
-          {/* CONTACT US */}
+       
           <div>
             <h3 className="text-white font-semibold mb-4 uppercase">
               Contact Us
             </h3>
             <div className="relative w-full mb-5">
-              {/* Gray full width line */}
+            
               <div className="w-full h-[3px] bg-gray-300"></div>
-              {/* Green accent line */}
+            
               <div className="absolute top-0 left-0 w-20 h-[3px] bg-emerald-600"></div>
             </div>
             <div className="flex items-center justify-center gap-4 mb-4 border p-2 py-3">
