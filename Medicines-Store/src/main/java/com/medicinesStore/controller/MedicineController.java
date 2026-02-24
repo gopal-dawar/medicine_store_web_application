@@ -68,7 +68,7 @@ public class MedicineController {
                                                     @RequestParam(required = false) Boolean prescriptionRequired, @RequestParam(required = false) Boolean active,
 
                                                     @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
-        System.out.println("🔥 UPDATE CONTROLLER HIT 🔥" + id);
+
 
         Medicines updated = medicineService.updateMedicineWithImage(id, name, brand, manufacturer, batchNumber, dosage, description, price, stock, manufactureDate, expiryDate, prescriptionRequired, active, categoryId, image);
 

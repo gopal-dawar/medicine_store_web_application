@@ -31,6 +31,7 @@ export const searchMedicineByName = (name) => {
   return privateApi.get(`/medicine/search?name=${name}`);
 };
 
+// delete medicine
 export const deleteMedicine = (id) => {
   return privateApi.delete(`/medicine/${id}`);
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllMedicines } from "../../api/medicineApi";
+import { deleteMedicine, getAllMedicines } from "../../api/medicineApi";
 
 const Medicines = () => {
   const [medicine, setMedicine] = useState([]);
@@ -12,6 +12,23 @@ const Medicines = () => {
     };
     fetchdata();
   }, []);
+
+  const deletemedicine = async (id) => {
+    const worningmsg = window.confirm(
+      "Are you sure you want to delete this medicine?",
+    );
+
+    if (!worningmsg) {
+      return;
+    }
+
+    try {
+      await deleteMedicine(id);
+      setMedicine((prev) => prev.filter((med) => med.id !== id));
+    } catch (error) {
+      alert("Failed to delete medicine ", error);
+    }
+  };
 
   return (
     <div className="mx-10 mt-6">
@@ -83,7 +100,12 @@ const Medicines = () => {
                   <button className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500">
                     Edit
                   </button>
-                  <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                  <button
+                    onClick={() => {
+                      deletemedicine(med.id);
+                    }}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                  >
                     Delete
                   </button>
                 </td>
