@@ -4,6 +4,7 @@ import com.medicinesStore.entity.Category;
 import com.medicinesStore.entity.Medicines;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -117,4 +118,8 @@ public class MedicineController {
         return new ResponseEntity<>(medicineService.countExpireMedicine(), HttpStatus.OK);
     }
 
+    @GetMapping("/searchpagination")
+    public Page<Medicines> searchpagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return medicineService.medicinewithpagination(page, size);
+    }
 }

@@ -50,6 +50,11 @@ export const countMedstock = () => {
 export const countExpireMedicine = () => {
   return privateApi.get("/medicine/expiremed");
 };
+
+// count expire medicine
+export const searchpagination = (page, size) => {
+  return privateApi.get(`/medicine/searchpagination?page=${page}&size=${size}`);
+};
 // ============================================
 // category apis
 // ============================================

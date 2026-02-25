@@ -7,6 +7,9 @@ import com.medicinesStore.repository.MedicineRepo;
 import com.medicinesStore.service.ImageService;
 import com.medicinesStore.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -123,5 +126,11 @@ public class MedicineServiceImpl implements MedicineService {
 
 
         return response;
+    }
+
+    @Override
+    public Page<Medicines> medicinewithpagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return medicineRepo.findAll(pageable);
     }
 }
