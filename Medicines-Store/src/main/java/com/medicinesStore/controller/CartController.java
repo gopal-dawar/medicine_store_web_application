@@ -3,9 +3,11 @@ package com.medicinesStore.controller;
 import com.medicinesStore.entity.Cart;
 import com.medicinesStore.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -58,9 +60,14 @@ public class CartController {
     }
 
     @GetMapping("/total/{userId}")
-    public ResponseEntity<Double> getCartTotal(
+    public ResponseEntity<BigDecimal> getCartTotal(
             @PathVariable Long userId
     ) {
         return ResponseEntity.ok(cartService.getCartTotal(userId));
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countcartItem() {
+        return new ResponseEntity<>(cartService.cartItemCount(), HttpStatus.OK);
     }
 }

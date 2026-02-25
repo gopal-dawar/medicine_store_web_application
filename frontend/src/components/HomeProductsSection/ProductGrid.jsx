@@ -5,16 +5,40 @@ import ProductViewCard from "../model/ProductViewCard";
 import { MedicineContext } from "../../context/MedicineData";
 import arrivImg from "../../assets/arrivoffer.jpg";
 import AOS from "aos";
+import "aos/dist/aos.css";
 
 const ProductGrid = () => {
-  const { medicine } = useContext(MedicineContext);
+  const { medicine, loading, error } = useContext(MedicineContext);
 
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  // ✅ MODAL STATE
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  useEffect(() => {
+    AOS.init({ duration: 700, once: true });
+  }, []);
+  
+  useEffect(() => {
+    setIsTransitioning(true);
+    const timer = setTimeout(() => setIsTransitioning(false), 300);
+    return () => clearTimeout(timer);
+  }, [activeTab, currentPage]);
+
+  useEffect(() => {
+    document.body.style.overflow = selectedProduct ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [selectedProduct]);
+
+  if (loading) {
+    return (
+      <p className="text-center p-10 text-gray-500">Loading medicines...</p>
+    );
+  }
+
+  if (error) {
+    return <p className="text-center p-10 text-red-500">{error}</p>;
+  }
 
   const filteredProducts = medicine.filter((item) => {
     if (activeTab === "all") return true;
@@ -24,6 +48,7 @@ const ProductGrid = () => {
     return true;
   });
 
+  // ---------------- PAGINATION ----------------
   const itemsPerPage = 8;
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
@@ -32,32 +57,17 @@ const ProductGrid = () => {
     currentPage * itemsPerPage,
   );
 
-  useEffect(() => {
-    setIsTransitioning(true);
-
-    const timer = setTimeout(() => {
-      AOS.refreshHard();
-      setIsTransitioning(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [activeTab, currentPage]);
-
-  useEffect(() => {
-    document.body.style.overflow = selectedProduct ? "hidden" : "auto";
-    return () => (document.body.style.overflow = "auto");
-  }, [selectedProduct]);
-
   return (
     <>
       <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="flex flex-col items-center">
+        {/* PRODUCT GRID */}
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10
-            transition-all duration-300 ease-in-out
-            ${isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"}
-          `}
+          transition-all duration-300
+          ${isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"}
+        `}
         >
           {paginatedProducts.map((item, index) => (
             <div key={item.id} data-aos="fade-up" data-aos-delay={index * 100}>
@@ -66,13 +76,12 @@ const ProductGrid = () => {
           ))}
         </div>
 
+        {/* PAGINATION */}
         <div className="p-10 flex justify-center gap-5">
           <button
-            className="px-4 py-2 border rounded transition-all duration-300
-              hover:bg-[#4e97fd] hover:text-white hover:scale-105
-              disabled:opacity-50 disabled:hover:scale-100"
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
+            className="px-4 py-2 border rounded hover:bg-[#4e97fd] hover:text-white disabled:opacity-50"
           >
             Prev
           </button>
@@ -82,26 +91,21 @@ const ProductGrid = () => {
           </span>
 
           <button
-            className="px-4 py-2 border rounded transition-all duration-300
-              hover:bg-[#4e97fd] hover:text-white hover:scale-105
-              disabled:opacity-50 disabled:hover:scale-100"
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
+            className="px-4 py-2 border rounded hover:bg-[#4e97fd] hover:text-white disabled:opacity-50"
           >
             Next
           </button>
         </div>
 
         {/* ARRIVAL BANNER */}
-        <div
-          data-aos="zoom-in"
-          className="w-full overflow-hidden group relative transition-all duration-500"
-        >
-          <img className="w-full block" src={arrivImg} alt="Arrival Offer" />
+        <div data-aos="zoom-in" className="w-full overflow-hidden">
+          <img src={arrivImg} alt="Arrival Offer" />
         </div>
       </div>
 
-      {/* ✅ MODAL RENDER */}
+      {/* QUICK VIEW */}
       {selectedProduct && (
         <ProductViewCard
           medicines={selectedProduct}

@@ -1,13 +1,22 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
+import { addToCartitem } from "../../api/medicineApi";
 
 const ProductViewCard = ({ medicines, onClose }) => {
   if (!medicines) return null;
 
-  const handleAddToCart = () => {
-    console.log("Added to cart:", medicines);
-  };
+  const handleAddToCart = async (medicineId) => {
+    try {
+      const userId = 1;
 
+      await addToCartitem(userId, medicineId, 1);
+
+      alert("Added to cart ✅");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add item ❌");
+    }
+  };
   return (
     <div className="fixed inset-0 z-50 bg-black/20 bg-opacity-90 backdrop-blur-md flex items-center justify-center p-4">
       <div className="relative bg-white rounded-3xl shadow-2xl max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden animate-fadeIn">
@@ -74,7 +83,7 @@ const ProductViewCard = ({ medicines, onClose }) => {
           </p>
 
           <button
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart(medicines.id)}
             disabled={!medicines.active || medicines.stock === 0}
             className={`mt-auto w-full py-4 text-sm font-bold uppercase tracking-wide transition rounded-xl
               ${

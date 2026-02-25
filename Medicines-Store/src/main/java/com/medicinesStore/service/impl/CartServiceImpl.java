@@ -32,11 +32,10 @@ public class CartServiceImpl implements CartService {
         }
 
         Medicines medicine = medicineRepo.findById(medicineId).orElseThrow(() -> new MedicineNotFoundException("Medicine not found"));
-
-        Cart cart = cartRepo.findByUserIdAndMedicineIdAndStatus(userId, medicineId, "ACTIVE").orElse(new Cart());
+        Cart cart = cartRepo.findByUserIdAndMedicines_IdAndStatus(userId, medicineId, "ACTIVE").orElse(new Cart());
 
         cart.setUserId(userId);
-        cart.setMedicineId(medicineId);
+        cart.setMedicines(medicine);
         cart.setPrice(medicine.getPrice());
         cart.setStatus("ACTIVE");
 
@@ -83,19 +82,18 @@ public class CartServiceImpl implements CartService {
     public void clearCart(Long userId) {
 
         List<Cart> carts = cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
-
         cartRepo.deleteAll(carts);
     }
 
     @Override
-    public Double getCartTotal(Long userId) {
-
+    public BigDecimal getCartTotal(Long userId) {
         List<Cart> carts = cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
-        double total = carts.stream()
-                .map(c -> c.getPrice().multiply(BigDecimal.valueOf(c.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .doubleValue();
-
+        BigDecimal total = carts.stream().map(c -> c.getPrice().multiply(BigDecimal.valueOf(c.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
+    }
+
+    @Override
+    public Long cartItemCount() {
+        return cartRepo.findAll().stream().count();
     }
 }

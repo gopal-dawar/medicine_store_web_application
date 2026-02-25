@@ -1,13 +1,30 @@
-import React, { useContext } from "react";
+// import { useContext } from "react";
 import { FaEye, FaShoppingCart } from "react-icons/fa";
+import { useContext } from "react";
+import { MedicineContext } from "../../context/MedicineData";
+import { addToCartitem } from "../../api/medicineApi";
 
 const ProductCard = ({ product, onQuickView }) => {
+  const { addToCart } = useContext(MedicineContext);
+
+  const handleAddToCart = async () => {
+    try {
+      const userId = 1;
+      await addToCartitem(userId, product.id, 1);
+      alert("Added to cart ✅");
+    } catch (error) {
+      console.error("Add to cart error", error);
+      alert("Failed to add item ❌");
+    }
+  };
+
   return (
     <div
       className="bg-white border border-gray-200 rounded overflow-hidden group
       transition-all duration-300 ease-in-out
       hover:-translate-y-2 hover:shadow-xl"
     >
+      {/* IMAGE */}
       <div className="relative h-52 px-3 flex items-center justify-center bg-gray-100 overflow-hidden">
         <img
           src={product.imageUrl}
@@ -17,6 +34,7 @@ const ProductCard = ({ product, onQuickView }) => {
 
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300"></div>
 
+        {/* QUICK VIEW */}
         <button
           onClick={() => onQuickView(product)}
           className="absolute opacity-0 translate-y-4
@@ -30,7 +48,7 @@ const ProductCard = ({ product, onQuickView }) => {
         </button>
       </div>
 
-      {/* INFO AREA */}
+      {/* INFO / ADD TO CART */}
       <div className="relative h-20 overflow-hidden">
         <div
           className="absolute inset-0 flex flex-col justify-center items-center text-center
@@ -38,7 +56,7 @@ const ProductCard = ({ product, onQuickView }) => {
           group-hover:opacity-0 group-hover:-translate-y-2"
         >
           <h4 className="text-sm text-gray-700">{product.name}</h4>
-          <p className="mt-1 text-lg font-semibold text-[#4e97fd]">
+          <p className="mt-1 text-lg font-semibold text-[#95a9c5]">
             ₹{product.price}
           </p>
         </div>
@@ -50,6 +68,7 @@ const ProductCard = ({ product, onQuickView }) => {
           transition-all duration-300"
         >
           <button
+            onClick={handleAddToCart}
             className="w-full bg-[#4e97fd] text-white py-3 text-sm font-medium
             flex items-center justify-center gap-2 hover:bg-[#3b82f6]"
           >

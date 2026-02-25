@@ -14,9 +14,6 @@ public class Cart {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "medicine_id", nullable = false)
-    private Long medicineId;
-
     @Column(nullable = false)
     private Integer quantity = 1;
 
@@ -26,11 +23,17 @@ public class Cart {
     @Column(nullable = false)
     private String status = "ACTIVE";
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "medicine_id", nullable = false)
+    private Medicines medicines;
+
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 
     public Long getId() {
         return id;
@@ -46,14 +49,6 @@ public class Cart {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getMedicineId() {
-        return medicineId;
-    }
-
-    public void setMedicineId(Long medicineId) {
-        this.medicineId = medicineId;
     }
 
     public Integer getQuantity() {
@@ -78,6 +73,14 @@ public class Cart {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Medicines getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(Medicines medicines) {
+        this.medicines = medicines;
     }
 
     public LocalDateTime getCreatedAt() {

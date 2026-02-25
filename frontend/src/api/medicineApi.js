@@ -81,3 +81,27 @@ export const updateCategory = (id, category) => {
 export const deleteCategory = (id) => {
   return privateApi.delete(`/categories/${id}`);
 };
+
+// ============================
+//  cart api's
+export const addToCartitem = (userId, medicineId, quantity = 1) => {
+  return privateApi.post("/cart/add", null, {
+    params: {
+      userId,
+      medicineId,
+      quantity,
+    },
+  });
+};
+
+export const getCartItem = (userId) => {
+  return privateApi.get(`/cart/user/${userId}`);
+};
+
+export const removeCartItem = (cartId) => {
+  return privateApi.delete(`/cart/remove/${cartId}`);
+};
+
+export const cartitemcount = () => {
+  return privateApi.get(`/cart/count`);
+};
