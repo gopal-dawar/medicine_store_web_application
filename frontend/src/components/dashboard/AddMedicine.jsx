@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addMedicine,
+  getAllCategories,
+  getMedicineById,
   searchMedicineByName,
   updateMedicine,
 } from "../../api/medicineApi";
-import { getAllCategories } from "../../api/categoryApi";
 
 const initialMedicineState = {
   name: "",
@@ -33,7 +34,7 @@ const AddMedicine = () => {
   const [selectedMedicineId, setSelectedMedicineId] = useState(null);
 
   const navigate = useNavigate();
-
+  const { id } = useParams();
   // Fetch categories
   useEffect(() => {
     getAllCategories()
@@ -87,7 +88,7 @@ const AddMedicine = () => {
         alert("Medicine added successfully");
       }
 
-      navigate("/dashboard");
+      navigate(-1);
     } catch (err) {
       console.error("ADD MEDICINE ERROR:", err.response?.data || err.message);
       alert("Failed to add medicine");
@@ -159,8 +160,15 @@ const AddMedicine = () => {
     setShowSuggestions(false);
   };
 
+  useEffect(() => {
+    const updateMedfromMedicineComponent = async () => {
+      const re = await getMedicineById(id);
+      handleSelectMedicine(re.data);
+    };
+    updateMedfromMedicineComponent();
+  }, [id]);
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="h-screen overflow-x-auto bg-gray-100">
       {/* Header */}
       <div className="bg-white shadow px-8 py-4 flex justify-between">
         <h2 className="text-2xl font-semibold text-sky-700">

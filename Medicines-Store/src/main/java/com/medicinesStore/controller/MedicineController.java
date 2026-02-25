@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/medicine")
@@ -99,4 +100,21 @@ public class MedicineController {
         medicineService.deleteMedicine(id);
         return ResponseEntity.ok("Successfully Deleted!");
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countMedicine() {
+        return new ResponseEntity<>(medicineService.countTotalMedicine(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/countstock")
+    public ResponseEntity<Map<String, Object>> countLowStock() {
+        return new ResponseEntity<>(medicineService.countLowStock(), HttpStatus.OK);
+    }
+
+    @GetMapping("/expiremed")
+    public ResponseEntity<Map<String, Object>> countExpireMedicine() {
+        return new ResponseEntity<>(medicineService.countExpireMedicine(), HttpStatus.OK);
+    }
+
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface MedicineService {
 
@@ -25,4 +26,10 @@ public interface MedicineService {
 
     // ✅ DELETE
     void deleteMedicine(Long medicineId);
+
+    Long countTotalMedicine();
+
+    Map<String, Object> countLowStock();
+
+    Map<String, Object> countExpireMedicine();
 }

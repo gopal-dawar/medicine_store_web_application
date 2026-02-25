@@ -42,9 +42,6 @@ public class Medicines {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "prescription_required", nullable = false)
-    private Boolean prescriptionRequired = false;
-
     @Column(name = "batch_number")
     private String batchNumber;
 
@@ -144,14 +141,6 @@ public class Medicines {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Boolean getPrescriptionRequired() {
-        return prescriptionRequired;
-    }
-
-    public void setPrescriptionRequired(Boolean prescriptionRequired) {
-        this.prescriptionRequired = prescriptionRequired;
     }
 
     public String getBatchNumber() {

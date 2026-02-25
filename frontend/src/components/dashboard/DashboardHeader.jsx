@@ -2,10 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-const DashboardHeader = ({
-  title = "Medicine Dashboard",
-  showAddBtn = true,
-}) => {
+const DashboardHeader = ({ title = "Medicine Dashboard" }) => {
   const navigate = useNavigate();
 
   let username = "Admin";
@@ -16,7 +13,7 @@ const DashboardHeader = ({
       const decoded = jwtDecode(token);
       username = decoded.sub || decoded.username || "Admin";
     } catch (e) {
-      console.error("Invalid JWT");
+      console.error("Invalid JWT", e);
     }
   }
 
@@ -33,15 +30,6 @@ const DashboardHeader = ({
       {/* Right */}
       <div className="flex items-center gap-4">
         <span className="text-white font-medium">👋 {username}</span>
-
-        {showAddBtn && (
-          <button
-            onClick={() => navigate("/dashboard/addmedicine")}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            + Add Medicine
-          </button>
-        )}
 
         <button
           onClick={handleLogout}

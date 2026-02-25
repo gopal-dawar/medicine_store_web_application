@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { deleteMedicine, getAllMedicines } from "../../api/medicineApi";
+import {
+  deleteMedicine,
+  getAllMedicines,
+  searchMedicineByName,
+} from "../../api/medicineApi";
+import { useNavigate } from "react-router-dom";
 
 const Medicines = () => {
   const [medicine, setMedicine] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchdata = async () => {
       const re = await getAllMedicines();
       setMedicine(re.data);
-      console.log(re.data);
     };
     fetchdata();
   }, []);
@@ -30,9 +35,24 @@ const Medicines = () => {
     }
   };
 
+  const searchmed = async (name) => {
+    const re = await searchMedicineByName(name);
+    setMedicine(re.data);
+  };
+
   return (
-    <div className="mx-10 mt-6">
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+    <div className="mx-10 mt-6 overflow-x-auto">
+      <div className="bg-white rounded-lg shadow mr-5 ">
+        <div className="w-full px-4 py-2">
+          <input
+            onChange={(e) => searchmed(e.target.value)}
+            type="search"
+            placeholder="Search medicines..."
+            className="w-full px-4 py-2 border border-gray-300
+               rounded-xl outline-none
+              transition"
+          />
+        </div>
         <table className="w-full border-collapse">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
@@ -49,9 +69,9 @@ const Medicines = () => {
           </thead>
 
           <tbody>
-            {medicine.map((med) => (
+            {medicine.map((med, idx) => (
               <tr key={med.id} className="border-t hover:bg-gray-50 transition">
-                <td className="p-3">{med.id}</td>
+                <td className="p-3">{idx + 1}</td>
 
                 <td className="p-3 flex items-center gap-3">
                   <img
@@ -97,7 +117,10 @@ const Medicines = () => {
                 </td>
 
                 <td className="p-3 text-center space-x-2">
-                  <button className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500">
+                  <button
+                    onClick={() => navigate(`/dashboard/addmedicine/${med.id}`)}
+                    className="bg-yellow-400 px-3 m-3 py-1 rounded hover:bg-yellow-500"
+                  >
                     Edit
                   </button>
                   <button

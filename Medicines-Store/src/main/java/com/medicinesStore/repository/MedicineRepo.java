@@ -6,10 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface MedicineRepo extends JpaRepository<Medicines, Long> {
     List<Medicines> findByNameContainingIgnoreCase(String name);
 
+    @Query("SELECT m FROM Medicines m WHERE m.stock <= 10")
+    List<Medicines> countMedicineStock();
+
+    @Query("SELECT m FROM Medicines m WHERE m.expiryDate <= :date")
+    List<Medicines> countExpireMedicine(@Param("date") LocalDate date);
 }

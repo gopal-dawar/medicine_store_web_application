@@ -7,17 +7,14 @@ import RecentActivity from "./dashboardcards/RecentActivity";
 
 const DashBoardlayout = () => {
   return (
-    <main className="p-6 space-y-6">
-      {/* Summary Cards */}
+    <main className="p-6 space-y-6 overflow-x-auto ">
       <DashBoardCard />
-
-      {/* Quick Actions */}
       <QuickActions />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <LowStockAlert />
-          <ExpiryReminder />
+          <LowStockAlert limit={5} />
+          <ExpiryReminder limit={5} />
         </div>
 
         <div>

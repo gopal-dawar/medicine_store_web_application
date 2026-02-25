@@ -13,7 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MedicineServiceImpl implements MedicineService {
@@ -55,9 +58,6 @@ public class MedicineServiceImpl implements MedicineService {
         medi.setManufactureDate(manufactureDate);
         medi.setExpiryDate(expiryDate);
 
-        if (prescriptionRequired != null) {
-            medi.setPrescriptionRequired(prescriptionRequired);
-        }
 
         if (active != null) {
             medi.setActive(active);
@@ -94,5 +94,34 @@ public class MedicineServiceImpl implements MedicineService {
     public void deleteMedicine(Long id) {
         Medicines medicine = medicineRepo.findById(id).orElseThrow(() -> new MedicineNotFoundException("Medicine Not Found : " + id));
         medicineRepo.delete(medicine);
+    }
+
+    @Override
+    public Long countTotalMedicine() {
+        return medicineRepo.findAll().stream().count();
+    }
+
+    @Override
+    public Map<String, Object> countLowStock() {
+        List<Medicines> stockmed = medicineRepo.findAll().stream().filter(x -> x.getStock() <= 10).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", stockmed.stream().sorted(Comparator.comparing(Medicines::getStock)));
+        response.put("count", stockmed.size());
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> countExpireMedicine() {
+
+        LocalDate days10 = LocalDate.now().minusDays(10);
+
+        List<Medicines> expiremed = medicineRepo.findAll().stream().filter(x -> !x.getExpiryDate().isAfter(days10)).toList();
+        Map<String, Object> response = new HashMap<>();
+        response.put("count", expiremed.size());
+        response.put("data", expiremed.stream().sorted(Comparator.comparing(Medicines::getExpiryDate)));
+
+
+        return response;
     }
 }

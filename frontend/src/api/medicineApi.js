@@ -35,3 +35,44 @@ export const searchMedicineByName = (name) => {
 export const deleteMedicine = (id) => {
   return privateApi.delete(`/medicine/${id}`);
 };
+
+// count total medicine
+export const countmedicine = () => {
+  return privateApi.get("/medicine/count");
+};
+
+// count medicine stock
+export const countMedstock = () => {
+  return privateApi.get("/medicine/countstock");
+};
+
+// count expire medicine
+export const countExpireMedicine = () => {
+  return privateApi.get("/medicine/expiremed");
+};
+// ============================================
+// category apis
+// ============================================
+export const getAllCategories = () => {
+  return privateApi.get("/categories");
+};
+
+export const getCategoryById = (id) => {
+  return privateApi.get(`/categories/${id}`);
+};
+
+export const getCategoryByName = (name) => {
+  return privateApi.get(`/categories/name/${name}`);
+};
+
+export const createCategory = (category) => {
+  return privateApi.post("/categories", category);
+};
+
+export const updateCategory = (id, category) => {
+  return privateApi.put(`/categories/${id}`, category);
+};
+
+export const deleteCategory = (id) => {
+  return privateApi.delete(`/categories/${id}`);
+};
