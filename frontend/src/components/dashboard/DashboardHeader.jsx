@@ -23,17 +23,20 @@ const DashboardHeader = ({ title = "Medicine Dashboard" }) => {
   };
 
   return (
-    <div className="bg-[#1d6aff] px-6 py-4   flex justify-between items-center">
+    <div className="bg-slate-900 px-6 py-4 flex justify-between items-center shadow">
       {/* Left */}
-      <h1 className="text-3xl font-semibold text-white">{title}</h1>
+      <h1 className="text-2xl font-semibold text-white">{title}</h1>
 
       {/* Right */}
       <div className="flex items-center gap-4">
-        <span className="text-white font-medium">👋 {username}</span>
+        <span className="text-slate-200 font-medium">👋 {username}</span>
 
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="bg-slate-700 text-slate-200 px-4 py-2 rounded-lg
+             hover:bg-slate-600 hover:text-white
+             focus:outline-none focus:ring-2 focus:ring-slate-500
+             transition duration-200"
         >
           Logout
         </button>

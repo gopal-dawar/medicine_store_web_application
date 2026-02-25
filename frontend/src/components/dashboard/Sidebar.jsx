@@ -3,14 +3,22 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   const linkClass = ({ isActive }) =>
-    `px-4 py-2 rounded block cursor-pointer
-     ${isActive ? "bg-sky-900" : "hover:bg-sky-800"}`;
+    `px-4 py-2 rounded-lg block cursor-pointer transition
+     ${
+       isActive
+         ? "bg-slate-700 text-white"
+         : "text-slate-300 hover:bg-slate-800 hover:text-white"
+     }`;
 
   return (
-    <aside className="w-64 bg-sky-700 text-white min-h-screen">
-      <div className="p-6 text-2xl font-bold">💊 MedStore</div>
+    <aside className="w-64 bg-slate-900 text-white min-h-screen shadow-lg">
+      {/* Logo */}
+      <div className="p-6 text-2xl font-bold text-white border-b border-slate-800">
+        💊 MedStore
+      </div>
 
-      <nav className="px-4 space-y-3">
+      {/* Navigation */}
+      <nav className="px-4 py-4 space-y-2">
         <NavLink to="/dashboard" end className={linkClass}>
           Dashboard
         </NavLink>

@@ -5,6 +5,7 @@ const Home = () => {
   return (
     <>
       <Header />
+      
       <HomeProductsSection />
       <Footer />
     </>

@@ -7,7 +7,7 @@ import RecentActivity from "./dashboardcards/RecentActivity";
 
 const DashBoardlayout = () => {
   return (
-    <main className="p-6 space-y-6 overflow-x-auto ">
+    <main className="p-6 space-y-6 overflow-x-auto bg-slate-900">
       <DashBoardCard />
       <QuickActions />
 

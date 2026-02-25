@@ -8,15 +8,15 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
+import MedicineDetails from "./components/MedicineDetails";
 
 const App = () => {
   return (
     <Routes>
-      {/* Public routes */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} /> {/* ✅ ADD THIS */}
       <Route path="/register" element={<Register />} />
-      {/* Protected Home */}
+      
       <Route
         path="/home/*"
         element={
@@ -27,7 +27,6 @@ const App = () => {
       >
         <Route index element={<HomeProductsSection />} />
       </Route>
-      {/* Protected Dashboard */}
       <Route
         path="/dashboard/*"
         element={

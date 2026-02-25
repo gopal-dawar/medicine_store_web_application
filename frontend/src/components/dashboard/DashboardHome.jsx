@@ -5,19 +5,20 @@ import { Outlet } from "react-router-dom";
 
 const DashboardHome = () => {
   return (
-    <>
-      <div className="flex h-screen overflow-hidden bg-gray-100">
-        <Sidebar />
+    <div className="flex h-screen overflow-hidden bg-slate-900">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <div className="flex-1 flex flex-col">
-          <div>
-            <DashboardHeader />
-          </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        <DashboardHeader />
 
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto bg-slate-900">
           <Outlet />
-        </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

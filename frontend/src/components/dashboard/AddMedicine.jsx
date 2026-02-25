@@ -168,15 +168,16 @@ const AddMedicine = () => {
     updateMedfromMedicineComponent();
   }, [id]);
   return (
-    <div className="h-screen overflow-x-auto bg-gray-100">
+    <div className="min-h-screen overflow-x-auto mt-10 bg-slate-900">
       {/* Header */}
-      <div className="bg-white shadow px-8 py-4 flex justify-between">
-        <h2 className="text-2xl font-semibold text-sky-700">
-          ➕ Add New Medicine
+      <div className="bg-slate-800 shadow p-8 py-4 flex max-w-6xl mx-auto rounded justify-between items-center">
+        <h2 className="text-2xl font-semibold text-slate-100">
+          ➕ {isUpdateMode ? "Update Medicine" : "Add New Medicine"}
         </h2>
         <button
           onClick={() => navigate(-1)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-slate-600 rounded text-slate-200
+                 hover:bg-slate-700 transition"
         >
           ⬅ Back
         </button>
@@ -186,11 +187,13 @@ const AddMedicine = () => {
       <div className="p-8">
         <form
           onSubmit={formhandling}
-          className="bg-white rounded-lg shadow p-8 max-w-6xl mx-auto"
+          className="bg-slate-800 rounded-2xl shadow-lg p-8 max-w-6xl mx-auto"
           encType="multipart/form-data"
         >
           {/* Basic Info */}
-          <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
+          <h3 className="text-lg font-semibold mb-4 text-slate-100">
+            Basic Information
+          </h3>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="relative">
@@ -199,20 +202,25 @@ const AddMedicine = () => {
                 placeholder="Medicine Name"
                 value={medicines.name}
                 onChange={handleNameChange}
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
                 required
               />
 
               {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute z-20 bg-white border w-full rounded shadow max-h-48 overflow-auto">
+                <ul
+                  className="absolute z-20 bg-slate-800 border border-slate-700
+               w-full rounded shadow-lg max-h-48 overflow-auto"
+                >
                   {suggestions.map((med) => (
                     <li
                       key={med.id}
                       onClick={() => handleSelectMedicine(med)}
-                      className="px-4 py-2 hover:bg-sky-100 cursor-pointer"
+                      className="px-4 py-2 hover:bg-slate-700 cursor-pointer text-slate-200"
                     >
                       <strong>{med.name}</strong>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-slate-400">
                         {" "}
                         ({med.brand})
                       </span>
@@ -229,13 +237,17 @@ const AddMedicine = () => {
               onChange={(e) =>
                 setMedicines({ ...medicines, brand: e.target.value })
               }
-              className="border px-4 py-2 rounded"
+              className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
             />
           </div>
 
           {/* Category */}
           <div className="mb-8">
-            <label className="block mb-1 font-medium">Category</label>
+            <label className="block mb-1 font-medium text-slate-300">
+              Category
+            </label>
             <select
               value={medicines.category?.id || ""}
               onChange={(e) =>
@@ -244,7 +256,9 @@ const AddMedicine = () => {
                   category: { id: Number(e.target.value) },
                 })
               }
-              className="border px-4 py-2 rounded w-full"
+              className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
               required
             >
               <option value="">Select Category</option>
@@ -257,12 +271,16 @@ const AddMedicine = () => {
           </div>
 
           {/* Pricing & Stock */}
-          <h3 className="text-lg font-semibold mb-4">Pricing & Stock</h3>
+          <h3 className="text-lg font-semibold text-slate-100 mb-4 mt-8 border-b border-slate-700 pb-2">
+            Pricing & Stock
+          </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
             {/* Price */}
             <div>
-              <label className="block mb-1 font-medium">Price</label>
+              <label className="block mb-1 font-medium text-slate-300">
+                Price
+              </label>
               <input
                 type="number"
                 placeholder="Price"
@@ -273,14 +291,18 @@ const AddMedicine = () => {
                     price: Number(e.target.value),
                   })
                 }
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
                 required
               />
             </div>
 
             {/* Quantity */}
             <div>
-              <label className="block mb-1 font-medium">Quantity</label>
+              <label className="block mb-1 font-medium text-slate-300">
+                Quantity
+              </label>
               <input
                 type="number"
                 placeholder="Stock"
@@ -291,14 +313,18 @@ const AddMedicine = () => {
                     stock: Number(e.target.value),
                   })
                 }
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
                 required
               />
             </div>
 
             {/* Dosage */}
             <div>
-              <label className="block mb-1 font-medium">Dosage</label>
+              <label className="block mb-1 font-medium text-slate-300">
+                Dosage
+              </label>
               <input
                 type="text"
                 placeholder="Dosage (e.g. 500mg)"
@@ -306,13 +332,17 @@ const AddMedicine = () => {
                 onChange={(e) =>
                   setMedicines({ ...medicines, dosage: e.target.value })
                 }
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
               />
             </div>
           </div>
 
           {/* Manufacturer Details */}
-          <h3 className="text-lg font-semibold mb-4">Manufacturer Details</h3>
+          <h3 className="text-lg font-semibold text-slate-100 mb-4 mt-8 border-b border-slate-700 pb-2">
+            Manufacturer Details
+          </h3>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <input
               type="text"
@@ -321,7 +351,9 @@ const AddMedicine = () => {
               onChange={(e) =>
                 setMedicines({ ...medicines, manufacturer: e.target.value })
               }
-              className="border px-4 py-2 rounded"
+              className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
             />
 
             <input
@@ -331,15 +363,21 @@ const AddMedicine = () => {
               onChange={(e) =>
                 setMedicines({ ...medicines, batchNumber: e.target.value })
               }
-              className="border px-4 py-2 rounded"
+              className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
             />
           </div>
 
           {/* Manufacturer Expirery date */}
-          <h3 className="text-lg font-semibold mb-4">Dates</h3>
+          <h3 className="text-lg font-semibold text-slate-100 mb-4 mt-8 border-b border-slate-700 pb-2">
+            Dates
+          </h3>
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div>
-              <label className="block mb-1 font-medium">Manufacture Date</label>
+              <label className="block mb-1 font-medium text-slate-300">
+                Manufacture Date
+              </label>
               <input
                 type="date"
                 value={medicines.manufactureDate}
@@ -349,12 +387,12 @@ const AddMedicine = () => {
                     manufactureDate: e.target.value,
                   })
                 }
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200 px-4 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-slate-600"
               />
             </div>
 
             <div>
-              <label className="block mb-1 font-medium">
+              <label className="block mb-1 font-medium text-slate-300">
                 Expiry Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -363,7 +401,9 @@ const AddMedicine = () => {
                 onChange={(e) =>
                   setMedicines({ ...medicines, expiryDate: e.target.value })
                 }
-                className="border px-4 py-2 rounded w-full"
+                className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
                 required
               />
             </div>
@@ -380,17 +420,23 @@ const AddMedicine = () => {
                 description: e.target.value,
               })
             }
-            className="border w-full px-4 py-2 rounded mb-8"
+            className="bg-slate-900 border border-slate-700 text-slate-200
+           w-full px-4 py-2 rounded mb-8
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
             required
           />
           {/* Image */}
           <div className="mb-8">
-            <label className="block mb-1 font-medium">Medicine Image</label>
+            <label className="block mb-1 font-medium text-slate-300">
+              Medicine Image
+            </label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setImage(e.target.files[0])}
-              className="border px-4 py-2 rounded w-full"
+              className="bg-slate-900 border border-slate-700 text-slate-200
+           px-4 py-2 rounded w-full
+           focus:outline-none focus:ring-2 focus:ring-slate-600"
               required={!selectedMedicineId}
             />
           </div>
@@ -400,16 +446,17 @@ const AddMedicine = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="px-6 py-2 border rounded"
+              className="px-6 py-2 border border-slate-600 rounded
+               text-slate-200 hover:bg-slate-700 transition"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className={`px-6 py-2 rounded text-white ${
-                isUpdateMode ? "bg-green-600" : "bg-sky-600"
-              }`}
+              className="px-6 py-2 rounded
+               bg-slate-700 text-slate-100
+               hover:bg-slate-600 transition"
             >
               {isUpdateMode ? "Update Medicine" : "Add Medicine"}
             </button>
