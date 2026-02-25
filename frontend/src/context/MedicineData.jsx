@@ -415,7 +415,7 @@ export const MedicineProvider = ({ children }) => {
         medicine,
         mostview,
         toprating,
-        cart, 
+        cart,
         addToCart,
       }}
     >

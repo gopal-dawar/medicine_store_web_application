@@ -1,28 +1,24 @@
 import React, { useContext } from "react";
 import { FaEye, FaShoppingCart } from "react-icons/fa";
-import { MedicineContext } from "../../context/MedicineData";
 
-const ProductCard = ({ product }) => {
-  const { addToCart } = useContext(MedicineContext);
-
+const ProductCard = ({ product, onQuickView }) => {
   return (
     <div
       className="bg-white border border-gray-200 rounded overflow-hidden group
       transition-all duration-300 ease-in-out
       hover:-translate-y-2 hover:shadow-xl"
     >
-      <div className="relative h-52 flex items-center justify-center bg-gray-100 overflow-hidden">
+      <div className="relative h-52 px-3 flex items-center justify-center bg-gray-100 overflow-hidden">
         <img
-          src={product.img}
+          src={product.imageUrl}
           alt={product.name}
           className="object-contain transition-transform duration-500 group-hover:scale-110"
         />
 
-        {/* Overlay */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300"></div>
 
-        {/* QUICK VIEW */}
         <button
+          onClick={() => onQuickView(product)}
           className="absolute opacity-0 translate-y-4
           group-hover:opacity-100 group-hover:translate-y-0
           transition-all duration-300
@@ -36,7 +32,6 @@ const ProductCard = ({ product }) => {
 
       {/* INFO AREA */}
       <div className="relative h-20 overflow-hidden">
-        {/* Product info */}
         <div
           className="absolute inset-0 flex flex-col justify-center items-center text-center
           transition-all duration-300
@@ -48,7 +43,6 @@ const ProductCard = ({ product }) => {
           </p>
         </div>
 
-        {/* ADD TO CART */}
         <div
           className="absolute inset-0 flex justify-center items-center
           opacity-0 translate-y-6
@@ -56,7 +50,6 @@ const ProductCard = ({ product }) => {
           transition-all duration-300"
         >
           <button
-            onClick={() => addToCart(product)}
             className="w-full bg-[#4e97fd] text-white py-3 text-sm font-medium
             flex items-center justify-center gap-2 hover:bg-[#3b82f6]"
           >

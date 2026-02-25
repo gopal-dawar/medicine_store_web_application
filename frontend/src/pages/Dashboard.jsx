@@ -7,7 +7,8 @@ import Medicines from "../components/dashboard/Medicines";
 import AddMedicine from "../components/dashboard/AddMedicine";
 import LowStockAlert from "../components/dashboard/dashboardcards/LowStockAlert";
 import ExpiryReminder from "../components/dashboard/dashboardcards/ExpiryReminder";
-import MedicineDetails from "../components/MedicineDetails";
+import MedicineDetails from "../components/model/MedicineDetails";
+
 
 const Dashboard = () => {
   return (

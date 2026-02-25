@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/HomeProductsSection/ProductCard";
+import ProductViewCard from "../components/model/ProductViewCard";
 import {
   getAllCategories,
   searchMedicineByName,
@@ -12,6 +13,8 @@ const Shop = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -41,22 +44,29 @@ const Shop = () => {
     setTotalPage(1);
   };
 
+  // ✅ LOCK BACKGROUND SCROLL WHEN MODAL OPEN
+  useEffect(() => {
+    document.body.style.overflow = selectedProduct ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [selectedProduct]);
+
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
         Medicine Shop
       </h1>
 
+      {/* SEARCH + FILTER */}
       <div className="flex flex-col md:flex-row gap-4 mb-10 justify-center">
         <input
-          type="text"
+          type="search"
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
             setPage(0);
           }}
           placeholder="Search medicine..."
-          className="border p-3 rounded-lg w-full md:w-1/3 outline-0 "
+          className="border p-3 rounded-lg w-full md:w-1/3 outline-0"
         />
 
         <select className="border p-3 rounded-lg w-full md:w-1/4 bg-gray-100">
@@ -67,10 +77,15 @@ const Shop = () => {
         </select>
       </div>
 
+      {/* PRODUCTS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {medicines.length > 0 ? (
           medicines.map((medicine) => (
-            <ProductCard key={medicine.id} product={medicine} />
+            <ProductCard
+              key={medicine.id}
+              product={medicine}
+              onQuickView={setSelectedProduct}
+            />
           ))
         ) : (
           <p className="text-center col-span-full text-gray-500">
@@ -79,6 +94,7 @@ const Shop = () => {
         )}
       </div>
 
+      {/* PAGINATION */}
       <div className="flex items-center justify-center mt-12 gap-2">
         <button
           onClick={() => setPage(page - 1)}
@@ -110,6 +126,14 @@ const Shop = () => {
           NEXT
         </button>
       </div>
+
+      {/* ✅ MODAL */}
+      {selectedProduct && (
+        <ProductViewCard
+          medicines={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </div>
   );
 };

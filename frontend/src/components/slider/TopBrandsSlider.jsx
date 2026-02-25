@@ -70,8 +70,8 @@ const TopBrandsSlider = () => {
             onClick={prevSlide}
             disabled={isAnimating}
             className="w-7 h-7 flex justify-center items-center
-              border border-emerald-600 text-emerald-600
-              hover:bg-emerald-600 hover:text-white
+              border border-[#4e97fd] text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white
               disabled:opacity-40 transition"
           >
             <FiChevronLeft />
@@ -80,8 +80,8 @@ const TopBrandsSlider = () => {
             onClick={nextSlide}
             disabled={isAnimating}
             className="w-7 h-7 flex justify-center items-center
-              border border-emerald-600 text-emerald-600
-              hover:bg-emerald-600 hover:text-white
+              border border-[#4e97fd] text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white
               disabled:opacity-40 transition"
           >
             <FiChevronRight />
@@ -92,7 +92,7 @@ const TopBrandsSlider = () => {
       {/* underline */}
       <div className="relative w-full">
         <div className="w-full h-[3px] bg-gray-300"></div>
-        <div className="absolute top-0 left-0 w-20 h-[3px] bg-emerald-600"></div>
+        <div className="absolute top-0 left-0 w-20 h-[3px] bg-[#4e97fd]"></div>
       </div>
 
       {/* Brands */}

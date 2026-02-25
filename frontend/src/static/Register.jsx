@@ -22,7 +22,6 @@ const Register = () => {
     setSuccessMsg("");
     setErrorMsg("");
 
-    // public API → no old auth
     localStorage.removeItem("token");
     localStorage.removeItem("role");
 
@@ -32,8 +31,7 @@ const Register = () => {
     }
 
     try {
-      await registerUser(userInfo); 
-
+      await registerUser(userInfo);
       setSuccessMsg("Registration successful 🎉");
 
       setUserInfo({
@@ -46,30 +44,32 @@ const Register = () => {
 
       navigate("/login");
     } catch (error) {
-      if (error.response?.data?.message) {
-        setErrorMsg(error.response.data.message);
-      } else {
-        setErrorMsg("Registration failed");
-      }
+      setErrorMsg(
+        error.response?.data?.message || "Registration failed"
+      );
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-8">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-green-600">Medicine Store</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-3xl font-bold text-slate-100">
+            Medicine Store
+          </h1>
+          <p className="text-slate-400 mt-1">
             {successMsg || "Create your account"}
           </p>
-          {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
+          {errorMsg && (
+            <p className="text-red-500 text-sm mt-2">{errorMsg}</p>
+          )}
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-300">
               Full Name
             </label>
             <div className="relative mt-1">
@@ -78,21 +78,22 @@ const Register = () => {
                 placeholder="Enter full name"
                 value={userInfo.fullName}
                 onChange={(e) =>
-                  setUserInfo({
-                    ...userInfo,
-                    fullName: e.target.value,
-                  })
+                  setUserInfo({ ...userInfo, fullName: e.target.value })
                 }
-                className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full bg-slate-900 text-slate-200 px-4 py-2 pl-10
+                           border border-slate-700 rounded
+                           focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-gray-400">👤</span>
+              <span className="absolute left-3 top-2.5 text-slate-400">
+                👤
+              </span>
             </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-300">
               Email
             </label>
             <div className="relative mt-1">
@@ -103,16 +104,20 @@ const Register = () => {
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, email: e.target.value })
                 }
-                className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full bg-slate-900 text-slate-200 px-4 py-2 pl-10
+                           border border-slate-700 rounded
+                           focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-gray-400">📧</span>
+              <span className="absolute left-3 top-2.5 text-slate-400">
+                📧
+              </span>
             </div>
           </div>
 
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-300">
               Username
             </label>
             <div className="relative mt-1">
@@ -123,16 +128,20 @@ const Register = () => {
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, username: e.target.value })
                 }
-                className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full bg-slate-900 text-slate-200 px-4 py-2 pl-10
+                           border border-slate-700 rounded
+                           focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-gray-400">🆔</span>
+              <span className="absolute left-3 top-2.5 text-slate-400">
+                🆔
+              </span>
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-300">
               Password
             </label>
             <div className="relative mt-1">
@@ -143,14 +152,18 @@ const Register = () => {
                 onChange={(e) =>
                   setUserInfo({ ...userInfo, password: e.target.value })
                 }
-                className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full bg-slate-900 text-slate-200 px-4 py-2 pl-10
+                           border border-slate-700 rounded
+                           focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-gray-400">🔒</span>
+              <span className="absolute left-3 top-2.5 text-slate-400">
+                🔒
+              </span>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-sm text-green-600"
+                className="absolute right-3 top-2.5 text-sm text-slate-400 hover:text-slate-200"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -159,7 +172,7 @@ const Register = () => {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-slate-300">
               Confirm Password
             </label>
             <div className="relative mt-1">
@@ -168,14 +181,20 @@ const Register = () => {
                 placeholder="Confirm password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 pl-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full bg-slate-900 text-slate-200 px-4 py-2 pl-10
+                           border border-slate-700 rounded
+                           focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-gray-400">🔒</span>
+              <span className="absolute left-3 top-2.5 text-slate-400">
+                🔒
+              </span>
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-2.5 text-sm text-green-600"
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
+                className="absolute right-3 top-2.5 text-sm text-slate-400 hover:text-slate-200"
               >
                 {showConfirmPassword ? "Hide" : "Show"}
               </button>
@@ -185,18 +204,19 @@ const Register = () => {
           {/* Register Button */}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+            className="w-full bg-slate-700 text-slate-100 py-2 rounded
+                       font-semibold hover:bg-slate-600 transition"
           >
             Register
           </button>
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-slate-400 mt-6">
           Already have an account?
           <span
             onClick={() => navigate(-1)}
-            className="text-green-600 font-semibold cursor-pointer"
+            className="text-slate-200 font-semibold cursor-pointer ml-1 hover:underline"
           >
             Login
           </span>

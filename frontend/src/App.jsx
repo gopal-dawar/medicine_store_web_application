@@ -8,8 +8,8 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
-// import MedicineDetails from "./components/MedicineDetails";
 import Shop from "./pages/Shop";
+import ProductViewCard from "./components/model/ProductViewCard";
 
 const App = () => {
   return (
@@ -28,6 +28,7 @@ const App = () => {
       >
         <Route index element={<HomeProductsSection />} />
         <Route path="shop" element={<Shop />} />
+        <Route path="viewmeddetails/:id" element={<ProductViewCard />} />
       </Route>
       <Route
         path="/dashboard/*"

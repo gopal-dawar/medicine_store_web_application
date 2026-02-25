@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import ProductTabs from "./ProductTabs";
+import ProductViewCard from "../model/ProductViewCard";
 import { MedicineContext } from "../../context/MedicineData";
 import arrivImg from "../../assets/arrivoffer.jpg";
 import AOS from "aos";
 
 const ProductGrid = () => {
   const { medicine } = useContext(MedicineContext);
+
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // ✅ MODAL STATE
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const filteredProducts = medicine.filter((item) => {
     if (activeTab === "all") return true;
@@ -38,6 +43,11 @@ const ProductGrid = () => {
     return () => clearTimeout(timer);
   }, [activeTab, currentPage]);
 
+  useEffect(() => {
+    document.body.style.overflow = selectedProduct ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [selectedProduct]);
+
   return (
     <>
       <ProductTabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -51,12 +61,11 @@ const ProductGrid = () => {
         >
           {paginatedProducts.map((item, index) => (
             <div key={item.id} data-aos="fade-up" data-aos-delay={index * 100}>
-              <ProductCard product={item} />
+              <ProductCard product={item} onQuickView={setSelectedProduct} />
             </div>
           ))}
         </div>
 
-        {/* PAGINATION */}
         <div className="p-10 flex justify-center gap-5">
           <button
             className="px-4 py-2 border rounded transition-all duration-300
@@ -91,6 +100,14 @@ const ProductGrid = () => {
           <img className="w-full block" src={arrivImg} alt="Arrival Offer" />
         </div>
       </div>
+
+      {/* ✅ MODAL RENDER */}
+      {selectedProduct && (
+        <ProductViewCard
+          medicines={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </>
   );
 };
