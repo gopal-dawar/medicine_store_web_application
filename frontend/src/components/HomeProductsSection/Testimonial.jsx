@@ -27,7 +27,7 @@ const Testimonial = () => {
     triggerSlide(
       () =>
         setIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1)),
-      "prev",
+      "prev"
     );
   };
 
@@ -35,7 +35,7 @@ const Testimonial = () => {
     triggerSlide(
       () =>
         setIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1)),
-      "next",
+      "next"
     );
   };
 
@@ -45,22 +45,24 @@ const Testimonial = () => {
     <div data-aos="fade-up" className="max-w-xl rounded">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold tracking-wide">WHAT CLIENT SAY</h2>
+        <h2 className="text-sm font-semibold tracking-wide">
+          WHAT CLIENT SAY
+        </h2>
 
         <div className="flex gap-2">
           <button
             onClick={prevSlide}
             className="w-7 h-7 flex items-center justify-center
-              border border-emerald-500 text-emerald-500
-              hover:bg-emerald-500 hover:text-white transition"
+              border border-[#4e97fd] text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white transition"
           >
             <FiChevronLeft />
           </button>
           <button
             onClick={nextSlide}
             className="w-7 h-7 flex items-center justify-center
-              border border-emerald-500 text-emerald-500
-              hover:bg-emerald-500 hover:text-white transition"
+              border border-[#4e97fd] text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white transition"
           >
             <FiChevronRight />
           </button>
@@ -70,7 +72,7 @@ const Testimonial = () => {
       {/* Divider */}
       <div className="relative w-full mb-6">
         <div className="w-full h-[3px] bg-gray-300"></div>
-        <div className="absolute top-0 left-0 w-20 h-[3px] bg-emerald-600"></div>
+        <div className="absolute top-0 left-0 w-20 h-[3px] bg-[#4e97fd]"></div>
       </div>
 
       {/* Content */}
@@ -85,7 +87,9 @@ const Testimonial = () => {
           }
         `}
       >
-        <p className="italic text-gray-600 text-sm mb-6">“{text}”</p>
+        <p className="italic text-gray-600 text-sm mb-6">
+          “{text}”
+        </p>
 
         {/* Client Info */}
         <div className="flex items-center gap-4">
@@ -96,8 +100,12 @@ const Testimonial = () => {
           />
 
           <div>
-            <h4 className="font-semibold text-sm uppercase">{name}</h4>
-            <p className="text-xs text-gray-500">{role}</p>
+            <h4 className="font-semibold text-sm uppercase">
+              {name}
+            </h4>
+            <p className="text-xs text-gray-500">
+              {role}
+            </p>
           </div>
         </div>
       </div>

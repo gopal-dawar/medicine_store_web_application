@@ -7,16 +7,16 @@ import SubscribeEmail from "./SubscribeEmail";
 import NewBlogs from "./NewBlogs";
 import Testimonial from "./Testimonial";
 import Slider from "../slider/Slider";
-
+import TopBrandsSlider from "../slider/TopBrandsSlider";
 const HomeProductsSection = () => {
   return (
     <div>
       <Slider />
       <section className="max-w-7xl mx-auto px-4 py-10">
+        <TopBrandsSlider />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
             <ProductCategorySidebar />
-          
             <HotDealSlider />
             <SubscribeEmail />
             <Testimonial />

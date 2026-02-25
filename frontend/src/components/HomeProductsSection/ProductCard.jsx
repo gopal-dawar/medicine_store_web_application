@@ -18,13 +18,16 @@ const ProductCard = ({ product }) => {
           className="object-contain transition-transform duration-500 group-hover:scale-110"
         />
 
+        {/* Overlay */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+
+        {/* QUICK VIEW */}
         <button
           className="absolute opacity-0 translate-y-4
           group-hover:opacity-100 group-hover:translate-y-0
           transition-all duration-300
           border border-white text-white px-4 py-2 text-xs
-          flex items-center gap-2 hover:bg-emerald-600"
+          flex items-center gap-2 hover:bg-[#4e97fd]"
         >
           <FaEye />
           QUICK VIEW
@@ -33,19 +36,19 @@ const ProductCard = ({ product }) => {
 
       {/* INFO AREA */}
       <div className="relative h-20 overflow-hidden">
-        {/* product info */}
+        {/* Product info */}
         <div
           className="absolute inset-0 flex flex-col justify-center items-center text-center
           transition-all duration-300
           group-hover:opacity-0 group-hover:-translate-y-2"
         >
           <h4 className="text-sm text-gray-700">{product.name}</h4>
-          <p className="mt-1 text-lg font-semibold text-emerald-600">
+          <p className="mt-1 text-lg font-semibold text-[#4e97fd]">
             ₹{product.price}
           </p>
         </div>
 
-        {/* ✅ ADD TO CART */}
+        {/* ADD TO CART */}
         <div
           className="absolute inset-0 flex justify-center items-center
           opacity-0 translate-y-6
@@ -54,8 +57,8 @@ const ProductCard = ({ product }) => {
         >
           <button
             onClick={() => addToCart(product)}
-            className="w-full bg-emerald-600 text-white py-3 text-sm font-medium
-            flex items-center justify-center gap-2 hover:bg-emerald-700"
+            className="w-full bg-[#4e97fd] text-white py-3 text-sm font-medium
+            flex items-center justify-center gap-2 hover:bg-[#3b82f6]"
           >
             <FaShoppingCart />
             ADD TO CART

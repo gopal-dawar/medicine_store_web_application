@@ -1,58 +1,49 @@
-import React, { useState } from "react";
-import medicines from "../data/medicines";
-import MedicineCard from "../components/MedicineCard";
-
+import React, { useEffect, useState } from "react";
+import ProductCard from "../components/HomeProductsSection/ProductCard";
+import { getAllCategories, getAllMedicines } from "../api/medicineApi";
 const Shop = () => {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [medicines, setMedicines] = useState([]);
+  const [category, setCategory] = useState([]);
 
-  const filteredMedicines = medicines.filter((med) => {
-    const matchesSearch = med.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  useEffect(() => {
+    const fetchdata = async () => {
+      const re = await getAllMedicines();
+      setMedicines(re.data);
 
-    const matchesCategory =
-      category === "All" || med.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
+      const ct = await getAllCategories();
+      setCategory(ct.data);
+    };
+    fetchdata();
+  }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Medicine Shop</h1>
+    <div className="p-6 min-h-screen max-w-7xl mx-auto px-4 py-10">
+      {/* Page Title */}
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+        Medicine Shop
+      </h1>
 
       {/* Search & Filter */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-col md:flex-row gap-4 mb-10 justify-center">
         <input
           type="text"
           placeholder="Search medicine..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded w-1/3"
+          className="border p-3 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="All">All</option>
-          <option value="Pain Relief">Pain Relief</option>
-          <option value="Antibiotic">Antibiotic</option>
-          <option value="Allergy">Allergy</option>
-          <option value="Vitamins">Vitamins</option>
+        <select className="border p-3 rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option>All Categories</option>
+          {category.map((cat) => {
+            return <option key={cat.id}>{cat.name}</option>;
+          })}
         </select>
       </div>
 
-      {/* Medicine List */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredMedicines.length > 0 ? (
-          filteredMedicines.map((medicine) => (
-            <MedicineCard key={medicine.id} medicine={medicine} />
-          ))
-        ) : (
-          <p>No medicines found.</p>
-        )}
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        {medicines.map((medicine) => (
+          <ProductCard product={medicine} />
+        ))}
       </div>
     </div>
   );

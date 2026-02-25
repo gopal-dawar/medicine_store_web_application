@@ -56,10 +56,11 @@ const ProductGrid = () => {
           ))}
         </div>
 
+        {/* PAGINATION */}
         <div className="p-10 flex justify-center gap-5">
           <button
             className="px-4 py-2 border rounded transition-all duration-300
-              hover:bg-emerald-600 hover:text-white hover:scale-105
+              hover:bg-[#4e97fd] hover:text-white hover:scale-105
               disabled:opacity-50 disabled:hover:scale-100"
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
@@ -73,7 +74,7 @@ const ProductGrid = () => {
 
           <button
             className="px-4 py-2 border rounded transition-all duration-300
-              hover:bg-emerald-600 hover:text-white hover:scale-105
+              hover:bg-[#4e97fd] hover:text-white hover:scale-105
               disabled:opacity-50 disabled:hover:scale-100"
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
@@ -82,7 +83,7 @@ const ProductGrid = () => {
           </button>
         </div>
 
-        {/* arrival banner */}
+        {/* ARRIVAL BANNER */}
         <div
           data-aos="zoom-in"
           className="w-full overflow-hidden group relative transition-all duration-500"

@@ -8,17 +8,14 @@ const Slider = () => {
   const [direction, setDirection] = useState("next");
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // refresh AOS on slide change
   useEffect(() => {
     AOS.refreshHard();
   }, [current]);
 
-  // auto slide
   useEffect(() => {
     const interval = setInterval(() => {
       slideNext();
     }, 4000);
-
     return () => clearInterval(interval);
   }, [current]);
 
@@ -44,35 +41,37 @@ const Slider = () => {
 
   return (
     <div
-      className="w-full h-screen bg-cover bg-center relative overflow-hidden transition-all duration-1000"
+      className="w-full h-screen bg-cover bg-center relative overflow-hidden"
       style={{ backgroundImage: `url(${slideInfo[current].image})` }}
     >
-      {/* overlay */}
-      <div className="absolute inset-0 bg-black/30"></div>
+      {/* 🔹 SOFT MEDICAL OVERLAY */}
+      <div className="absolute inset-0 bg-[#4e97fd]/10"></div>
 
-      {/* arrows */}
-      <div className="absolute top-[40%] -translate-y-1/2 flex justify-between w-full px-10 z-20">
+      {/* ARROWS */}
+      <div className="absolute top-[45%] -translate-y-1/2 flex justify-between w-full px-10 z-20">
         <div
           onClick={slidePrev}
-          className="bg-white/80 hover:bg-white text-black p-3 rounded-full cursor-pointer transition duration-300"
+          className="bg-white hover:bg-[#4e97fd] text-[#4e97fd] hover:text-white
+                     p-3 rounded-full cursor-pointer shadow transition"
         >
           <IoIosArrowBack className="text-2xl" />
         </div>
 
         <div
           onClick={slideNext}
-          className="bg-white/80 hover:bg-white text-black p-3 rounded-full cursor-pointer transition duration-300"
+          className="bg-white hover:bg-[#4e97fd] text-[#4e97fd] hover:text-white
+                     p-3 rounded-full cursor-pointer shadow transition"
         >
           <IoIosArrowForward className="text-2xl" />
         </div>
       </div>
 
-      {/* content */}
+      {/* CONTENT */}
       <div className="relative z-10 h-full flex items-center">
         <div className="max-w-7xl mx-auto w-full px-6">
           <div
             key={current}
-            className={`max-w-xl text-white transition-all duration-300 ease-in-out
+            className={`max-w-xl transition-all duration-300 ease-in-out
               ${
                 isAnimating
                   ? direction === "next"
@@ -83,24 +82,32 @@ const Slider = () => {
               ${current === 0 ? "text-left" : "text-right ml-auto"}
             `}
           >
-            <h2 data-aos="fade-right" className="text-4xl font-bold mb-4">
+            {/* TITLE */}
+            <h2
+              data-aos="fade-right"
+              className="text-4xl md:text-5xl font-bold mb-4 text-white"
+            >
               {slideInfo[current].title}
             </h2>
 
+            {/* DESCRIPTION */}
             <p
               data-aos="fade-left"
               data-aos-delay="200"
-              className="text-lg mb-6"
+              className="text-lg mb-6 text-slate-100"
             >
               {slideInfo[current].description}
             </p>
 
+            {/* BUTTON */}
             <div
               data-aos="zoom-in"
               data-aos-delay="400"
-              className={`inline-block bg-emerald-600 px-8 py-3 font-semibold cursor-pointer ${
-                current === 0 ? "" : "ml-auto"
-              }`}
+              className={`inline-block bg-[#4e97fd] hover:bg-[#3b82f6]
+                          text-white px-8 py-3 rounded-md font-semibold
+                          cursor-pointer transition shadow
+                          ${current === 0 ? "" : "ml-auto"}
+              `}
             >
               {slideInfo[current].buttonText}
             </div>

@@ -2,8 +2,8 @@ import React from "react";
 
 const ProductTabs = ({ activeTab, setActiveTab }) => {
   const tabBase = "px-5 py-2 text-sm font-medium border-b-2 transition";
-  const active = "border-emerald-600 text-emerald-600";
-  const inactive = "border-transparent text-gray-500 hover:text-emerald-600";
+  const active = "border-[#4e97fd] text-[#4e97fd]";
+  const inactive = "border-transparent text-gray-500 hover:text-[#4e97fd]";
 
   return (
     <div className="flex gap-6 border-b border-gray-200 mt-8">

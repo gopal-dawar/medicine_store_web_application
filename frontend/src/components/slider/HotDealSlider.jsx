@@ -16,7 +16,6 @@ const HotDealsSlider = () => {
     const timer = setInterval(() => {
       next();
     }, 5000);
-
     return () => clearInterval(timer);
   }, [current]);
 
@@ -46,15 +45,16 @@ const HotDealsSlider = () => {
     <div data-aos="fade-up">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b">
-        <h3 className="font-semibold tracking-wide border-b-2 border-emerald-600">
+        <h3 className="font-semibold tracking-wide border-b-2 border-[#4e97fd]">
           HOT DEALS
         </h3>
+
         <div className="flex gap-1">
           <button
             onClick={prev}
             disabled={isSliding}
-            className="border p-1 bg-white text-emerald-600
-              hover:bg-emerald-600 hover:text-white
+            className="border p-1 bg-white text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white
               disabled:opacity-40 transition"
           >
             <FiChevronLeft />
@@ -62,8 +62,8 @@ const HotDealsSlider = () => {
           <button
             onClick={next}
             disabled={isSliding}
-            className="border p-1 bg-white text-emerald-600
-              hover:bg-emerald-600 hover:text-white
+            className="border p-1 bg-white text-[#4e97fd]
+              hover:bg-[#4e97fd] hover:text-white
               disabled:opacity-40 transition"
           >
             <FiChevronRight />
@@ -81,7 +81,9 @@ const HotDealsSlider = () => {
             <div
               key={product.id}
               className={`min-w-full p-1 group transition-all duration-300
-                ${i === current ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+                ${
+                  i === current ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                }
               `}
             >
               {/* Image */}
@@ -89,11 +91,15 @@ const HotDealsSlider = () => {
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="h-full w-auto transition-transform duration-500 group-hover:scale-110"
+                  className="h-full w-auto transition-transform duration-500
+                             group-hover:scale-110"
                 />
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition"></div>
+                {/* Brand overlay */}
+                <div
+                  className="absolute inset-0 bg-[#4e97fd]/30
+                                opacity-0 group-hover:opacity-100 transition"
+                ></div>
 
                 {/* Quick View */}
                 <button
@@ -101,7 +107,7 @@ const HotDealsSlider = () => {
                     group-hover:opacity-100 group-hover:translate-y-0
                     transition-all duration-300
                     border border-white text-white px-4 py-2 text-xs
-                    flex items-center gap-2 hover:bg-emerald-600"
+                    flex items-center gap-2 hover:bg-[#4e97fd]"
                 >
                   <FaEye />
                   QUICK VIEW
@@ -113,7 +119,7 @@ const HotDealsSlider = () => {
                 <p className="text-sm text-gray-700">{product.title}</p>
 
                 <div className="mt-1 flex justify-center gap-2 items-center">
-                  <span className="text-emerald-600 font-semibold">
+                  <span className="text-[#4e97fd] font-semibold">
                     ${product.price}
                   </span>
                   <span className="line-through text-gray-400 text-sm">
@@ -123,7 +129,10 @@ const HotDealsSlider = () => {
               </div>
 
               {/* Countdown */}
-              <div className="grid grid-cols-4 text-center bg-emerald-600 text-white text-xs mt-3">
+              <div
+                className="grid grid-cols-4 text-center
+                              bg-[#4e97fd] text-white text-xs mt-3"
+              >
                 {[
                   { v: "304", l: "DAYS" },
                   { v: "00", l: "HOUR" },
