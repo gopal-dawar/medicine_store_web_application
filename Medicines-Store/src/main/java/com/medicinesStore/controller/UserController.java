@@ -40,11 +40,9 @@ public class UserController {
 
         UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name()
-        );
+        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole().name());
 
-        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name()
-        ));
+        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name()));
     }
 
 

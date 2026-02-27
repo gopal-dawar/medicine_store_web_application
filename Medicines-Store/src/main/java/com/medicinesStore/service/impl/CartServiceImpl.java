@@ -57,32 +57,30 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart updateQuantity(Long cartId, Integer quantity) {
-
         if (quantity == null || quantity < 1) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
-
         Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new RuntimeException("Cart item not found"));
-
         cart.setQuantity(quantity);
         cart.setUpdatedAt(LocalDateTime.now());
-
         return cartRepo.save(cart);
     }
 
     @Override
     public void removeFromCart(Long cartId) {
+        cartRepo.deleteById(cartId);
 
-        Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new RuntimeException("Cart item not found"));
-
-        cartRepo.delete(cart);
     }
 
     @Override
     public void clearCart(Long userId) {
-
         List<Cart> carts = cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
-        cartRepo.deleteAll(carts);
+        for (Cart cart : carts) {
+            cart.setStatus("REMOVED");
+            cart.setUpdatedAt(LocalDateTime.now());
+        }
+
+        cartRepo.saveAll(carts);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long cartItemCount() {
+    public Long cartItemCount(Long userId) {
         return cartRepo.findAll().stream().count();
     }
 }

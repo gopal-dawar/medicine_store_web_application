@@ -10,7 +10,7 @@ const Nav2 = () => {
   const [openCart, setOpenCart] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
 
-  // ✅ fetch cart count
+  
   const refreshCartCount = async () => {
     try {
       const res = await cartitemcount();
@@ -20,7 +20,7 @@ const Nav2 = () => {
     }
   };
 
-  // ✅ only on first load
+
   useEffect(() => {
     refreshCartCount();
   }, []);

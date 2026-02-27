@@ -94,8 +94,13 @@ export const addToCartitem = (userId, medicineId, quantity = 1) => {
   });
 };
 
-export const getCartItem = (userId) => {
-  return privateApi.get(`/cart/user/${userId}`);
+export const getCartItem = () => {
+  return privateApi.get(`/cart/cartdata`);
+};
+
+// medicineApi.js
+export const updateCartQuantity = (cartId, quantity) => {
+  return privateApi.put(`/cart/update/${cartId}?quantity=${quantity}`);
 };
 
 export const removeCartItem = (cartId) => {

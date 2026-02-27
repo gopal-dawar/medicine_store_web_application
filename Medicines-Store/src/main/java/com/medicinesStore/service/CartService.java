@@ -18,5 +18,5 @@ public interface CartService {
 
     BigDecimal getCartTotal(Long userId);
 
-    Long cartItemCount();
+    Long cartItemCount(Long userId);
 }
