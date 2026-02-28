@@ -111,4 +111,14 @@ public class OrdersServiceImpl implements OrdersService {
         return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("pending")).count();
     }
 
+    @Override
+    public Long deliveredOrderCount() {
+        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("delivered")).count();
+    }
+
+    @Override
+    public Long canelledOrderCount() {
+        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("cancelled")).count();
+    }
+
 }

@@ -25,3 +25,11 @@ export const getOrderCount = () => {
 export const getPendingOrderCount = () => {
   return privateApi.get("/orders/pendingordercount");
 };
+
+export const getDeliveredOrderCount = () => {
+  return privateApi.get("/orders/deliveredOrder");
+};
+
+export const getCanelledOrderCount = () => {
+  return privateApi.get("/orders/cancelledOrder");
+};

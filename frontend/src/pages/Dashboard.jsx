@@ -9,6 +9,7 @@ import LowStockAlert from "../components/dashboard/dashboardcards/LowStockAlert"
 import ExpiryReminder from "../components/dashboard/dashboardcards/ExpiryReminder";
 import MedicineDetails from "../components/model/MedicineDetails";
 import Orders from "../components/dashboard/orders/Orders";
+import ViewOrders from "../components/dashboard/orders/ViewOrders";
 
 const Dashboard = () => {
   return (
@@ -21,7 +22,9 @@ const Dashboard = () => {
         <Route path="meddetails/:id" element={<MedicineDetails />} />
         <Route path="addmedicine" element={<AddMedicine />} />
         <Route path="addmedicine/:id" element={<AddMedicine />} />
-        <Route path="orders" element={<Orders />} />
+        <Route path="orders" element={<Orders />}>
+          <Route path=":id" element={<ViewOrders />} />
+        </Route>
         <Route path="customers" element={<Customers />} />
       </Route>
     </Routes>

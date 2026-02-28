@@ -18,4 +18,7 @@ public interface OrdersService {
 
     Long pendingOrderCount();
 
+    Long deliveredOrderCount();
+
+    Long canelledOrderCount();
 }

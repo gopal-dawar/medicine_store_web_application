@@ -47,5 +47,16 @@ public class OrdersController {
         return new ResponseEntity<>(ordersService.pendingOrderCount(), HttpStatus.OK);
     }
 
+    @GetMapping("/deliveredOrder")
+    public ResponseEntity<Long> getDeliveredOrderCount() {
+        return new ResponseEntity<>(ordersService.deliveredOrderCount(), HttpStatus.OK);
+    }
+
+    @GetMapping("/cancelledOrder")
+    public ResponseEntity<Long> getCancelledOrderCount() {
+        return new ResponseEntity<>(ordersService.canelledOrderCount(), HttpStatus.OK);
+    }
+
+
 }
 
