@@ -1,10 +1,9 @@
 package com.medicinesStore.entity;
 
-import com.medicinesStore.entity.Medicines;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
@@ -12,41 +11,48 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemId;
+    private Long id;
 
+    // Prevent infinite JSON loop
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @JsonIgnore
+    private Orders order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "medicine_id", nullable = false)
     private Medicines medicine;
 
-
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
+    // price at order time
     @Column(nullable = false)
-    private double price;
+    private BigDecimal price;
 
+    // quantity * price
     @Column(nullable = false)
-    private double totalPrice;
+    private BigDecimal totalPrice;
 
     @PrePersist
     @PreUpdate
     public void calculateTotalPrice() {
-        this.totalPrice = this.quantity * this.price;
+        this.totalPrice = this.price.multiply(BigDecimal.valueOf(this.quantity));
     }
 
-    public Long getOrderItemId() {
-        return orderItemId;
+    public Long getId() {
+        return id;
     }
 
-    public Order getOrder() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Orders getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder(Orders order) {
         this.order = order;
     }
 
@@ -66,67 +72,19 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public double getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    @Entity
-    @Table(name = "orders")
-    public static class Order {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long orderId;
-
-        @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<OrderItem> orderItems;
-
-        @Column(nullable = false)
-        private double totalAmount;
-
-        private LocalDateTime orderDate;
-        private LocalDateTime deliveryDate;
-
-
-        public Long getOrderId() {
-            return orderId;
-        }
-
-        public List<OrderItem> getOrderItems() {
-            return orderItems;
-        }
-
-        public void setOrderItems(List<OrderItem> orderItems) {
-            this.orderItems = orderItems;
-        }
-
-
-        public double getTotalAmount() {
-            return totalAmount;
-        }
-
-        public void setTotalAmount(double totalAmount) {
-            this.totalAmount = totalAmount;
-        }
-
-        public LocalDateTime getOrderDate() {
-            return orderDate;
-        }
-
-        public LocalDateTime getDeliveryDate() {
-            return deliveryDate;
-        }
-
-        public void setDeliveryDate(LocalDateTime deliveryDate) {
-            this.deliveryDate = deliveryDate;
-        }
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

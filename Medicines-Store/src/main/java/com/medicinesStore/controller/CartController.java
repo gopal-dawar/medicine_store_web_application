@@ -50,7 +50,6 @@ public class CartController {
         return ResponseEntity.ok("Item removed from cart");
     }
 
-    // ✅ CLEAR CART
     @DeleteMapping("/clear")
     public ResponseEntity<String> clearCart(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserId(authHeader);
@@ -58,18 +57,21 @@ public class CartController {
         return ResponseEntity.ok("Cart cleared successfully");
     }
 
-    // ✅ CART TOTAL
     @GetMapping("/total")
     public ResponseEntity<BigDecimal> getCartTotal(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserId(authHeader);
         return ResponseEntity.ok(cartService.getCartTotal(userId));
     }
 
-    // ✅ CART ITEM COUNT
     @GetMapping("/count")
     public ResponseEntity<Long> countCartItem(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserId(authHeader);
         return new ResponseEntity<>(cartService.cartItemCount(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<Cart>> getAllOrders() {
+        return new ResponseEntity<>(cartService.getAllOrders(), HttpStatus.OK);
     }
 
     // 🔹 Helper method (simple)

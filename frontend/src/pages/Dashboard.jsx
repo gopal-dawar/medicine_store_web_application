@@ -2,13 +2,13 @@ import { Route, Routes } from "react-router-dom";
 import Customers from "../components/dashboard/Customers";
 import DashboardHome from "../components/dashboard/DashboardHome";
 import DashBoardlayout from "../components/dashboard/DashBoardlayout";
-import Orders from "../components/dashboard/Orders";
+
 import Medicines from "../components/dashboard/Medicines";
 import AddMedicine from "../components/dashboard/AddMedicine";
 import LowStockAlert from "../components/dashboard/dashboardcards/LowStockAlert";
 import ExpiryReminder from "../components/dashboard/dashboardcards/ExpiryReminder";
 import MedicineDetails from "../components/model/MedicineDetails";
-
+import Orders from "../components/dashboard/orders/Orders";
 
 const Dashboard = () => {
   return (

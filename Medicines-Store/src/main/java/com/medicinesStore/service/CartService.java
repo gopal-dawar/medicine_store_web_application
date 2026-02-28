@@ -19,4 +19,7 @@ public interface CartService {
     BigDecimal getCartTotal(Long userId);
 
     Long cartItemCount(Long userId);
+
+    List<Cart> getAllOrders();
+
 }

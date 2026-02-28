@@ -91,9 +91,14 @@ public class CartServiceImpl implements CartService {
         return total;
     }
 
+
     @Override
     public Long cartItemCount(Long userId) {
-        System.err.println(userId);
         return cartRepo.findCartByUserId(userId).stream().count();
+    }
+
+    @Override
+    public List<Cart> getAllOrders() {
+        return cartRepo.findAll();
     }
 }

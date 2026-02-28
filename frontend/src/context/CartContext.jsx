@@ -18,6 +18,7 @@ export const CartProvider = ({ children }) => {
     setCart(res.data);
   };
 
+
   const fetchCount = async () => {
     const res = await cartItemCounts();
     setCount(res.data);
@@ -25,24 +26,26 @@ export const CartProvider = ({ children }) => {
 
   const addItem = async (userId, medicineId, quantity) => {
     await addToCartItem(userId, medicineId, quantity);
-    fetchCart();
-    fetchCount();
+    await fetchCart();
+    await fetchCount();
   };
 
   const updateQuantity = async (cartId, quantity) => {
     await updateCartQuantity(cartId, quantity);
-    fetchCart();
+    await fetchCart();
+    await fetchCount();
   };
 
   const removeItem = async (cartId) => {
     await removeCartItem(cartId);
     setCart((prev) => prev.filter((c) => c.id !== cartId));
-    fetchCount();
+    await fetchCount();
   };
 
   useEffect(() => {
     fetchCart();
     fetchCount();
+    // fetchOrders();
   }, []);
 
   return (
@@ -50,6 +53,7 @@ export const CartProvider = ({ children }) => {
       value={{
         cart,
         count,
+        // orders,
         addItem,
         updateQuantity,
         removeItem,

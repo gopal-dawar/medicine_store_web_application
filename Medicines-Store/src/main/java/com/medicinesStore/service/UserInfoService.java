@@ -21,7 +21,6 @@ public class UserInfoService {
     public String register(UserInfo userInfo) {
 
         if (userRepo.findByUsername(userInfo.getUsername()).isPresent()) {
-            System.err.println("System error");
             throw new RuntimeException("Username already exists");
         }
 

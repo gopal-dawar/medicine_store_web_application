@@ -10,6 +10,17 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse> orderNotFoundExceptionHandler(OrderNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse("Order Not Found!", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> cartItemNotFoundExceptionHandler(CartItemNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse("Cart Item Not found!", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> categoryNotFoundExceptionHandler(CategoryNotFoundException ex) {

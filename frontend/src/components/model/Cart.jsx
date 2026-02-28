@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
-import { getCartItems, removeCartItem, updateCartQuantity } from "../../api/cartApi";
-
+import {
+  getCartItems,
+  removeCartItem,
+  updateCartQuantity,
+} from "../../api/cartApi";
+import { checkout } from "../../api/ordersApi";
+import { getCurrentUser } from "../../api/userApi";
 
 const Cart = ({ isOpen, onClose, refreshCartCount }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [checkoutItems, setCheckoutItems] = useState([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -22,8 +28,21 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
     fetchCart();
   }, [isOpen]);
 
+  const checkouthandle = async () => {
+    try {
+      const re = await getCurrentUser();
+      const address = "Nagpur";
+       await checkout(re.data.id, address);
+      
+      setCartItems([]);
+      refreshCartCount();
+      onClose();
+    } catch (err) {
+      console.error("Checkout failed", err);
+    }
+  };
+
   const handleDelete = async (cartId) => {
-    
     try {
       await removeCartItem(cartId);
       setCartItems((prev) => prev.filter((item) => item.id !== cartId));
@@ -54,7 +73,6 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
   };
   return (
     <>
-      {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
         onClick={onClose}
@@ -149,7 +167,10 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
             </span>
           </div>
 
-          <button className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl shadow-lg transition">
+          <button
+            onClick={checkouthandle}
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl shadow-lg transition"
+          >
             Proceed to Checkout
           </button>
         </div>
