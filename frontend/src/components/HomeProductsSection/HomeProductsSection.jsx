@@ -8,6 +8,8 @@ import NewBlogs from "./NewBlogs";
 import Testimonial from "./Testimonial";
 import Slider from "../slider/Slider";
 import TopBrandsSlider from "../slider/TopBrandsSlider";
+import FeatureSection from "../featureSection/FeatureSection";
+import FeatureGroup from "../FeatureSection/FeatureGroup";
 const HomeProductsSection = () => {
   return (
     <div>
@@ -27,7 +29,11 @@ const HomeProductsSection = () => {
           <div className="lg:col-span-3 space-y-8">
             <ProductGrid />
             <NewBlogs />
+            <FeatureSection />
           </div>
+        </div>
+        <div>
+          <FeatureGroup />
         </div>
       </section>
     </div>

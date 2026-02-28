@@ -24,10 +24,12 @@ public class CartController {
     // ✅ ADD TO CART
     @PostMapping("/add")
     public ResponseEntity<Cart> addToCart(@RequestHeader("Authorization") String authHeader, @RequestParam Long medicineId, @RequestParam(defaultValue = "1") Integer quantity) {
+
         Long userId = extractUserId(authHeader);
         Cart cart = cartService.addToCart(userId, medicineId, quantity);
         return ResponseEntity.ok(cart);
     }
+
 
     // ✅ GET USER CART
     @GetMapping("/cartdata")

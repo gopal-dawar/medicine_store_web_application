@@ -1,21 +1,15 @@
 // import { useContext } from "react";
 import { FaEye, FaShoppingCart } from "react-icons/fa";
-import { useContext } from "react";
-import { MedicineContext } from "../../context/MedicineContext";
 import { addToCartItem } from "../../api/cartApi";
 
-
 const ProductCard = ({ product, onQuickView }) => {
-  const { addToCart, refreshCartCount } = useContext(MedicineContext);
-
   const handleAddToCart = async () => {
     try {
-      const userId = 1;
-      await addToCartItem(userId, product.id, 1);
-      alert("Added to cart ✅");
+      await addToCartItem(product.id, 1);
+      alert("Added to cart");
     } catch (error) {
       console.error("Add to cart error", error);
-      alert("Failed to add item ❌");
+      alert("Failed to add item");
     }
   };
 

@@ -21,7 +21,7 @@ const ProductCategorySidebar = () => {
       <ul className="divide-y divide-[#6aa8ff]">
         {category.map((cat) => (
           <li
-            key={cat}
+            key={cat.id}
             onClick={() => setActive(cat)}
             className={`px-5 py-3 text-sm cursor-pointer transition-all duration-300
               ${

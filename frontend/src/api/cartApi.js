@@ -1,8 +1,8 @@
 import privateApi from "./privateApi";
 
-export const addToCartItem = (userId, medicineId, quantity = 1) =>
+export const addToCartItem = (medicineId, quantity = 1) =>
   privateApi.post("/cart/add", null, {
-    params: { userId, medicineId, quantity },
+    params: { medicineId, quantity },
   });
 
 export const getCartItems = () => privateApi.get("/cart/cartdata");

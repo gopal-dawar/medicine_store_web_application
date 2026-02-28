@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { addToCartItem } from "../../api/cartApi";
 
 const ITEMS_PER_SLIDE = 6;
 
@@ -24,11 +25,18 @@ const TopRatingSlider = ({ data, dataheading }) => {
     }
   };
 
-  const visibleProducts = data.slice(index, index + ITEMS_PER_SLIDE);
+  const handleAddToCart = async () => {
+    try {
+      await addToCartItem(data.id, 1);
+      alert("Added to cart");
+    } catch (error) {
+      console.error("Add to cart error", error);
+      alert("Failed to add item");
+    }
+  };
 
   return (
     <div className="w-full pt-10">
-      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold uppercase">{dataheading}</h2>
 
@@ -50,24 +58,33 @@ const TopRatingSlider = ({ data, dataheading }) => {
         </div>
       </div>
 
-      {/* underline */}
       <div className="w-12 h-[2px] bg-emerald-600 mb-5"></div>
 
-      {/* Products Grid */}
       <div className="grid grid-cols-2 gap-x-10 gap-y-5">
-        {visibleProducts.map((item) => (
-          <div key={item.id} className="flex bg-white items-center gap-5 p-4">
-            <img
-              src={item.img}
-              alt={item.name}
-              className="w-23 h-23 object-contain"
-            />
+        {data.slice(index, index + ITEMS_PER_SLIDE).map((item) => (
+          <div
+            key={item.id}
+            className="flex bg-white border-gray-200 border items-center gap-5 px-2 p-2"
+          >
+            <div className="w-[140px] h-[100px] border border-gray-200 rounded-lg shadow-sm overflow-hidden bg-white">
+              <img
+                src={item.imageUrl}
+                alt={item.name}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
 
-            <div>
+            <div className="w-full">
               <p className="text-sm text-gray-700 leading-snug">{item.name}</p>
               <p className="text-emerald-600 font-semibold mt-1">
-                {item.price}
+                ₹{item.price}
               </p>
+              <button
+                onClick={handleAddToCart}
+                className=" bg-[#4e97fd] text-white py-2 mt-1 rounded text-[13px] px-2  hover:bg-[#3b82f6]"
+              >
+                ADD TO CART
+              </button>
             </div>
           </div>
         ))}
