@@ -1,112 +1,42 @@
 import privateApi from "./privateApi";
 
-// add medicine
-export const addMedicine = (formData) => {
-  return privateApi.post("/medicine", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+export const getAllMedicines = () => privateApi.get("/medicine");
+
+export const getMedicineById = (id) => privateApi.get(`/medicine/${id}`);
+
+export const addMedicine = (formData) =>
+  privateApi.post("/medicine", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-};
 
-// update medicine
-export const updateMedicine = (id, medicines) => {
-  return privateApi.put(`/medicine/${id}`, medicines, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+export const updateMedicine = (id, formData) =>
+  privateApi.put(`/medicine/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-};
 
-export const getMedicineById = (id) => {
-  return privateApi.get(`/medicine/${id}`);
-};
+export const deleteMedicine = (id) => privateApi.delete(`/medicine/${id}`);
 
-export const getAllMedicines = () => {
-  return privateApi.get("/medicine");
-};
-
-// search medicine by name
-export const searchMedicineByName = (name) => {
-  return privateApi.get(`/medicine/search?name=${name}`);
-};
-
-// delete medicine
-export const deleteMedicine = (id) => {
-  return privateApi.delete(`/medicine/${id}`);
-};
-
-// count total medicine
-export const countmedicine = () => {
-  return privateApi.get("/medicine/count");
-};
-
-// count medicine stock
-export const countMedstock = () => {
-  return privateApi.get("/medicine/countstock");
-};
-
-// count expire medicine
-export const countExpireMedicine = () => {
-  return privateApi.get("/medicine/expiremed");
-};
-
-// count expire medicine
-export const searchpagination = (page, size) => {
-  return privateApi.get(`/medicine/searchpagination?page=${page}&size=${size}`);
-};
-// ============================================
-// category apis
-// ============================================
-export const getAllCategories = () => {
-  return privateApi.get("/categories");
-};
-
-export const getCategoryById = (id) => {
-  return privateApi.get(`/categories/${id}`);
-};
-
-export const getCategoryByName = (name) => {
-  return privateApi.get(`/categories/name/${name}`);
-};
-
-export const createCategory = (category) => {
-  return privateApi.post("/categories", category);
-};
-
-export const updateCategory = (id, category) => {
-  return privateApi.put(`/categories/${id}`, category);
-};
-
-export const deleteCategory = (id) => {
-  return privateApi.delete(`/categories/${id}`);
-};
-
-// ============================
-//  cart api's
-export const addToCartitem = (userId, medicineId, quantity = 1) => {
-  return privateApi.post("/cart/add", null, {
-    params: {
-      userId,
-      medicineId,
-      quantity,
-    },
+// =======================
+// SEARCH
+// =======================
+export const searchMedicineByName = (name) =>
+  privateApi.get("/medicine/search", {
+    params: { name },
   });
-};
 
-export const getCartItem = () => {
-  return privateApi.get(`/cart/cartdata`);
-};
+// =======================
+// PAGINATION
+// =======================
+export const getMedicinesWithPagination = (page = 0, size = 10, category) =>
+  privateApi.get("/medicine/searchpagination", {
+    params: { page, size, category },
+  });
 
-// medicineApi.js
-export const updateCartQuantity = (cartId, quantity) => {
-  return privateApi.put(`/cart/update/${cartId}?quantity=${quantity}`);
-};
+// =======================
+// STATS
+// =======================
+export const countMedicines = () => privateApi.get("/medicine/count");
 
-export const removeCartItem = (cartId) => {
-  return privateApi.delete(`/cart/remove/${cartId}`);
-};
+export const countMedStock = () => privateApi.get("/medicine/countstock");
 
-export const cartitemcount = () => {
-  return privateApi.get(`/cart/count`);
-};
+export const countExpireMedicine = () => privateApi.get("/medicine/expiremed");

@@ -6,10 +6,7 @@ import com.medicinesStore.service.UserInfoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -54,4 +51,12 @@ public class UserController {
 
         return ResponseEntity.ok("Successfully Deleted!");
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserInfo> getCurrentUser(org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName(); // from JWT
+        UserInfo user = userInfoService.getByUsername(username);
+        return ResponseEntity.ok(user);
+    }
+
 }

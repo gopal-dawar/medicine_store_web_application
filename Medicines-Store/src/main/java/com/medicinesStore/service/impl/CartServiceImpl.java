@@ -36,6 +36,7 @@ public class CartServiceImpl implements CartService {
 
         cart.setUserId(userId);
         cart.setMedicines(medicine);
+        cart.setUpdatedAt(LocalDateTime.now());
         cart.setPrice(medicine.getPrice());
         cart.setStatus("ACTIVE");
 
@@ -52,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> getUserCart(Long userId) {
-        return cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
+        return cartRepo.findCartByUserId(userId);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void clearCart(Long userId) {
-        List<Cart> carts = cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
+        List<Cart> carts = cartRepo.findCartByUserId(userId);
         for (Cart cart : carts) {
             cart.setStatus("REMOVED");
             cart.setUpdatedAt(LocalDateTime.now());
@@ -85,13 +86,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public BigDecimal getCartTotal(Long userId) {
-        List<Cart> carts = cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
+        List<Cart> carts = cartRepo.findCartByUserId(userId);
         BigDecimal total = carts.stream().map(c -> c.getPrice().multiply(BigDecimal.valueOf(c.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
     }
 
     @Override
     public Long cartItemCount(Long userId) {
-        return cartRepo.findAll().stream().count();
+        System.err.println(userId);
+        return cartRepo.findCartByUserId(userId).stream().count();
     }
 }

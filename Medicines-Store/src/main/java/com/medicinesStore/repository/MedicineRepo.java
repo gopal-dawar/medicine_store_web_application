@@ -1,6 +1,8 @@
 package com.medicinesStore.repository;
 
 import com.medicinesStore.entity.Medicines;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +20,6 @@ public interface MedicineRepo extends JpaRepository<Medicines, Long> {
 
     @Query("SELECT m FROM Medicines m WHERE m.expiryDate <= :date")
     List<Medicines> countExpireMedicine(@Param("date") LocalDate date);
+
+    Page<Medicines> findByCategory_Name(String name, Pageable pageable);
 }

@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/HomeProductsSection/ProductCard";
 import ProductViewCard from "../components/model/ProductViewCard";
-import {
-  getAllCategories,
-  searchMedicineByName,
-  searchpagination,
-} from "../api/medicineApi";
+import { getAllCategories } from "../api/categoryApi";
+import { MedicineContext } from "../context/MedicineContext";
 
 const Shop = () => {
-  const [medicines, setMedicines] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
-  const [totalPage, setTotalPage] = useState(0);
+  const { medicines, loading, page, totalPages, setPage, search, setSearch } =
+    useContext(MedicineContext);
 
+  const [categories, setCategories] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
@@ -24,27 +19,7 @@ const Shop = () => {
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    if (search.trim() !== "") {
-      searchData();
-    } else {
-      fetchPaginatedData();
-    }
-  }, [search, page]);
 
-  const fetchPaginatedData = async () => {
-    const res = await searchpagination(page, 16);
-    setMedicines(res.data.content);
-    setTotalPage(res.data.totalPages);
-  };
-
-  const searchData = async () => {
-    const res = await searchMedicineByName(search);
-    setMedicines(res.data);
-    setTotalPage(1);
-  };
-
-  // ✅ LOCK BACKGROUND SCROLL WHEN MODAL OPEN
   useEffect(() => {
     document.body.style.overflow = selectedProduct ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
@@ -62,7 +37,7 @@ const Shop = () => {
           type="search"
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
+            setSearch(e.target.value); // 🔥 context handles API
             setPage(0);
           }}
           placeholder="Search medicine..."
@@ -78,21 +53,25 @@ const Shop = () => {
       </div>
 
       {/* PRODUCTS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {medicines.length > 0 ? (
-          medicines.map((medicine) => (
-            <ProductCard
-              key={medicine.id}
-              product={medicine}
-              onQuickView={setSelectedProduct}
-            />
-          ))
-        ) : (
-          <p className="text-center col-span-full text-gray-500">
-            No medicines found.
-          </p>
-        )}
-      </div>
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          {medicines.length > 0 ? (
+            medicines.map((medicine) => (
+              <ProductCard
+                key={medicine.id}
+                product={medicine}
+                onQuickView={setSelectedProduct}
+              />
+            ))
+          ) : (
+            <p className="text-center col-span-full text-gray-500">
+              No medicines found.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* PAGINATION */}
       <div className="flex items-center justify-center mt-12 gap-2">
@@ -110,15 +89,15 @@ const Shop = () => {
         </button>
 
         <div className="px-6 py-3 font-bold text-black">
-          {page + 1} / {totalPage}
+          {page + 1} / {totalPages}
         </div>
 
         <button
           onClick={() => setPage(page + 1)}
-          disabled={page + 1 === totalPage || search}
+          disabled={page + 1 === totalPages || search}
           className={`px-6 py-3 text-sm font-semibold border transition
             ${
-              page + 1 === totalPage || search
+              page + 1 === totalPages || search
                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                 : "text-black hover:text-white hover:bg-blue-700"
             }`}
@@ -127,7 +106,7 @@ const Shop = () => {
         </button>
       </div>
 
-      {/* ✅ MODAL */}
+      {/* MODAL */}
       {selectedProduct && (
         <ProductViewCard
           medicines={selectedProduct}

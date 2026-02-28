@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
-import {
-  getCartItem,
-  removeCartItem,
-  updateCartQuantity,
-} from "../../api/medicineApi";
+import { getCartItems, removeCartItem, updateCartQuantity } from "../../api/cartApi";
+
 
 const Cart = ({ isOpen, onClose, refreshCartCount }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -15,7 +12,7 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
 
     const fetchCart = async () => {
       try {
-        const res = await getCartItem();
+        const res = await getCartItems();
         setCartItems(res.data);
       } catch (err) {
         console.error("Failed to load cart", err);
@@ -26,6 +23,7 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
   }, [isOpen]);
 
   const handleDelete = async (cartId) => {
+    
     try {
       await removeCartItem(cartId);
       setCartItems((prev) => prev.filter((item) => item.id !== cartId));
@@ -62,9 +60,7 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
         onClick={onClose}
       />
 
-      {/* Drawer */}
       <div className="fixed right-0 top-0 h-full w-full sm:w-[420px] bg-gray-50 z-50 shadow-2xl flex flex-col">
-        {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 border-b bg-white">
           <h2 className="text-xl font-bold tracking-tight">Shopping Cart</h2>
           <button
@@ -107,11 +103,12 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
                       <p className="mt-2 font-bold text-green-600">
                         ₹{item.price * item.quantity}
                       </p>
-                      {/* Quantity Controls */}
+
                       <div className="flex items-center gap-3 mt-2">
                         <button
                           onClick={() => handleQuantityChange(item, "dec")}
-                          className="w-8 h-5 flex items-center justify-center rounded-full border hover:bg-gray-100"
+                          disabled={item.quantity === 1}
+                          className={`w-8 h-5 flex items-center justify-center rounded-full border hover:bg-gray-100    ${item.quantity === 1 ? "cursor-not-allowed" : "active:scale-75"}                      `}
                         >
                           <FaMinus size={12} />
                         </button>
@@ -122,7 +119,7 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
 
                         <button
                           onClick={() => handleQuantityChange(item, "inc")}
-                          className="w-8 h-5 flex items-center justify-center rounded-full border hover:bg-gray-100"
+                          className="w-8 h-5 flex active:scale-75 items-center justify-center rounded-full border hover:bg-gray-100"
                         >
                           <FaPlus size={12} />
                         </button>

@@ -119,7 +119,8 @@ public class MedicineController {
     }
 
     @GetMapping("/searchpagination")
-    public Page<Medicines> searchpagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return medicineService.medicinewithpagination(page, size);
+    public Page<Medicines> searchpagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(required = false) String category) {
+
+        return medicineService.medicinewithpagination(page, size, category);
     }
 }

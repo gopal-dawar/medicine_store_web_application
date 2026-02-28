@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { countMedstock } from "../../../api/medicineApi";
+
 import { useNavigate } from "react-router-dom";
+import { countMedStock } from "../../../api/medicineApi";
 
 const LowStockAlert = ({ limit, place = false }) => {
   const [medicines, setMedicines] = useState([]);
@@ -8,7 +9,7 @@ const LowStockAlert = ({ limit, place = false }) => {
 
   useEffect(() => {
     const fetchdata = async () => {
-      const re = await countMedstock();
+      const re = await countMedStock();
       if (limit) {
         setMedicines(re.data.data.slice(0, limit));
       } else {

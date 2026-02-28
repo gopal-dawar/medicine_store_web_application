@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   countExpireMedicine,
-  countmedicine,
-  countMedstock,
+  countMedicines,
+  countMedStock,
 } from "../../../api/medicineApi";
-import { useNavigate } from "react-router-dom";
 
 const DashBoardCard = () => {
   const [countMedicine, setCountMedicine] = useState(0);
@@ -14,10 +14,10 @@ const DashBoardCard = () => {
 
   useEffect(() => {
     const countmed = async () => {
-      const re1 = await countmedicine();
+      const re1 = await countMedicines();
       setCountMedicine(re1.data);
 
-      const re2 = await countMedstock();
+      const re2 = await countMedStock();
       setCountstock(re2.data.count);
 
       const re3 = await countExpireMedicine();

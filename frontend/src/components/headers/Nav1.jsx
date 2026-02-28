@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaFacebookF,
   FaGooglePlusG,
@@ -7,8 +7,18 @@ import {
   FaRss,
   FaTwitter,
 } from "react-icons/fa";
+import { getCurrentUser } from "../../api/userApi";
 
 const Nav1 = () => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchcurrentuserdata = async () => {
+      const re = await getCurrentUser();
+      setUser(re.data);
+    };
+    fetchcurrentuserdata();
+  }, []);
   return (
     <div className="bg-slate-900 text-slate-400 text-sm">
       <div
@@ -59,7 +69,7 @@ const Nav1 = () => {
                        hover:bg-slate-800 hover:text-slate-100
                        cursor-pointer transition"
           >
-            👤 Account
+            👤 {user.fullName}
           </div>
         </div>
       </div>

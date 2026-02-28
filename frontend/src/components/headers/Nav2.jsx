@@ -3,23 +3,21 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { BiSearch, BiMenu } from "react-icons/bi";
 import { CiShoppingCart } from "react-icons/ci";
 import Cart from "../model/Cart";
-import { cartitemcount } from "../../api/medicineApi";
+import { cartItemCounts } from "../../api/cartApi";
 
 const Nav2 = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
 
-  
   const refreshCartCount = async () => {
     try {
-      const res = await cartitemcount();
+      const res = await cartItemCounts();
       setCartItemCount(res.data);
     } catch (err) {
       console.error(err);
     }
   };
-
 
   useEffect(() => {
     refreshCartCount();
@@ -40,7 +38,6 @@ const Nav2 = () => {
     <>
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-          {/* LOGO */}
           <div
             onClick={() => navigate("/")}
             className="flex items-center gap-2 cursor-pointer"
@@ -80,7 +77,6 @@ const Nav2 = () => {
               <BiSearch className="absolute right-3 top-2.5 text-gray-500 text-lg" />
             </div>
 
-            {/* MOBILE MENU */}
             <button className="md:hidden text-2xl text-slate-700">
               <BiMenu />
             </button>

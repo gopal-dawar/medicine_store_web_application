@@ -129,8 +129,11 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Page<Medicines> medicinewithpagination(int page, int size) {
+    public Page<Medicines> medicinewithpagination(int page, int size, String category) {
         Pageable pageable = PageRequest.of(page, size);
+        if (category != null && !category.isBlank()) {
+            return medicineRepo.findByCategory_Name(category, pageable);
+        }
         return medicineRepo.findAll(pageable);
     }
 }

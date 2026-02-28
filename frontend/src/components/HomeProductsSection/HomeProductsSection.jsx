@@ -14,6 +14,9 @@ const HomeProductsSection = () => {
       <Slider />
       <section className="max-w-7xl mx-auto px-4 py-10">
         <TopBrandsSlider />
+        <div className="py-4">
+          <PromoBannerSection />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
             <ProductCategorySidebar />
@@ -22,7 +25,6 @@ const HomeProductsSection = () => {
             <Testimonial />
           </div>
           <div className="lg:col-span-3 space-y-8">
-            <PromoBannerSection />
             <ProductGrid />
             <NewBlogs />
           </div>

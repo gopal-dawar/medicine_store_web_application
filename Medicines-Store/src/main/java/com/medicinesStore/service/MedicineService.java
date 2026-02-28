@@ -39,6 +39,6 @@ public interface MedicineService {
     // count expire medicine
     Map<String, Object> countExpireMedicine();
 
-    Page<Medicines> medicinewithpagination(int page, int size);
+    Page<Medicines> medicinewithpagination(int page, int size, String category);
 
 }

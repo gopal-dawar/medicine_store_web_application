@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  addMedicine,
-  getAllCategories,
-  getMedicineById,
-  searchMedicineByName,
-  updateMedicine,
-} from "../../api/medicineApi";
+import { getAllCategories } from "../../api/categoryApi";
+import { addMedicine, getMedicineById, searchMedicineByName, updateMedicine } from "../../api/medicineApi";
 
 const initialMedicineState = {
   name: "",
