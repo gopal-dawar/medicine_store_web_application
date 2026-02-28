@@ -16,4 +16,12 @@ export const getOrderById = (orderId) => {
 
 export const getAllOrders = () => {
   return privateApi.get("/orders/allOrders");
-};  
+};
+
+export const getOrderCount = () => {
+  return privateApi.get("/orders/orderCount");
+};
+
+export const getPendingOrderCount = () => {
+  return privateApi.get("/orders/pendingordercount");
+};

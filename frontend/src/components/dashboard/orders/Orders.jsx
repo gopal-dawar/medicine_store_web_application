@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getAllOrders } from "../../../api/ordersApi";
+import {
+  getAllOrders,
+  getOrderCount,
+  getPendingOrderCount,
+} from "../../../api/ordersApi";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [ordercount, setOrdercount] = useState(0);
+  const [orderPendingCount, setOrderPendingCount] = useState(0);
   useEffect(() => {
     const fetchdata = async () => {
-      const re = await getAllOrders();
-      console.log(re.data);
-      setOrders(re.data);
+      const re1 = await getAllOrders();
+      setOrders(re1.data);
+
+      const re2 = await getOrderCount();
+      setOrdercount(re2.data);
+
+      const re3 = await getPendingOrderCount();
+      setOrderPendingCount(re3.data);
     };
     fetchdata();
   }, []);
@@ -21,12 +32,16 @@ const Orders = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-slate-800 p-5 rounded-xl shadow border-l-4 border-slate-600">
           <p className="text-slate-400 text-sm">Total Orders</p>
-          <h3 className="text-2xl font-bold mt-2 text-slate-100">245</h3>
+          <h3 className="text-2xl font-bold mt-2 text-slate-100">
+            {ordercount}
+          </h3>
         </div>
 
         <div className="bg-slate-800 p-5 rounded-xl shadow border-l-4 border-slate-600">
           <p className="text-slate-400 text-sm">Pending</p>
-          <h3 className="text-2xl font-bold mt-2 text-slate-100">18</h3>
+          <h3 className="text-2xl font-bold mt-2 text-slate-100">
+            {orderPendingCount}
+          </h3>
         </div>
 
         <div className="bg-slate-800 p-5 rounded-xl shadow border-l-4 border-slate-600">

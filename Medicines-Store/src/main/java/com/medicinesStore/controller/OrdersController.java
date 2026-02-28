@@ -22,16 +22,12 @@ public class OrdersController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Orders>> getOrdersByUser(
-            @PathVariable Long userId
-    ) {
+    public ResponseEntity<List<Orders>> getOrdersByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(ordersService.getOrdersByUser(userId));
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Orders> getOrderById(
-            @PathVariable Long orderId
-    ) {
+    public ResponseEntity<Orders> getOrderById(@PathVariable Long orderId) {
         return ResponseEntity.ok(ordersService.getOrderById(orderId));
     }
 
@@ -39,4 +35,17 @@ public class OrdersController {
     public ResponseEntity<List<Orders>> getAllOrders() {
         return new ResponseEntity<>(ordersService.getAllOrders(), HttpStatus.OK);
     }
+
+    @GetMapping("/orderCount")
+    public ResponseEntity<Long> getOrderCount() {
+        return new ResponseEntity<>(ordersService.countOrder(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/pendingordercount")
+    public ResponseEntity<Long> getPendingOrderCount() {
+        return new ResponseEntity<>(ordersService.pendingOrderCount(), HttpStatus.OK);
+    }
+
 }
+

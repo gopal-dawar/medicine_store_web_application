@@ -100,4 +100,15 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Orders> getAllOrders() {
         return ordersRepo.findAll();
     }
+
+    @Override
+    public Long countOrder() {
+        return ordersRepo.findAll().stream().count();
+    }
+
+    @Override
+    public Long pendingOrderCount() {
+        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("pending")).count();
+    }
+
 }
