@@ -21,7 +21,7 @@ const App = () => {
       <Route
         path="/home/*"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["USER"]}>
             <Home />
           </ProtectedRoute>
         }
@@ -33,7 +33,7 @@ const App = () => {
       <Route
         path="/dashboard/*"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["ADMIN"]}>
             <Dashboard />
           </ProtectedRoute>
         }

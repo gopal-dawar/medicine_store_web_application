@@ -21,7 +21,7 @@ public class CartController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // ✅ ADD TO CART
+    // ADD TO CART
     @PostMapping("/add")
     public ResponseEntity<Cart> addToCart(@RequestHeader("Authorization") String authHeader, @RequestParam Long medicineId, @RequestParam(defaultValue = "1") Integer quantity) {
 
@@ -31,21 +31,21 @@ public class CartController {
     }
 
 
-    // ✅ GET USER CART
+    // GET USER CART
     @GetMapping("/cartdata")
     public ResponseEntity<List<Cart>> getUserCart(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserId(authHeader);
         return ResponseEntity.ok(cartService.getUserCart(userId));
     }
 
-    // ✅ UPDATE QUANTITY
+    // UPDATE QUANTITY
     @PutMapping("/update/{cartId}")
     public ResponseEntity<String> updateQuantity(@PathVariable Long cartId, @RequestParam Integer quantity) {
         cartService.updateQuantity(cartId, quantity);
         return ResponseEntity.ok("Quantity updated");
     }
 
-    // ✅ REMOVE ITEM
+
     @DeleteMapping("/remove/{cartId}")
     public ResponseEntity<String> removeFromCart(@PathVariable Long cartId) {
         cartService.removeFromCart(cartId);

@@ -20,11 +20,11 @@ const ProductCard = ({ product, onQuickView }) => {
       hover:-translate-y-2 hover:shadow-xl"
     >
       {/* IMAGE */}
-      <div className="relative h-52 px-3 flex items-center justify-center bg-gray-100 overflow-hidden">
+      <div className="relative h-52 p-2 flex items-center justify-center bg-gray-100 overflow-hidden">
         <img
           src={product.imageUrl}
           alt={product.name}
-          className="object-contain transition-transform duration-500 group-hover:scale-110"
+          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
         />
 
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300"></div>

@@ -6,7 +6,7 @@ const DashboardHeader = ({ title = "Medicine Dashboard" }) => {
   const navigate = useNavigate();
 
   let username = "Admin";
-  const token = localStorage.getItem("authToken");
+  const token = sessionStorage.getItem("authToken");
 
   if (token) {
     try {
@@ -18,7 +18,8 @@ const DashboardHeader = ({ title = "Medicine Dashboard" }) => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("role");
     navigate("/login");
   };
 

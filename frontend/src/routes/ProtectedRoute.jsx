@@ -10,13 +10,20 @@ const isTokenValid = (token) => {
   }
 };
 
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("authToken");
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const token = sessionStorage.getItem("authToken");
 
   if (!token || !isTokenValid(token)) {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("role");
-    return <Navigate to="/" replace />;
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("role");
+    return <Navigate to="/login" replace />;
+  }
+
+  const decoded = jwtDecode(token);
+  const userRole = decoded.role || sessionStorage.getItem("role");
+
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;

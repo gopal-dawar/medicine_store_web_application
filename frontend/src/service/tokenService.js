@@ -1,17 +1,17 @@
 export const setAuth = (token, role) => {
-  localStorage.setItem("authToken", token);
-  localStorage.setItem("role", role);
+  sessionStorage.setItem("authToken", token);
+  sessionStorage.setItem("role", role);
 };
 
 export const getToken = () => {
-  return localStorage.getItem("authToken");
+  return sessionStorage.getItem("authToken");
 };
 
 export const getRole = () => {
-  return localStorage.getItem("role");
+  return sessionStorage.getItem("role");
 };
 
 export const clearAuth = () => {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("role");
+  sessionStorage.removeItem("authToken");
+  sessionStorage.removeItem("role");
 };

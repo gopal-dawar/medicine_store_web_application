@@ -63,7 +63,7 @@ const TopRatingSlider = ({ data, dataheading }) => {
       <div className="grid grid-cols-2 gap-x-10 gap-y-5">
         {data.slice(index, index + ITEMS_PER_SLIDE).map((item) => (
           <div
-            key={item.id}
+            key={item.id} 
             className="flex bg-white border-gray-200 border items-center gap-5 px-2 p-2"
           >
             <div className="w-[140px] h-[100px] border border-gray-200 rounded-lg shadow-sm overflow-hidden bg-white">

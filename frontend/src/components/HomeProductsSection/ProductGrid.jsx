@@ -64,7 +64,7 @@ const ProductGrid = () => {
       <div className="flex flex-wrap justify-center gap-4 mb-10">
         <button
           onClick={() => handleCategoryChange(null)}
-          className={`px-5 py-2 rounded-full border text-sm font-medium transition
+          className={`px-2 py-2 rounded-full border text-sm font-medium transition
             ${
               activeCategory === null
                 ? "bg-[#4e97fd] text-white"

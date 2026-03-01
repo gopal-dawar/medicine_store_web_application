@@ -22,8 +22,8 @@ const Register = () => {
     setSuccessMsg("");
     setErrorMsg("");
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
 
     if (userInfo.password !== confirmPassword) {
       setErrorMsg("Passwords do not match");
