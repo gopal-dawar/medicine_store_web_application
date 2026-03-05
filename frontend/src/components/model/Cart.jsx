@@ -8,10 +8,11 @@ import {
 } from "../../api/cartApi";
 import { checkout } from "../../api/ordersApi";
 import { getCurrentUser } from "../../api/userApi";
+import { getMedicineById, updateMedicine } from "../../api/medicineApi";
 
 const Cart = ({ isOpen, onClose, refreshCartCount }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [checkoutItems, setCheckoutItems] = useState([]);
+  // const [checkoutItems, setCheckoutItems] = useState([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -32,9 +33,25 @@ const Cart = ({ isOpen, onClose, refreshCartCount }) => {
     try {
       const re = await getCurrentUser();
       const address = "Nagpur";
-       await checkout(re.data.id, address);
-      
+      const re1 = await checkout(re.data.id, address);
+
       setCartItems([]);
+
+      for (const item of re1.data.items) {
+        const medicineId = item.medicine.id;
+        const re = await getMedicineById(medicineId);
+
+        const stock = re.data.stock;
+        const currentstock = item.medicine.quantity;
+
+        const updatedMedicine = {
+          ...item.medicine,
+          stock: stock - currentstock,
+        };
+
+        await updateMedicine(medicineId, updatedMedicine);
+      }
+
       refreshCartCount();
       onClose();
     } catch (err) {
