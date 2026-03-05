@@ -2,7 +2,6 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 import { addToCartItem } from "../../api/cartApi";
 
-
 const ProductViewCard = ({ medicines, onClose }) => {
   if (!medicines) return null;
 
@@ -12,10 +11,10 @@ const ProductViewCard = ({ medicines, onClose }) => {
 
       await addToCartItem(userId, medicineId, 1);
 
-      alert("Added to cart ✅");
+      alert("Added to cart ");
     } catch (error) {
       console.error(error);
-      alert("Failed to add item ❌");
+      alert("Failed to add item ");
     }
   };
   return (

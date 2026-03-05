@@ -14,7 +14,6 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ORD1021
     @Column(name = "order_code", unique = true, nullable = false)
     private String orderCode;
 

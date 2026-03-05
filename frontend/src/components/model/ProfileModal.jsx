@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MyOrders from "./MyOrders";
 
 const ProfileModal = ({ show, onClose, user }) => {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   if (!show) return null;
@@ -14,7 +16,7 @@ const ProfileModal = ({ show, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/30">
+    <div className="fixed inset-0 z-51 flex items-center justify-center bg-black/30">
       <div className="relative w-full max-w-md rounded-xl bg-white shadow-2xl p-6">
         {/* Close */}
         <button
@@ -61,12 +63,14 @@ const ProfileModal = ({ show, onClose, user }) => {
         {/* Actions */}
         <div className="mt-6 flex flex-col gap-3">
           <button
-            onClick={() => navigate("/orders")}
+            onClick={() => setOpen(true)}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             My Orders
           </button>
-
+          {open && (
+            <MyOrders show={open} onClose={() => setOpen(false)} user={user} />
+          )}
           <button
             onClick={() => navigate("/change-password")}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
