@@ -19,7 +19,7 @@ const Orders = () => {
   const [filterType, setFilterType] = useState("ALL");
   const isViewOrder = useMatch("/dashboard/orders/:id");
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
+  const [filterOrders, setFilterOrders] = useState([]);
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -59,13 +59,18 @@ const Orders = () => {
     fetchdatausingId();
   }, [search]);
 
-  const filteredOrders = orders.filter((order) => {
-    if (filterType === "ALL") return true;
-    if (filterType === "PENDING") return order.status === "PENDING";
-    if (filterType === "DELIVERED") return order.status === "DELIVERED";
-    if (filterType === "CANCELLED") return order.status === "CANCELLED";
-    return true;
-  });
+  useEffect(() => {
+    const filteredOrders = orders.filter((order) => {
+      if (filterType === "ALL") return true;
+      if (filterType === "PENDING") return order.status === "PENDING";
+      if (filterType === "DELIVERED") return order.status === "DELIVERED";
+      if (filterType === "CANCELLED") return order.status === "CANCELLED";
+      console.log(order.status);
+
+      return true;
+    });
+    setFilterOrders(filteredOrders);
+  }, [filterType, orders]);
 
   return (
     <main className="p-6 space-y-6 bg-slate-900 min-h-screen">
@@ -131,26 +136,20 @@ const Orders = () => {
         </div>
 
         <select
-        
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
           className="bg-slate-900 border border-slate-700 text-slate-200
                      px-4 py-2 rounded
                      focus:outline-none focus:ring-2 focus:ring-slate-600"
         >
-          <option value={"All"}>All Status</option>
-          <option value={"Pending"}>Pending</option>
-          <option value={"Delivered"}>Delivered</option>
-          <option value={"Cancelled"}>Cancelled</option>
+          <option value={"ALL"}>All Status</option>
+          <option value={"PENDING"}>Pending</option>
+          <option value={"DELIVERED"}>Delivered</option>
+          <option value={"CANCELLED"}>Cancelled</option>
         </select>
-
-        <input
-          type="date"
-          className="bg-slate-900 border border-slate-700 text-slate-200
-                     px-4 py-2 rounded
-                     focus:outline-none focus:ring-2 focus:ring-slate-600"
-        />
       </div>
 
-      {!isViewOrder && <OrdersList orders={filteredOrders} />}
+      {!isViewOrder && <OrdersList orders={filterOrders} />}
 
       <Outlet />
     </main>

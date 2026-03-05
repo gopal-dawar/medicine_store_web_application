@@ -19,9 +19,9 @@ const OrdersList = ({ orders }) => {
 
         <tbody className="divide-y divide-slate-700">
           {orders.length === 0 ? (
-            <p className="text-center text-white text-2xl p-3">
-              Not Data Found
-            </p>
+            <tr className="text-center text-white text-2xl p-3">
+              <td>Not Data Found</td>
+            </tr>
           ) : (
             orders.map((data) => {
               return (
