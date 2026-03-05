@@ -6,6 +6,7 @@ import com.medicinesStore.entity.Orders;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.exception.CartItemNotFoundException;
 import com.medicinesStore.repository.CartRepo;
+import com.medicinesStore.repository.MedicineRepo;
 import com.medicinesStore.repository.OrdersRepo;
 import com.medicinesStore.repository.UserRepo;
 import com.medicinesStore.service.OrdersService;
@@ -29,6 +30,9 @@ public class OrdersServiceImpl implements OrdersService {
     @Autowired
     private OrdersRepo ordersRepo;
 
+    @Autowired
+    private MedicineRepo medicineRepo;
+
     @Override
     @Transactional
     public Orders checkout(Long userId, String deliveryAddress) {
@@ -45,7 +49,6 @@ public class OrdersServiceImpl implements OrdersService {
         order.setUser(user);
         order.setDeliveryAddress(deliveryAddress);
 
-        // ✅ TEMP value to satisfy NOT NULL
         order.setOrderCode("TEMP");
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -53,15 +56,32 @@ public class OrdersServiceImpl implements OrdersService {
         int totalItems = 0;
 
         for (Cart cart : cartItems) {
+
+            // Get medicine
+            var medicine = cart.getMedicines();
+
+            // Check stock
+            if (medicine.getStock() < cart.getQuantity()) {
+                throw new RuntimeException("Not enough stock for " + medicine.getName());
+            }
+
+            // Reduce stock
+            medicine.setStock(medicine.getStock() - cart.getQuantity());
+            medicineRepo.save(medicine);
+
+            // Create order item
             OrderItem item = new OrderItem();
             item.setOrder(order);
-            item.setMedicine(cart.getMedicines());
+            item.setMedicine(medicine);
             item.setQuantity(cart.getQuantity());
-            item.setPrice(cart.getMedicines().getPrice());
+            item.setPrice(medicine.getPrice());
 
-            totalAmount = totalAmount.add(cart.getMedicines().getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())));
+            totalAmount = totalAmount.add(
+                    medicine.getPrice().multiply(BigDecimal.valueOf(cart.getQuantity()))
+            );
 
             totalItems += cart.getQuantity();
+
             orderItems.add(item);
         }
 
