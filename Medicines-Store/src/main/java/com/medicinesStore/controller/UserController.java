@@ -45,10 +45,8 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(org.springframework.security.core.Authentication authentication) {
-
         String username = authentication.getName();
         userInfoService.removeAccount(username);
-
         return ResponseEntity.ok("Successfully Deleted!");
     }
 

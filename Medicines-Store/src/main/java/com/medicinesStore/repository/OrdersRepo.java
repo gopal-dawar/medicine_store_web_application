@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface OrdersRepo extends JpaRepository<Orders, Long> {
     List<Orders> findByUserId(Long userId);
+
+    Orders findByOrderCodeContainingIgnoreCase(String orderCode);
 }

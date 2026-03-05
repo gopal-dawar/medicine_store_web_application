@@ -5,7 +5,6 @@ import com.medicinesStore.entity.OrderItem;
 import com.medicinesStore.entity.Orders;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.exception.CartItemNotFoundException;
-import com.medicinesStore.exception.OrderNotFoundException;
 import com.medicinesStore.repository.CartRepo;
 import com.medicinesStore.repository.OrdersRepo;
 import com.medicinesStore.repository.UserRepo;
@@ -40,8 +39,7 @@ public class OrdersServiceImpl implements OrdersService {
             throw new CartItemNotFoundException("Cart item not found");
         }
 
-        UserInfo user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Orders order = new Orders();
         order.setUser(user);
@@ -61,10 +59,7 @@ public class OrdersServiceImpl implements OrdersService {
             item.setQuantity(cart.getQuantity());
             item.setPrice(cart.getMedicines().getPrice());
 
-            totalAmount = totalAmount.add(
-                    cart.getMedicines().getPrice()
-                            .multiply(BigDecimal.valueOf(cart.getQuantity()))
-            );
+            totalAmount = totalAmount.add(cart.getMedicines().getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())));
 
             totalItems += cart.getQuantity();
             orderItems.add(item);
@@ -92,8 +87,8 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Orders getOrderById(Long orderId) {
-        return ordersRepo.findById(orderId).orElseThrow(() -> new OrderNotFoundException("Order Not Found at : " + orderId));
+    public Orders getOrderById(String orderCode) {
+        return ordersRepo.findByOrderCodeContainingIgnoreCase(orderCode);
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface OrdersService {
 
     List<Orders> getOrdersByUser(Long userId);
 
-    Orders getOrderById(Long orderId);
+    Orders getOrderById(String orderId);
 
     List<Orders> getAllOrders();
 

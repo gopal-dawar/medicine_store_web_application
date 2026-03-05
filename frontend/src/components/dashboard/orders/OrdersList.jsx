@@ -18,43 +18,49 @@ const OrdersList = ({ orders }) => {
         </thead>
 
         <tbody className="divide-y divide-slate-700">
-          {orders.map((data) => {
-            return (
-              <tr className="hover:bg-slate-700 transition">
-                <td className="p-4 text-slate-200">{data.orderCode}</td>
-                <td className="p-4 text-slate-200">{data.user.fullName}</td>
-                <td className="p-4 text-slate-400">
-                  {new Date(data.orderDate).toLocaleDateString()}
-                </td>
-                <td className="p-4 text-slate-200">₹{data.totalAmount}</td>
-                <td className="p-4">
-                  <span
-                    className="px-3 py-1 rounded-full text-xs
+          {orders.length === 0 ? (
+            <p className="text-center text-white text-2xl p-3">
+              Not Data Found
+            </p>
+          ) : (
+            orders.map((data) => {
+              return (
+                <tr className="hover:bg-slate-700 transition">
+                  <td className="p-4 text-slate-200">{data.orderCode}</td>
+                  <td className="p-4 text-slate-200">{data.user.fullName}</td>
+                  <td className="p-4 text-slate-400">
+                    {new Date(data.orderDate).toLocaleDateString()}
+                  </td>
+                  <td className="p-4 text-slate-200">₹{data.totalAmount}</td>
+                  <td className="p-4">
+                    <span
+                      className="px-3 py-1 rounded-full text-xs
                                  bg-yellow-500/20 text-yellow-400"
-                  >
-                    {data.status}
-                  </span>
-                </td>
-                <td className="p-4 text-center space-x-2">
-                  <button
-                    onClick={() => navigate(`${data.id}`)}
-                    className="px-3 py-1 text-xs rounded
+                    >
+                      {data.status}
+                    </span>
+                  </td>
+                  <td className="p-4 text-center space-x-2">
+                    <button
+                      onClick={() => navigate(`${data.id}`)}
+                      className="px-3 py-1 text-xs rounded
                                    bg-slate-700 text-slate-200
                                    hover:bg-slate-600 transition"
-                  >
-                    View
-                  </button>
-                  <button
-                    className="px-3 py-1 text-xs rounded
+                    >
+                      View
+                    </button>
+                    <button
+                      className="px-3 py-1 text-xs rounded
                                    bg-slate-700 text-slate-200
                                    hover:bg-slate-600 transition"
-                  >
-                    Update
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>

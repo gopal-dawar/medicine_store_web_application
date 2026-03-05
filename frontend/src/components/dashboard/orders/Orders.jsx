@@ -3,6 +3,7 @@ import {
   getAllOrders,
   getCanelledOrderCount,
   getDeliveredOrderCount,
+  getOrderById,
   getOrderCount,
   getPendingOrderCount,
 } from "../../../api/ordersApi";
@@ -17,6 +18,8 @@ const Orders = () => {
   const [orderCancelled, setOrderCancelled] = useState(0);
   const [filterType, setFilterType] = useState("ALL");
   const isViewOrder = useMatch("/dashboard/orders/:id");
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -37,6 +40,24 @@ const Orders = () => {
     };
     fetchdata();
   }, []);
+
+  useEffect(() => {
+    const fetchdatausingId = async () => {
+      if (search === "") {
+        const re1 = await getAllOrders();
+        setOrders(re1.data);
+      } else {
+        const re = await getOrderById(search);
+        if (re.data) {
+          const ordersList = Array.isArray(re.data) ? re.data : [re.data];
+          setOrders(ordersList);
+        } else {
+          setOrders([]);
+        }
+      }
+    };
+    fetchdatausingId();
+  }, [search]);
 
   const filteredOrders = orders.filter((order) => {
     if (filterType === "ALL") return true;
@@ -96,24 +117,29 @@ const Orders = () => {
       </div>
 
       <div className="bg-slate-800 p-4 rounded-xl shadow flex flex-wrap gap-4">
-        <input
-          type="text"
-          placeholder="Search by Order ID"
-          className="bg-slate-900 border border-slate-700 text-slate-200
+        <div className="border border-slate-700 flex justify-center text-slate-200 placeholder:text-slate-500 rounded">
+          <input
+            type="text"
+            placeholder="Search by Order ID"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-slate-900 border border-slate-700 text-slate-200
                      placeholder:text-slate-500
                      px-4 py-2 rounded w-60
                      focus:outline-none focus:ring-2 focus:ring-slate-600"
-        />
+          />
+        </div>
 
         <select
+        
           className="bg-slate-900 border border-slate-700 text-slate-200
                      px-4 py-2 rounded
                      focus:outline-none focus:ring-2 focus:ring-slate-600"
         >
-          <option>All Status</option>
-          <option>Pending</option>
-          <option>Delivered</option>
-          <option>Cancelled</option>
+          <option value={"All"}>All Status</option>
+          <option value={"Pending"}>Pending</option>
+          <option value={"Delivered"}>Delivered</option>
+          <option value={"Cancelled"}>Cancelled</option>
         </select>
 
         <input

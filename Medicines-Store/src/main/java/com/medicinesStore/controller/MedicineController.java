@@ -77,25 +77,25 @@ public class MedicineController {
         return ResponseEntity.ok(updated);
     }
 
-    // ✅ GET BY ID
+    // GET BY ID
     @GetMapping("/{id}")
     public ResponseEntity<Medicines> getMedicineById(@PathVariable Long id) {
         return ResponseEntity.ok(medicineService.getMedicineById(id));
     }
 
-    // ✅ GET ALL
+    // GET ALL
     @GetMapping
     public ResponseEntity<List<Medicines>> getAllMedicines() {
         return ResponseEntity.ok(medicineService.getAllMedicines());
     }
 
-    // ✅ SEARCH
+    // SEARCH
     @GetMapping("/search")
     public ResponseEntity<List<Medicines>> searchMedicineByName(@RequestParam String name) {
         return ResponseEntity.ok(medicineService.searchMedicineByName(name));
     }
 
-    // ✅ DELETE
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMedicine(@PathVariable Long id) {
         medicineService.deleteMedicine(id);
