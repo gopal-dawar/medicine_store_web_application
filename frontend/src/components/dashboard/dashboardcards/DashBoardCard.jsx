@@ -28,7 +28,6 @@ const DashBoardCard = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      {/* Total Medicines */}
       <div
         onClick={() => navigate("/dashboard/medicines")}
         className="bg-slate-800 text-slate-100 p-6 rounded-xl shadow

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { countMedStock } from "../../../api/medicineApi";
+import { recentActivity } from "../../../api/RecentActivity";
 
 const LowStockAlert = ({ limit, place = false }) => {
   const [medicines, setMedicines] = useState([]);
@@ -9,15 +10,26 @@ const LowStockAlert = ({ limit, place = false }) => {
 
   useEffect(() => {
     const fetchdata = async () => {
-      const re = await countMedStock();
+      const re1 = await countMedStock();
+
       if (limit) {
-        setMedicines(re.data.data.slice(0, limit));
+        setMedicines(re1.data.data.slice(0, limit));
       } else {
-        setMedicines(re.data.data);
+        setMedicines(re1.data.data);
       }
     };
     fetchdata();
   }, [limit]);
+
+  // useEffect(() => {
+  //   const fetchdata = async () => {
+  //     const type = "ADDED";
+
+  //     const re2 = await recentActivity(type);
+  //     console.log(re2.data);
+  //   };
+  //   fetchdata();
+  // }, []);
 
   return (
     <div className="bg-slate-800 overflow-x-auto rounded-2xl shadow-lg p-6">

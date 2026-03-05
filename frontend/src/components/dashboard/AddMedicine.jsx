@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllCategories } from "../../api/categoryApi";
-import { addMedicine, getMedicineById, searchMedicineByName, updateMedicine } from "../../api/medicineApi";
+import {
+  addMedicine,
+  getMedicineById,
+  searchMedicineByName,
+  updateMedicine,
+} from "../../api/medicineApi";
+import { addActivity } from "../../api/RecentActivity";
 
 const initialMedicineState = {
   name: "",
@@ -27,7 +33,6 @@ const AddMedicine = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedMedicineId, setSelectedMedicineId] = useState(null);
-
   const navigate = useNavigate();
   const { id } = useParams();
   // Fetch categories
@@ -77,9 +82,25 @@ const AddMedicine = () => {
       if (selectedMedicineId) {
         await updateMedicine(selectedMedicineId, formData);
 
+        const activitydata = {
+          med_id: selectedMedicineId,
+          type: "UPDATED",
+          activityDateTime: new Date().toISOString(),
+        };
+
+        await addActivity(activitydata);
+
         alert("Medicine updated successfully");
       } else {
-        await addMedicine(formData);
+        const re = await addMedicine(formData);
+
+        const activitydata = {
+          med_id: re.data.id,
+          type: "ADDED",
+          activityDateTime: new Date().toISOString(),
+        };
+        await addActivity(activitydata);
+
         alert("Medicine added successfully");
       }
 
