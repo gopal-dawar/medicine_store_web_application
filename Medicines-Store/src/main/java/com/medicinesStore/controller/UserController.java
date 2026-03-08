@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -37,7 +38,11 @@ public class UserController {
 
         UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole().name());
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("userId", user.getId());
+        claim.put("roles", user.getRole());
+
+        String token = jwtUtil.generateToken(claim, user.getUsername());
 
         return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name()));
     }

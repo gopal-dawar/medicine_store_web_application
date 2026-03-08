@@ -9,6 +9,7 @@ const Nav2 = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [countrefresh, setCountrefresh] = useState(true);
 
   const refreshCartCount = async () => {
     try {
@@ -45,7 +46,9 @@ const Nav2 = () => {
             <div className="bg-[#4e97fd] text-white font-bold px-2 py-1 rounded">
               +
             </div>
-            <span className="text-xl font-bold text-slate-800">Medibazar</span>
+            <span className="text-xl font-bold text-slate-800">
+              Medicine Store
+            </span>
           </div>
 
           {/* NAV LINKS */}
@@ -93,7 +96,7 @@ const Nav2 = () => {
                 className="absolute -top-2 -right-2 bg-red-600 text-white
                            text-xs px-2 py-1 rounded-full font-bold"
               >
-                {cartItemCount}
+                {countrefresh && cartItemCount}
               </span>
             </button>
           </div>
