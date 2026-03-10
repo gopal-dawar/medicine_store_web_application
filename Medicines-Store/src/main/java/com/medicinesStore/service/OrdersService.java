@@ -8,6 +8,8 @@ public interface OrdersService {
 
     Orders checkout(Long userId, String deliveryAddress);
 
+    Orders getOrderById(Long id);
+
     List<Orders> getOrdersByUser(Long userId);
 
     Orders getOrderById(String orderId);
@@ -21,4 +23,6 @@ public interface OrdersService {
     Long deliveredOrderCount();
 
     Long canelledOrderCount();
+
+    Orders updateorder(Long id, Orders orders);
 }

@@ -26,6 +26,11 @@ public class OrdersController {
         return ResponseEntity.ok(ordersService.getOrdersByUser(userId));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Orders> getOrderById(@PathVariable Long id) {
+        return new ResponseEntity<>(ordersService.getOrderById(id), HttpStatus.OK);
+    }
+
     @GetMapping("/{orderCode}")
     public ResponseEntity<Orders> getOrderById(@PathVariable String orderCode) {
         return ResponseEntity.ok(ordersService.getOrderById(orderCode));
@@ -55,6 +60,11 @@ public class OrdersController {
     @GetMapping("/cancelledOrder")
     public ResponseEntity<Long> getCancelledOrderCount() {
         return new ResponseEntity<>(ordersService.canelledOrderCount(), HttpStatus.OK);
+    }
+
+    @PutMapping("/updateorder/{id}")
+    public ResponseEntity<Orders> updateOrder(@PathVariable Long id, @RequestBody Orders order) {
+        return new ResponseEntity<>(ordersService.updateorder(id, order), HttpStatus.OK);
     }
 
 

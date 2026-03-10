@@ -5,6 +5,7 @@ import com.medicinesStore.entity.OrderItem;
 import com.medicinesStore.entity.Orders;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.exception.CartItemNotFoundException;
+import com.medicinesStore.exception.OrderNotFoundException;
 import com.medicinesStore.repository.CartRepo;
 import com.medicinesStore.repository.MedicineRepo;
 import com.medicinesStore.repository.OrdersRepo;
@@ -102,6 +103,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
+    public Orders getOrderById(Long id) {
+        return ordersRepo.findById(id).orElseThrow(() -> new OrderNotFoundException("Order not found"));
+    }
+
+    @Override
     public List<Orders> getOrdersByUser(Long userId) {
         return ordersRepo.findByUserId(userId);
     }
@@ -134,6 +140,13 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Long canelledOrderCount() {
         return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("cancelled")).count();
+    }
+
+    @Override
+    public Orders updateorder(Long id, Orders orders) {
+        Orders or = ordersRepo.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not Found at : " + id));
+        or.setStatus(orders.getStatus());
+        return ordersRepo.save(or);
     }
 
 }
