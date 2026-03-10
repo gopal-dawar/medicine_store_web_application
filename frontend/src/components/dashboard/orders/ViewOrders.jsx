@@ -4,6 +4,7 @@ import { getOrderById } from "../../../api/ordersApi";
 
 const ViewOrders = () => {
   const { id } = useParams();
+
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
@@ -14,6 +15,8 @@ const ViewOrders = () => {
       try {
         const res = await getOrderById(id);
         setOrder(res.data);
+        
+        console.log(res.data);
       } catch (error) {
         console.error("Failed to fetch order", error);
       } finally {

@@ -34,24 +34,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(AbstractHttpConfigurer::disable).formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
 
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/register").permitAll()
-                        .requestMatchers("/categories/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/dashboard/**").hasRole("ADMIN")
-                        .requestMatchers("/home/**").hasRole("USER")
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/register").permitAll().requestMatchers("/categories/**").hasAnyRole("USER", "ADMIN").requestMatchers("/dashboard/**").hasRole("ADMIN").requestMatchers("/home/**").hasRole("USER").anyRequest().authenticated())
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -66,8 +53,7 @@ public class SecurityConfig {
         config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
