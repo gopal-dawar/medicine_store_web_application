@@ -14,9 +14,8 @@ const ViewOrders = () => {
     const fetchOrder = async () => {
       try {
         const res = await getOrderById(id);
-        setOrder(res.data);
-        
         console.log(res.data);
+        setOrder(res.data);
       } catch (error) {
         console.error("Failed to fetch order", error);
       } finally {

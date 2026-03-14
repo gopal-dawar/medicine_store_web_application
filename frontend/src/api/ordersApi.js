@@ -11,7 +11,7 @@ export const getOrdersByUser = (userId) => {
 };
 
 export const getOrderById = (orderCode) => {
-  return privateApi.get(`/orders/${orderCode}`);
+  return privateApi.get(`/orders/getorderbyid/${orderCode}`);
 };
 
 export const getAllOrders = () => {

@@ -17,7 +17,8 @@ const Orders = () => {
   const [orderDelivered, setOrderDelivered] = useState(0);
   const [orderCancelled, setOrderCancelled] = useState(0);
   const [filterType, setFilterType] = useState("ALL");
-  const isViewOrder = useMatch("/dashboard/orders/:id");
+  const isViewOrder = useMatch("/dashboard/orders/orders/vieworder/:id");
+  const isUpdateOrder = useMatch("/dashboard/orders/orders/updateOrder/:id");
   const [search, setSearch] = useState("");
   const [filterOrders, setFilterOrders] = useState([]);
 
@@ -149,7 +150,7 @@ const Orders = () => {
         </select>
       </div>
 
-      {!isViewOrder && <OrdersList orders={filterOrders} />}
+      {!(isViewOrder || isUpdateOrder) && <OrdersList orders={filterOrders} />}
 
       <Outlet />
     </main>

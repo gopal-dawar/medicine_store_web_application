@@ -26,7 +26,7 @@ public class OrdersController {
         return ResponseEntity.ok(ordersService.getOrdersByUser(userId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getorderbyid/{id}")
     public ResponseEntity<Orders> getOrderById(@PathVariable Long id) {
         return new ResponseEntity<>(ordersService.getOrderById(id), HttpStatus.OK);
     }

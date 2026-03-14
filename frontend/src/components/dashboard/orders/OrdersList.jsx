@@ -19,13 +19,13 @@ const OrdersList = ({ orders }) => {
 
         <tbody className="divide-y divide-slate-700">
           {orders.length === 0 ? (
-            <tr className="text-center text-white text-2xl p-3">
+            <tr colspan="6" className="text-center text-white text-2xl p-3">
               <td>Not Data Found</td>
             </tr>
           ) : (
             orders.map((data) => {
               return (
-                <tr className="hover:bg-slate-700 transition">
+                <tr key={data.id} className="hover:bg-slate-700 transition">
                   <td className="p-4 text-slate-200">{data.orderCode}</td>
                   <td className="p-4 text-slate-200">{data.user.fullName}</td>
                   <td className="p-4 text-slate-400">
@@ -42,7 +42,7 @@ const OrdersList = ({ orders }) => {
                   </td>
                   <td className="p-4 text-center space-x-2">
                     <button
-                      onClick={() => navigate(`${data.id}`)}
+                      onClick={() => navigate(`orders/vieworder/${data.id}`)}
                       className="px-3 py-1 text-xs rounded
                                    bg-slate-700 text-slate-200
                                    hover:bg-slate-600 transition"
@@ -50,7 +50,7 @@ const OrdersList = ({ orders }) => {
                       View
                     </button>
                     <button
-                      onClick={() => navigate(`orders/${data.id}`)}
+                      onClick={() => navigate(`orders/updateOrder/${data.id}`)}
                       className="px-3 py-1 text-xs rounded
                                    bg-slate-700 text-slate-200
                                    hover:bg-slate-600 transition"

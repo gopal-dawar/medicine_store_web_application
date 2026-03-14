@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getOrderById } from "../../../api/ordersApi";
 
 const UpdateOrder = () => {
-  
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [status, setStatus] = useState("");
@@ -15,12 +16,17 @@ const UpdateOrder = () => {
     };
 
     console.log(orderData);
-
-    // call API here
-    // axios.put(`/api/orders/${orderId}`, orderData)
-
     alert("Order status updated successfully");
   };
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      const re = await getOrderById(id);
+
+      console.log(re.data);
+    };
+    fetchdata();
+  }, []);
 
   return (
     <>

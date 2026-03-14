@@ -10,7 +10,7 @@ import ExpiryReminder from "../components/dashboard/dashboardcards/ExpiryReminde
 import MedicineDetails from "../components/model/MedicineDetails";
 import Orders from "../components/dashboard/orders/Orders";
 import ViewOrders from "../components/dashboard/orders/ViewOrders";
-// import UpdateOrder from "../components/dashboard/orders/UpdateOrder";
+import UpdateOrder from "../components/dashboard/orders/UpdateOrder";
 
 const Dashboard = () => {
   return (
@@ -24,8 +24,8 @@ const Dashboard = () => {
         <Route path="addmedicine" element={<AddMedicine />} />
         <Route path="addmedicine/:id" element={<AddMedicine />} />
         <Route path="orders" element={<Orders />}>
-          <Route path="orders/:id" element={<ViewOrders />} />
-          {/* <Route paht=":id" element={<UpdateOrder />} /> */}
+          <Route path="orders/vieworder/:id" element={<ViewOrders />} />
+          <Route path="orders/updateOrder/:id" element={<UpdateOrder />} />
         </Route>
         <Route path="customers" element={<Customers />} />
       </Route>
