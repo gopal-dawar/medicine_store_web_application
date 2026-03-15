@@ -143,10 +143,11 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Orders updateorder(Long id, Orders orders) {
+    public String updateorder(Long id, Orders orders) {
         Orders or = ordersRepo.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not Found at : " + id));
         or.setStatus(orders.getStatus());
-        return ordersRepo.save(or);
+        ordersRepo.save(or);
+        return "Successfully updated!";
     }
 
 }

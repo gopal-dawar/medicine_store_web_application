@@ -24,5 +24,7 @@ public interface OrdersService {
 
     Long canelledOrderCount();
 
-    Orders updateorder(Long id, Orders orders);
+    String updateorder(Long id, Orders orders);
+
+
 }

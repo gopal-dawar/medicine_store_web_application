@@ -9,7 +9,7 @@ import Testimonial from "./Testimonial";
 import Slider from "../slider/Slider";
 import TopBrandsSlider from "../slider/TopBrandsSlider";
 import FeatureSection from "../featureSection/FeatureSection";
-import FeatureGroup from "../FeatureSection/FeatureGroup";
+import FeatureGroup from "../featureSection/FeatureGroup"
 const HomeProductsSection = () => {
   return (
     <div>

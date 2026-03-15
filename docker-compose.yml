@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-medicine-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 45Gopal45
+      MYSQL_DATABASE: medicinestore_db
+    ports:
+      - "3307:3306"
+    networks:
+      - medicine-network
+
+  backend:
+    build: ./Medicines-Store
+    container_name: backend-medicine-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - medicine-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-medicine-container
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - medicine-network
+
+networks:
+  medicine-network:
