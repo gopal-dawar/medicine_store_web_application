@@ -41,27 +41,6 @@ public class OrdersController {
         return new ResponseEntity<>(ordersService.getAllOrders(), HttpStatus.OK);
     }
 
-    @GetMapping("/orderCount")
-    public ResponseEntity<Long> getOrderCount() {
-        return new ResponseEntity<>(ordersService.countOrder(), HttpStatus.OK);
-    }
-
-
-    @GetMapping("/pendingordercount")
-    public ResponseEntity<Long> getPendingOrderCount() {
-        return new ResponseEntity<>(ordersService.pendingOrderCount(), HttpStatus.OK);
-    }
-
-    @GetMapping("/deliveredOrder")
-    public ResponseEntity<Long> getDeliveredOrderCount() {
-        return new ResponseEntity<>(ordersService.deliveredOrderCount(), HttpStatus.OK);
-    }
-
-    @GetMapping("/cancelledOrder")
-    public ResponseEntity<Long> getCancelledOrderCount() {
-        return new ResponseEntity<>(ordersService.canelledOrderCount(), HttpStatus.OK);
-    }
-
     @PutMapping("/updateorder/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable Long id, @RequestBody Orders order) {
         return new ResponseEntity<>(ordersService.updateorder(id, order), HttpStatus.OK);
