@@ -116,10 +116,24 @@ const ViewOrders = () => {
         </table>
       </div>
 
-      <div className="bg-slate-800 p-5 rounded-xl shadow text-right">
+      <div className="bg-slate-800 p-5 rounded-xl shadow flex justify-between">
         <h3 className="text-xl font-bold text-slate-100">
           Total : ₹{Number(order.totalAmount).toFixed(2)}
         </h3>
+        <div className="flex justify-center items-center gap-4">
+          <button className="px-5 py-2 rounded bg-slate-700 text-slate-200 hover:bg-slate-600 transition">
+            View
+          </button>
+
+          <button
+            onClick={() =>
+              navigate(`/dashboard/orders/orders/updateOrder/${order.id}`)
+            }
+            className="px-5 py-2 rounded bg-slate-700 text-slate-200 hover:bg-slate-600 transition"
+          >
+            Update
+          </button>
+        </div>
       </div>
     </div>
   );

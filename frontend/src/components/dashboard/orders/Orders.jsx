@@ -9,7 +9,9 @@ const Orders = () => {
   const [orderPendingCount, setOrderPendingCount] = useState(0);
   const [orderDelivered, setOrderDelivered] = useState(0);
   const [orderCancelled, setOrderCancelled] = useState(0);
-
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [bulkAction, setBulkAction] = useState("");
+  const [selectMode, setSelectMode] = useState(false);
   const [filterType, setFilterType] = useState("ALL");
   const [search, setSearch] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -36,7 +38,7 @@ const Orders = () => {
       );
 
       setOrderCancelled(
-        data.filter((order) => order.status === "CANCELLED").length,  
+        data.filter((order) => order.status === "CANCELLED").length,
       );
 
       setOrdercount(re1.data.length);
@@ -68,6 +70,28 @@ const Orders = () => {
 
     setFilteredOrders(result);
   }, [search, filterType, orders]);
+
+  const handleBulkUpdate = () => {
+    if (!bulkAction) {
+      alert("Please select a bulk action");
+      return;
+    }
+
+    if (selectedOrders.length === 0) {
+      alert("Please select at least one order");
+      return;
+    }
+
+    const updatedOrders = orders.map((order) => {
+      if (selectedOrders.includes(order.id)) {
+        return { ...order, status: bulkAction };
+      }
+      return order;
+    });
+
+    setOrders(updatedOrders);
+    setSelectedOrders([]);
+  };
   return (
     <main className="p-6 space-y-6 bg-slate-900 min-h-screen">
       <div className="flex justify-between items-center">
@@ -118,36 +142,71 @@ const Orders = () => {
       </div>
 
       {/* Search + Filter */}
-      <div className="bg-slate-800 p-4 rounded-xl shadow flex flex-wrap gap-4">
+      <div className="bg-slate-800 p-4 rounded-xl shadow flex flex-wrap items-center gap-4">
         <input
           type="text"
-          placeholder="Search Order ID"
+          placeholder="Search Order ID / Customer"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="bg-slate-900 border border-slate-700 text-slate-200
-                     placeholder:text-slate-500 px-4 py-2 rounded w-60
-                     focus:outline-none focus:ring-2 focus:ring-slate-600"
+               placeholder:text-slate-500 px-4 py-2 rounded w-60
+               focus:outline-none focus:ring-2 focus:ring-slate-600"
         />
 
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
           className="bg-slate-900 border border-slate-700 text-slate-200
-                     px-4 py-2 rounded
-                     focus:outline-none focus:ring-2 focus:ring-slate-600"
+               px-4 py-2 rounded
+               focus:outline-none focus:ring-2 focus:ring-slate-600"
         >
           <option value="ALL">All Status</option>
           <option value="PENDING">Pending</option>
+          <option value="PROCESSING">Processing</option>
+          <option value="SHIPPED">Shipped</option>
           <option value="DELIVERED">Delivered</option>
           <option value="CANCELLED">Cancelled</option>
-          <option value="SHIPPED">Shipped</option>
-          <option value="PROCESSING">Processing</option>
         </select>
+        <div>
+          <button
+            onClick={() => setSelectMode(!selectMode)}
+            className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded"
+          >
+            {selectMode ? "Cancel Select" : "Select Orders"}
+          </button>
+        </div>
+        {/* Bulk Action */}
+        <select
+          value={bulkAction}
+          onChange={(e) => setBulkAction(e.target.value)}
+          className="bg-slate-900 border border-slate-700 text-slate-200
+             px-4 py-2 rounded
+             focus:outline-none focus:ring-2 focus:ring-slate-600"
+        >
+          <option value="">Bulk Action</option>
+          <option value="PROCESSING">Mark as Processing</option>
+          <option value="SHIPPED">Mark as Shipped</option>
+          <option value="DELIVERED">Mark as Delivered</option>
+          <option value="CANCELLED">Cancel Orders</option>
+        </select>
+
+        <button
+          onClick={handleBulkUpdate}
+          className=" bg-slate-700 text-slate-200 hover:bg-slate-600 px-4 py-2 rounded"
+        >
+          Apply
+        </button>
       </div>
 
       {/* Orders Table */}
       {!(isViewOrder || isUpdateOrder) && (
-        <OrdersList orders={filteredOrders} />
+        <OrdersList
+          orders={filteredOrders}
+          selectedOrders={selectedOrders}
+          setSelectedOrders={setSelectedOrders}
+          setSelectMode={setSelectMode}
+          selectMode={selectMode}
+        />
       )}
 
       <Outlet />
