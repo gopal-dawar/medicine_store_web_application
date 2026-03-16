@@ -11,6 +11,7 @@ import MedicineDetails from "../components/model/MedicineDetails";
 import Orders from "../components/dashboard/orders/Orders";
 import ViewOrders from "../components/dashboard/orders/ViewOrders";
 import UpdateOrder from "../components/dashboard/orders/UpdateOrder";
+import Reports from "../components/dashboard/Reports";
 
 const Dashboard = () => {
   return (
@@ -20,6 +21,8 @@ const Dashboard = () => {
         <Route path="medicines" element={<Medicines />} />
         <Route path="lowstock" element={<LowStockAlert place={true} />} />
         <Route path="expiremed" element={<ExpiryReminder place={true} />} />
+        <Route path="reports" element={<Reports place={true} />} />
+
         <Route path="meddetails/:id" element={<MedicineDetails />} />
         <Route path="addmedicine" element={<AddMedicine />} />
         <Route path="addmedicine/:id" element={<AddMedicine />} />
