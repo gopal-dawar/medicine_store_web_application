@@ -16,13 +16,6 @@ public interface OrdersService {
 
     List<Orders> getAllOrders();
 
-    Long countOrder();
-
-    Long pendingOrderCount();
-
-    Long deliveredOrderCount();
-
-    Long canelledOrderCount();
 
     String updateorder(Long id, Orders orders);
 

@@ -123,26 +123,6 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Long countOrder() {
-        return ordersRepo.findAll().stream().count();
-    }
-
-    @Override
-    public Long pendingOrderCount() {
-        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("pending")).count();
-    }
-
-    @Override
-    public Long deliveredOrderCount() {
-        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("delivered")).count();
-    }
-
-    @Override
-    public Long canelledOrderCount() {
-        return ordersRepo.findAll().stream().filter(x -> x.getStatus().equalsIgnoreCase("cancelled")).count();
-    }
-
-    @Override
     public String updateorder(Long id, Orders orders) {
         Orders or = ordersRepo.findById(id).orElseThrow(() -> new OrderNotFoundException("Order Not Found at : " + id));
         or.setStatus(orders.getStatus());
