@@ -21,19 +21,27 @@ const Login = () => {
 
     try {
       const re = await loginUser(userInfo);
-
-      console.log(re.data);
-
       setSuccessMsg("OTP sent to your email 📩");
 
-      // ✅ only change: redirect to OTP page
       setTimeout(() => {
         navigate("/otpverification", {
           state: { email: re.data.email },
         });
       }, 1000);
     } catch (error) {
-      setErrorMsg("Invalid username or password");
+      if (error.response) {
+        if (error.response.status === 401 || error.response.status === 403) {
+          setErrorMsg("Invalid username or password");
+        } else if (error.response.status === 500) {
+          setErrorMsg("Server error, please try again later");
+        } else {
+          setErrorMsg("Something went wrong");
+        }
+      } else if (error.request) {
+        setErrorMsg("Please check your internet connection");
+      } else {
+        setErrorMsg("Unexpected error occurred");
+      }
     }
   };
 

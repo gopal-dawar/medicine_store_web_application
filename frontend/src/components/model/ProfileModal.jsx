@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MyOrders from "./MyOrders";
+import { logoutUser } from "../../service/authService";
 
 const ProfileModal = ({ show, onClose, user }) => {
   const [open, setOpen] = useState(false);
@@ -8,11 +9,15 @@ const ProfileModal = ({ show, onClose, user }) => {
 
   if (!show) return null;
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("role");
-    onClose();
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+
+      sessionStorage.clear();
+      navigate("/login");
+    } catch (err) {
+      console.log("Logout failed");
+    }
   };
 
   return (

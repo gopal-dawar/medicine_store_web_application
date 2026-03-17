@@ -3,9 +3,14 @@ package com.medicinesStore.controller;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.security.JwtUtil;
 import com.medicinesStore.service.UserInfoService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -34,12 +39,7 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody UserInfo userInfo) {
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        userInfo.getUsername(),
-                        userInfo.getPassword()
-                )
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword()));
 
         UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
@@ -56,17 +56,10 @@ public class UserController {
             userInfoService.sendOtp(user.getEmail());
         } catch (Exception e) {
             e.printStackTrace(); // 👈 VERY IMPORTANT (check console)
-            return ResponseEntity.internalServerError().body(
-                    Map.of("error", "Failed to send OTP")
-            );
+            return ResponseEntity.internalServerError().body(Map.of("error", "Failed to send OTP"));
         }
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message", "OTP sent successfully",
-                        "email", user.getEmail()
-                )
-        );
+        return ResponseEntity.ok(Map.of("message", "OTP sent successfully", "email", user.getEmail()));
     }
 
     @DeleteMapping("/delete")
@@ -77,29 +70,26 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserInfo> getCurrentUser(org.springframework.security.core.Authentication authentication) {
-        String username = authentication.getName(); // from JWT
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+
+        String username = authentication.getName();
         UserInfo user = userInfoService.getByUsername(username);
-        return ResponseEntity.ok(user);
+
+        return ResponseEntity.ok(Map.of("email", user.getEmail(), "role", user.getRole().name()));
     }
 
     @PostMapping("/otp")
     public ResponseEntity<?> sendOtp(@RequestParam String email) {
-
         try {
             userInfoService.sendOtp(email);
-
             return ResponseEntity.ok().body(Map.of("message", "OTP sent successfully", "email", email));
-
         } catch (Exception e) {
-
             return ResponseEntity.badRequest().body(Map.of("error", "Failed to send OTP"));
         }
-
     }
 
     @PostMapping("/auth/verify-otp")
-    public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> request, HttpServletResponse response) {
 
         String email = request.get("email");
         String otp = request.get("otp");
@@ -107,18 +97,24 @@ public class UserController {
         boolean isValid = userInfoService.verifyOtp(email, otp);
 
         if (isValid) {
-
             UserInfo user = userInfoService.getByEmail(email);
-
             Map<String, Object> claim = new HashMap<>();
             claim.put("userId", user.getId());
             claim.put("roles", user.getRole());
-
             String token = jwtUtil.generateToken(claim, user.getUsername());
-
-            return ResponseEntity.ok(Map.of("token", token, "role", user.getRole().name()));
+            ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true)     // 🔐 cannot access from JS
+                    .secure(false).path("/").maxAge(24 * 60 * 60).sameSite("Lax").build();
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            return ResponseEntity.ok(Map.of("message", "Login successful", "role", user.getRole().name()));
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid or expired OTP"));
+    }
 
-        return ResponseEntity.badRequest().body(Map.of("error", "Invalid or expired OTP"));
+    @PostMapping("/auth/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("token", "").httpOnly(true).secure(false).path("/").maxAge(0) // delete cookie
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(Map.of("message", "Logged out"));
     }
 }

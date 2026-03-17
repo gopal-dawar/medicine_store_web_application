@@ -13,5 +13,9 @@ export const verifyOtp = (data) => {
 };
 
 export const sendOtp = (email) => {
-  return publicApi.post("/auth/verify-otp", email);
+  return publicApi.post("/otp", email);
+};
+
+export const logoutUser = () => {
+  return publicApi.post("/auth/logout");
 };
