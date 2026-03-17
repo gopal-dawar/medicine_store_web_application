@@ -90,10 +90,8 @@ public class OrdersServiceImpl implements OrdersService {
         order.setTotalAmount(totalAmount);
         order.setTotalItems(totalItems);
 
-        // ✅ First save (gets ID)
         Orders savedOrder = ordersRepo.save(order);
 
-        // ✅ Now set real order code
         savedOrder.setOrderCode("ORD" + savedOrder.getId());
         savedOrder = ordersRepo.save(savedOrder);
 
