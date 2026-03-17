@@ -1,28 +1,34 @@
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-
-const isTokenValid = (token) => {
-  try {
-    const decoded = jwtDecode(token);
-    return decoded.exp * 1000 > Date.now();
-  } catch {
-    return false;
-  }
-};
+import { useEffect, useState } from "react";
+import publicApi from "../api/publicApi";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const token = sessionStorage.getItem("authToken");
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-  if (!token || !isTokenValid(token)) {
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("role");
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await publicApi.get("/me");
+
+        setUser(res.data);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  const decoded = jwtDecode(token);
-  const userRole = decoded.role || sessionStorage.getItem("role");
-
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 

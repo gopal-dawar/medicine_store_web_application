@@ -14,14 +14,24 @@ export const CartProvider = ({ children }) => {
   const [count, setCount] = useState(0);
 
   const fetchCart = async () => {
-    const res = await getCartItems();
-    setCart(res.data);
+    try {
+      const res = await getCartItems();
+      setCart(res.data);
+    } catch (error) {
+      console.error("Cart Fetch Error:", error.response?.data || error.message);
+    }
   };
 
-
   const fetchCount = async () => {
-    const res = await cartItemCounts();
-    setCount(res.data);
+    try {
+      const res = await cartItemCounts();
+      setCount(res.data);
+    } catch (error) {
+      console.error(
+        "Count Fetch Error:",
+        error.response?.data || error.message,
+      );
+    }
   };
 
   const addItem = async (userId, medicineId, quantity) => {

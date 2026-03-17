@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { BiSearch, BiMenu } from "react-icons/bi";
 import { CiShoppingCart } from "react-icons/ci";
 import Cart from "../model/Cart";
-import { cartItemCounts } from "../../api/cartApi";
+import { CartContext } from "../../context/CartContext";
 
 const Nav2 = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
-  const [cartItemCount, setCartItemCount] = useState(0);
-  const [countrefresh, setCountrefresh] = useState(true);
 
-  const refreshCartCount = async () => {
-    try {
-      const res = await cartItemCounts();
-      setCartItemCount(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    refreshCartCount();
-  }, []);
+  // ✅ Use context instead of API call
+  const { count } = useContext(CartContext);
 
   const activeClass = "text-[#4e97fd] border-b-2 border-[#4e97fd] pb-1";
 
@@ -39,6 +27,7 @@ const Nav2 = () => {
     <>
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          {/* LOGO */}
           <div
             onClick={() => navigate("/")}
             className="flex items-center gap-2 cursor-pointer"
@@ -80,6 +69,7 @@ const Nav2 = () => {
               <BiSearch className="absolute right-3 top-2.5 text-gray-500 text-lg" />
             </div>
 
+            {/* MOBILE MENU */}
             <button className="md:hidden text-2xl text-slate-700">
               <BiMenu />
             </button>
@@ -92,11 +82,12 @@ const Nav2 = () => {
             >
               <CiShoppingCart className="text-3xl" />
               My Cart
+              {/* ✅ Cart Count from Context */}
               <span
                 className="absolute -top-2 -right-2 bg-red-600 text-white
                            text-xs px-2 py-1 rounded-full font-bold"
               >
-                {countrefresh && cartItemCount}
+                {count}
               </span>
             </button>
           </div>
@@ -105,11 +96,7 @@ const Nav2 = () => {
 
       {/* CART MODAL */}
       {openCart && (
-        <Cart
-          isOpen={openCart}
-          onClose={() => setOpenCart(false)}
-          refreshCartCount={refreshCartCount}
-        />
+        <Cart isOpen={openCart} onClose={() => setOpenCart(false)} />
       )}
     </>
   );

@@ -16,7 +16,6 @@ const OtpVerification = () => {
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
 
-  // ⏳ Timer logic
   useEffect(() => {
     if (timer === 0) {
       setCanResend(true);
@@ -33,23 +32,40 @@ const OtpVerification = () => {
   const handleResendOtp = async () => {
     try {
       await sendOtp(email);
+
       setSuccessMsg("OTP resent successfully 📩");
+      setErrorMsg("");
       setTimer(30);
       setCanResend(false);
     } catch (err) {
-      setErrorMsg("Failed to resend OTP");
+      if (err.response) {
+        if (err.response.status === 400) {
+          setErrorMsg("Invalid email address");
+        } else if (err.response.status === 404) {
+          setErrorMsg("User not found");
+        } else if (err.response.status === 500) {
+          setErrorMsg("Server error, try again later");
+        } else {
+          setErrorMsg("Failed to resend OTP");
+        }
+      } else if (err.request) {
+        setErrorMsg("Please check your internet connection 🌐");
+      } else {
+        setErrorMsg("Something went wrong");
+      }
     }
   };
 
-  // ✅ Verify OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+
     setErrorMsg("");
+    setSuccessMsg("");
 
     try {
       const res = await verifyOtp({ email, otp });
 
-      setAuth(res.data.token, res.data.role);
+      setAuth(res.data.role);
 
       setSuccessMsg("Login successful 🎉");
 
@@ -57,7 +73,23 @@ const OtpVerification = () => {
         navigate(res.data.role === "ADMIN" ? "/dashboard" : "/home");
       }, 1000);
     } catch (err) {
-      setErrorMsg("Invalid or expired OTP");
+      if (err.response) {
+        if (err.response.status === 400) {
+          setErrorMsg("Invalid OTP");
+        } else if (err.response.status === 410) {
+          setErrorMsg("OTP expired");
+        } else if (err.response.status === 404) {
+          setErrorMsg("User not found");
+        } else if (err.response.status === 500) {
+          setErrorMsg("Server error, please try again later");
+        } else {
+          setErrorMsg("Verification failed");
+        }
+      } else if (err.request) {
+        setErrorMsg("Please check your internet connection 🌐");
+      } else {
+        setErrorMsg("Something went wrong");
+      }
     }
   };
 
