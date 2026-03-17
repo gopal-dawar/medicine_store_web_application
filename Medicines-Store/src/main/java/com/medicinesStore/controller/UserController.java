@@ -71,11 +71,19 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "User not authenticated"));
+        }
 
         String username = authentication.getName();
+
         UserInfo user = userInfoService.getByUsername(username);
 
-        return ResponseEntity.ok(Map.of("email", user.getEmail(), "role", user.getRole().name()));
+        return ResponseEntity.ok(Map.of(
+                "email", user.getEmail(),
+                "role", user.getRole().name()
+        ));
     }
 
     @PostMapping("/otp")
@@ -94,20 +102,41 @@ public class UserController {
         String email = request.get("email");
         String otp = request.get("otp");
 
+        if (email == null || otp == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email or OTP missing"));
+        }
+
         boolean isValid = userInfoService.verifyOtp(email, otp);
 
-        if (isValid) {
-            UserInfo user = userInfoService.getByEmail(email);
+
+        if (!isValid) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid or expired OTP"));
+        }
+
+        UserInfo user = userInfoService.getByEmail(email);
+
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+
+        try {
             Map<String, Object> claim = new HashMap<>();
             claim.put("userId", user.getId());
             claim.put("roles", user.getRole());
+
             String token = jwtUtil.generateToken(claim, user.getUsername());
-            ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true)     // 🔐 cannot access from JS
-                    .secure(false).path("/").maxAge(24 * 60 * 60).sameSite("Lax").build();
+
+            ResponseCookie cookie = ResponseCookie.from("token", token).httpOnly(true).secure(false).path("/").maxAge(24 * 60 * 60).sameSite("Lax").build();
+
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
             return ResponseEntity.ok(Map.of("message", "Login successful", "role", user.getRole().name()));
+
+        } catch (Exception e) {
+            e.printStackTrace(); // 🔥 check console
+            return ResponseEntity.internalServerError().body(Map.of("error", "Server error during login"));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid or expired OTP"));
     }
 
     @PostMapping("/auth/logout")

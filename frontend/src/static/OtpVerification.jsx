@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setAuth } from "../utils/tokenService";
 import { verifyOtp, sendOtp } from "../service/authService";
+import publicApi from "../api/publicApi";
 
 const OtpVerification = () => {
   const navigate = useNavigate();
@@ -65,13 +66,9 @@ const OtpVerification = () => {
     try {
       const res = await verifyOtp({ email, otp });
 
-      setAuth(res.data.role);
-
       setSuccessMsg("Login successful 🎉");
 
-      setTimeout(() => {
-        navigate(res.data.role === "ADMIN" ? "/dashboard" : "/home");
-      }, 1000);
+      navigate(res.data.role === "ADMIN" ? "/dashboard" : "/home");
     } catch (err) {
       if (err.response) {
         if (err.response.status === 400) {

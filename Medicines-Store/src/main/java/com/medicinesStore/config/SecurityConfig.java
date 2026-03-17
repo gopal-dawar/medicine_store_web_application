@@ -38,7 +38,9 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/register", "/otp", "/auth/verify-otp").permitAll().requestMatchers("/categories/**").hasAnyRole("USER", "ADMIN").requestMatchers("/dashboard/**").hasRole("ADMIN").requestMatchers("/home/**").hasRole("USER").anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/register", "/otp", "/auth/verify-otp")
+
+                        .permitAll().requestMatchers("/**").permitAll().requestMatchers("/categories/**").hasAnyRole("USER", "ADMIN").requestMatchers("/dashboard/**").hasRole("ADMIN").requestMatchers("/home/**").hasRole("USER").anyRequest().authenticated())
 
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -49,8 +51,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Set-Cookie"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

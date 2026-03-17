@@ -17,23 +17,38 @@ public class JwtUtil {
 
 
     public String generateToken(Map<String, Object> claims, String username) {
-        return Jwts.builder().setClaims(claims).setSubject(username).setIssuer(new Date().toString()).setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)).signWith(secretKey).compact();
+        return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)).signWith(secretKey).compact();
     }
+
 
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
+
     public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            return extractClaims(token).getSubject();
+        } catch (Exception e) {
+            return null;
+        }
     }
+
 
     public Boolean isTokenValid(String token) {
-        return extractClaims(token).getExpiration().after(new Date());
+        try {
+            return extractClaims(token).getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
+
 
     public Long extractUserId(String token) {
-        return extractClaims(token).get("userId", Long.class);
+        try {
+            return extractClaims(token).get("userId", Long.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
-
 }

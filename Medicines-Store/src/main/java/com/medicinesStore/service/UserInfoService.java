@@ -51,12 +51,17 @@ public class UserInfoService {
 
     public void sendOtp(String email) {
         UserInfo user = userRepo.findByEmail(email).orElseThrow();
+
         String otp = OTPUtill.generateOtp();
 
         user.setOtp(otp);
         user.setOtpExpire(LocalDateTime.now().plusMinutes(5));
         userRepo.save(user);
-        emailService.sendOtp(email, otp);
+        try {
+            emailService.sendOtp(email, otp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public UserInfo getByEmail(String email) {
@@ -64,17 +69,26 @@ public class UserInfoService {
     }
 
     public boolean verifyOtp(String email, String userOtp) {
+
         UserInfo user = userRepo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
-        if (user == null) {
+
+        if (user.getOtp() == null || user.getOtpExpire() == null) {
             return false;
         }
-        if (user.getOtp().equals(userOtp) && user.getOtpExpire().isAfter(LocalDateTime.now())) {
-            user.setVerified(true);
-            user.setOtp(null);
-            userRepo.save(user);
-            return true;
+
+        if (!user.getOtp().trim().equals(userOtp.trim())) {
+            return false;
         }
-        return false;
+
+        if (user.getOtpExpire().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+        user.setVerified(true);
+        user.setOtp(null);
+        user.setOtpExpire(null);
+
+        userRepo.save(user);
+        return true;
     }
 
 

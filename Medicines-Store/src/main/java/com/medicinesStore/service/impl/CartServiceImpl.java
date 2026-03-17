@@ -70,7 +70,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeFromCart(Long cartId) {
         cartRepo.deleteById(cartId);
-
     }
 
     @Override
@@ -80,7 +79,6 @@ public class CartServiceImpl implements CartService {
             cart.setStatus("REMOVED");
             cart.setUpdatedAt(LocalDateTime.now());
         }
-
         cartRepo.saveAll(carts);
     }
 
@@ -90,8 +88,7 @@ public class CartServiceImpl implements CartService {
         BigDecimal total = carts.stream().map(c -> c.getPrice().multiply(BigDecimal.valueOf(c.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
     }
-
-
+    
     @Override
     public Long cartItemCount(Long userId) {
         return cartRepo.findCartByUserId(userId).stream().count();

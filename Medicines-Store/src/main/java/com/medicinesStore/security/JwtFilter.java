@@ -26,6 +26,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        if (path.equals("/auth/login") || path.equals("/register") || path.equals("/otp") || path.equals("/auth/verify-otp")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = null;
 
         if (request.getCookies() != null) {
@@ -43,21 +51,25 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        if (token != null) {
-            String username = jwtUtil.extractUsername(token);
+        try {
+            if (token != null) {
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null && jwtUtil.isTokenValid(token)) {
+                String username = jwtUtil.extractUsername(token);
 
-                UserDetails user = userDetailsService.loadUserByUsername(username);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null && jwtUtil.isTokenValid(token)) {
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    UserDetails user = userDetailsService.loadUserByUsername(username);
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
+
+        } catch (Exception e) {
+            System.out.println("JWT Error: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);
     }
-
-
 }
