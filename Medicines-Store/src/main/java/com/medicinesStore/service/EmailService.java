@@ -11,9 +11,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendOtp(String email, String otp) {
-
         SimpleMailMessage message = new SimpleMailMessage();
-
         message.setTo(email);
         message.setSubject("Medicine Store OTP Verification");
         message.setText("Your OTP is : " + otp);

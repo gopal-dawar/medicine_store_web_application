@@ -1,13 +1,10 @@
 package com.medicinesStore.security;
 
 
-import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 
 public class OTPUtill {
 

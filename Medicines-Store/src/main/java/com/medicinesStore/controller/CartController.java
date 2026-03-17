@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -57,18 +56,6 @@ public class CartController {
         Long userId = extractUserId(authHeader);
         cartService.clearCart(userId);
         return ResponseEntity.ok("Cart cleared successfully");
-    }
-
-    @GetMapping("/total")
-    public ResponseEntity<BigDecimal> getCartTotal(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserId(authHeader);
-        return ResponseEntity.ok(cartService.getCartTotal(userId));
-    }
-
-    @GetMapping("/count")
-    public ResponseEntity<Long> countCartItem(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserId(authHeader);
-        return new ResponseEntity<>(cartService.cartItemCount(userId), HttpStatus.OK);
     }
 
     @GetMapping("/orders")

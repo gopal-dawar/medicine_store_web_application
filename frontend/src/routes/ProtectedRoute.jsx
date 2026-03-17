@@ -7,26 +7,32 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const checkAuth = async () => {
       try {
-        const res = await publicApi.get("/me");
+        const res = await publicApi.get("/me", {
+          withCredentials: true,
+        });
 
-        setUser(res.data);
+        if (isMounted) setUser(res.data);
       } catch (err) {
-        setUser(null);
+        if (isMounted) setUser(null);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     checkAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) return <div>Loading...</div>;
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;

@@ -82,7 +82,7 @@ const Nav2 = () => {
             >
               <CiShoppingCart className="text-3xl" />
               My Cart
-              {/* ✅ Cart Count from Context */}
+              
               <span
                 className="absolute -top-2 -right-2 bg-red-600 text-white
                            text-xs px-2 py-1 rounded-full font-bold"
