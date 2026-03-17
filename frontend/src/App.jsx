@@ -10,6 +10,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSection";
 import Shop from "./pages/Shop";
 import ProductViewCard from "./components/model/ProductViewCard";
+import OtpVerification from "./static/OtpVerification";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/otpverification" element={<OtpVerification />} />
 
       <Route
         path="/home/*"

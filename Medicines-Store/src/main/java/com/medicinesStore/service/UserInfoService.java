@@ -3,19 +3,25 @@ package com.medicinesStore.service;
 import com.medicinesStore.entity.Role;
 import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.repository.UserRepo;
+import com.medicinesStore.security.OTPUtill;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class UserInfoService {
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public UserInfoService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserInfoService(EmailService emailService, UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public String register(UserInfo userInfo) {
@@ -35,12 +41,41 @@ public class UserInfoService {
     }
 
     public UserInfo getByUsername(String username) {
-        return userRepo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Transactional
     public void removeAccount(String username) {
         userRepo.deleteByUsername(username);
     }
+
+    public void sendOtp(String email) {
+        UserInfo user = userRepo.findByEmail(email).orElseThrow();
+        String otp = OTPUtill.generateOtp();
+
+        user.setOtp(otp);
+        user.setOtpExpire(LocalDateTime.now().plusMinutes(5));
+        userRepo.save(user);
+        emailService.sendOtp(email, otp);
+    }
+
+    public UserInfo getByEmail(String email) {
+        return userRepo.findByEmail(email).orElseThrow();
+    }
+
+    public boolean verifyOtp(String email, String userOtp) {
+        UserInfo user = userRepo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+        if (user == null) {
+            return false;
+        }
+        if (user.getOtp().equals(userOtp) && user.getOtpExpire().isAfter(LocalDateTime.now())) {
+            user.setVerified(true);
+            user.setOtp(null);
+            userRepo.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
 }

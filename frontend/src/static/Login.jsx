@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SuccessPopup from "../components/SuccessPopup";
 import { loginUser } from "../service/authService";
-import { setAuth } from "../utils/tokenService";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +8,6 @@ const Login = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [showLoginSuccessPopup, setShowLoginSuccessPopup] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
     username: "",
@@ -24,18 +21,17 @@ const Login = () => {
 
     try {
       const re = await loginUser(userInfo);
-      setAuth(re.data.token, re.data.role);
 
-      setSuccessMsg("Login successful 🎉");
-      setUserInfo({ username: "", password: "" });
-      setShowLoginSuccessPopup(true);
+      console.log(re.data);
 
+      setSuccessMsg("OTP sent to your email 📩");
+
+      // ✅ only change: redirect to OTP page
       setTimeout(() => {
-        setShowLoginSuccessPopup(false);
-        navigate(re.data.role === "ADMIN" ? "/dashboard" : "/home", {
-          replace: true,
+        navigate("/otpverification", {
+          state: { email: re.data.email },
         });
-      }, 2000);
+      }, 1000);
     } catch (error) {
       setErrorMsg("Invalid username or password");
     }
@@ -46,15 +42,11 @@ const Login = () => {
       <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-8">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-slate-100">
-            Medicine Store
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-100">Medicine Store</h1>
           <p className="text-slate-400 mt-1">
             {successMsg || "Login to manage medicines"}
           </p>
-          {errorMsg && (
-            <p className="text-red-500 text-sm mt-2">{errorMsg}</p>
-          )}
+          {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
         </div>
 
         {/* Form */}
@@ -77,9 +69,7 @@ const Login = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                👤
-              </span>
+              <span className="absolute left-3 top-2.5 text-slate-400">👤</span>
             </div>
           </div>
 
@@ -101,9 +91,7 @@ const Login = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                🔒
-              </span>
+              <span className="absolute left-3 top-2.5 text-slate-400">🔒</span>
 
               <button
                 type="button"
@@ -132,11 +120,9 @@ const Login = () => {
             className="w-full bg-slate-700 text-slate-100 py-2 rounded
                        font-semibold hover:bg-slate-600 transition"
           >
-            Login
+            Continue
           </button>
         </form>
-
-        <SuccessPopup show={showLoginSuccessPopup} />
 
         {/* Footer */}
         <p className="text-center text-sm text-slate-400 mt-6">

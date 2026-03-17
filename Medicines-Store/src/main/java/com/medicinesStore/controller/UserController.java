@@ -32,21 +32,42 @@ public class UserController {
 
 
     @PostMapping("/auth/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserInfo userInfo) {
+    public ResponseEntity<?> login(@RequestBody UserInfo userInfo) {
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userInfo.getUsername(), userInfo.getPassword()));
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userInfo.getUsername(),
+                        userInfo.getPassword()
+                )
+        );
 
         UserInfo user = userInfoService.getByUsername(userInfo.getUsername());
 
-        Map<String, Object> claim = new HashMap<>();
-        claim.put("userId", user.getId());
-        claim.put("roles", user.getRole());
+        // ✅ safety checks
+        if (user == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "User not found"));
+        }
 
-        String token = jwtUtil.generateToken(claim, user.getUsername());
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email not available"));
+        }
 
-        return ResponseEntity.ok(Map.of("message", "Login Successfully", "token", token, "role", user.getRole().name()));
+        try {
+            userInfoService.sendOtp(user.getEmail());
+        } catch (Exception e) {
+            e.printStackTrace(); // 👈 VERY IMPORTANT (check console)
+            return ResponseEntity.internalServerError().body(
+                    Map.of("error", "Failed to send OTP")
+            );
+        }
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "OTP sent successfully",
+                        "email", user.getEmail()
+                )
+        );
     }
-
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(org.springframework.security.core.Authentication authentication) {
@@ -62,4 +83,42 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/otp")
+    public ResponseEntity<?> sendOtp(@RequestParam String email) {
+
+        try {
+            userInfoService.sendOtp(email);
+
+            return ResponseEntity.ok().body(Map.of("message", "OTP sent successfully", "email", email));
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to send OTP"));
+        }
+
+    }
+
+    @PostMapping("/auth/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody Map<String, String> request) {
+
+        String email = request.get("email");
+        String otp = request.get("otp");
+
+        boolean isValid = userInfoService.verifyOtp(email, otp);
+
+        if (isValid) {
+
+            UserInfo user = userInfoService.getByEmail(email);
+
+            Map<String, Object> claim = new HashMap<>();
+            claim.put("userId", user.getId());
+            claim.put("roles", user.getRole());
+
+            String token = jwtUtil.generateToken(claim, user.getUsername());
+
+            return ResponseEntity.ok(Map.of("token", token, "role", user.getRole().name()));
+        }
+
+        return ResponseEntity.badRequest().body(Map.of("error", "Invalid or expired OTP"));
+    }
 }
