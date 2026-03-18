@@ -1,11 +1,14 @@
 package com.medicinesStore.controller;
 
 import com.medicinesStore.entity.Cart;
+import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.security.JwtUtil;
 import com.medicinesStore.service.CartService;
+import com.medicinesStore.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,21 +23,28 @@ public class CartController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserInfoService userInfoService;
+
     // ADD TO CART
     @PostMapping("/add")
-    public ResponseEntity<Cart> addToCart(@RequestHeader("Authorization") String authHeader, @RequestParam Long medicineId, @RequestParam(defaultValue = "1") Integer quantity) {
+    public ResponseEntity<?> addToCart(@RequestParam Long medicineId, @RequestParam(defaultValue = "1") Integer quantity, Authentication authentication) {
 
-        Long userId = extractUserId(authHeader);
-        Cart cart = cartService.addToCart(userId, medicineId, quantity);
+        if (authentication == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+        String username = authentication.getName();
+        UserInfo user = userInfoService.getByUsername(username);
+        Cart cart = cartService.addToCart(user.getId(), medicineId, quantity);
         return ResponseEntity.ok(cart);
     }
 
-
-    // GET USER CART
     @GetMapping("/cartdata")
-    public ResponseEntity<List<Cart>> getUserCart(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserId(authHeader);
-        return ResponseEntity.ok(cartService.getUserCart(userId));
+    public ResponseEntity<?> getCartItem(Authentication authentication) {
+        String username = authentication.getName();
+        UserInfo user = userInfoService.getByUsername(username);
+        List<Cart> cart = cartService.getCartItemByUserId(user.getId());
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
     // UPDATE QUANTITY
@@ -52,21 +62,12 @@ public class CartController {
     }
 
     @DeleteMapping("/clear")
-    public ResponseEntity<String> clearCart(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserId(authHeader);
-        cartService.clearCart(userId);
+    public ResponseEntity<String> clearCart(Authentication authentication) {
+        String username = authentication.getName();
+        UserInfo user = userInfoService.getByUsername(username);
+        cartService.clearCart(user.getId());
         return ResponseEntity.ok("Cart cleared successfully");
     }
 
-    @GetMapping("/orders")
-    public ResponseEntity<List<Cart>> getAllOrders() {
-        return new ResponseEntity<>(cartService.getAllOrders(), HttpStatus.OK);
-    }
-
-    // 🔹 Helper method (simple)
-    private Long extractUserId(String authHeader) {
-        String token = authHeader.substring(7);
-        return jwtUtil.extractUserId(token);
-    }
 
 }

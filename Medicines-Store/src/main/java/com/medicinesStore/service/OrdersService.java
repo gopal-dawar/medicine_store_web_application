@@ -12,10 +12,7 @@ public interface OrdersService {
 
     List<Orders> getOrdersByUser(Long userId);
 
-    Orders getOrderById(String orderId);
-
     List<Orders> getAllOrders();
-
 
     String updateorder(Long id, Orders orders);
 

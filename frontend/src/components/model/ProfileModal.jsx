@@ -12,11 +12,10 @@ const ProfileModal = ({ show, onClose, user }) => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-
       sessionStorage.clear();
       navigate("/login");
     } catch (err) {
-      console.log("Logout failed");
+      alert("Logout failed");
     }
   };
 
@@ -34,11 +33,11 @@ const ProfileModal = ({ show, onClose, user }) => {
         {/* Avatar */}
         <div className="flex flex-col items-center text-center">
           <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl font-semibold text-blue-600">
-            {user?.fullName?.charAt(0) || "U"}
+            {user?.name?.charAt(0) || "U"}
           </div>
 
           <h2 className="mt-4 text-xl font-semibold text-gray-800">
-            {user?.fullName || "Customer Name"}
+            {user?.name || "Customer Name"}
           </h2>
 
           <p className="text-sm text-gray-500">{user?.role || "USER"}</p>
@@ -68,7 +67,11 @@ const ProfileModal = ({ show, onClose, user }) => {
         {/* Actions */}
         <div className="mt-6 flex flex-col gap-3">
           <button
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true);
+
+              navigate("/home/myorders");
+            }}
             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             My Orders

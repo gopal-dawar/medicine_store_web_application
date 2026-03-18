@@ -11,13 +11,15 @@ import { getCurrentUser } from "../../api/userApi";
 import ProfileModal from "../model/ProfileModal";
 
 const Nav1 = () => {
-  const [user, setUser] = useState({});
+  const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const fetchcurrentuserdata = async () => {
       try {
         const re = await getCurrentUser();
+        setName(re.data.name);
         setUser(re.data);
       } catch (err) {
         console.error(err);
@@ -33,7 +35,6 @@ const Nav1 = () => {
           className="max-w-7xl mx-auto flex justify-between items-center
                      px-4 py-2 border-b border-slate-700"
         >
-          {/* Left: Social Icons */}
           <div className="flex items-center gap-3">
             {[
               FaFacebookF,
@@ -53,7 +54,6 @@ const Nav1 = () => {
             ))}
           </div>
 
-          {/* Right: Meta Info */}
           <div className="flex items-center gap-6">
             <div
               className="flex items-center gap-2 cursor-pointer
@@ -71,14 +71,13 @@ const Nav1 = () => {
 
             <span className="text-slate-600">|</span>
 
-            {/* Profile Button */}
             <div
               onClick={() => setOpen(true)}
               className="px-3 py-1 rounded-full border border-slate-700
                          hover:bg-slate-800 hover:text-slate-100
                          cursor-pointer transition"
             >
-              👤 {user?.fullName || "Guest"}
+              👤 {name || "Guest"}
             </div>
           </div>
         </div>

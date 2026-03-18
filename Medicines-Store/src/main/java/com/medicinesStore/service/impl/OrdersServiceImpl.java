@@ -37,7 +37,6 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     @Transactional
     public Orders checkout(Long userId, String deliveryAddress) {
-
         List<Cart> cartItems = cartRepo.findCartByUserId(userId);
 
         if (cartItems.isEmpty()) {
@@ -76,27 +75,19 @@ public class OrdersServiceImpl implements OrdersService {
             item.setMedicine(medicine);
             item.setQuantity(cart.getQuantity());
             item.setPrice(medicine.getPrice());
-
             totalAmount = totalAmount.add(
                     medicine.getPrice().multiply(BigDecimal.valueOf(cart.getQuantity()))
             );
-
             totalItems += cart.getQuantity();
-
             orderItems.add(item);
         }
-
         order.setItems(orderItems);
         order.setTotalAmount(totalAmount);
         order.setTotalItems(totalItems);
-
         Orders savedOrder = ordersRepo.save(order);
-
         savedOrder.setOrderCode("ORD" + savedOrder.getId());
         savedOrder = ordersRepo.save(savedOrder);
-
         cartRepo.deleteByUserId(userId);
-
         return savedOrder;
     }
 
@@ -108,11 +99,6 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersByUser(Long userId) {
         return ordersRepo.findByUserId(userId);
-    }
-
-    @Override
-    public Orders getOrderById(String orderCode) {
-        return ordersRepo.findByOrderCodeContainingIgnoreCase(orderCode);
     }
 
     @Override

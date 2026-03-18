@@ -8,11 +8,9 @@ import { CartContext } from "../../context/CartContext";
 const Nav2 = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
-
-  // ✅ Use context instead of API call
-  const { count } = useContext(CartContext);
-
   const activeClass = "text-[#4e97fd] border-b-2 border-[#4e97fd] pb-1";
+
+  const { cart } = useContext(CartContext);
 
   const menuItems = [
     { name: "Home", path: "/home" },
@@ -82,12 +80,11 @@ const Nav2 = () => {
             >
               <CiShoppingCart className="text-3xl" />
               My Cart
-              
               <span
                 className="absolute -top-2 -right-2 bg-red-600 text-white
                            text-xs px-2 py-1 rounded-full font-bold"
               >
-                {count}
+                {cart.length}
               </span>
             </button>
           </div>

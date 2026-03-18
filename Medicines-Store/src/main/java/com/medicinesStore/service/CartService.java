@@ -8,18 +8,13 @@ import java.util.List;
 public interface CartService {
     Cart addToCart(Long userId, Long medicineId, Integer quantity);
 
-    List<Cart> getUserCart(Long userId);
-
     Cart updateQuantity(Long cartId, Integer quantity);
 
     void removeFromCart(Long cartId);
 
     void clearCart(Long userId);
 
-    BigDecimal getCartTotal(Long userId);
-
-    Long cartItemCount(Long userId);
-
     List<Cart> getAllOrders();
 
+    List<Cart> getCartItemByUserId(Long userId);
 }

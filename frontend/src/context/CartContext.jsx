@@ -1,17 +1,16 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import {
-  addToCartItem,
   getCartItems,
+  addToCartItem,
   updateCartQuantity,
   removeCartItem,
-  cartItemCounts,
+  clearCartItem,
 } from "../api/cartApi";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const [count, setCount] = useState(0);
 
   const fetchCart = async () => {
     try {
@@ -22,51 +21,61 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const fetchCount = async () => {
+  const addItem = async (medicineId, quantity = 1) => {
     try {
-      const res = await cartItemCounts();
-      setCount(res.data);
+      await addToCartItem(medicineId, quantity);
+      fetchCart();
+    } catch (error) {
+      console.error("Add Cart Error:", error.response?.data || error.message);
+    }
+  };
+
+  const updateItem = async (cartId, quantity) => {
+    try {
+      await updateCartQuantity(cartId, quantity);
+      fetchCart();
     } catch (error) {
       console.error(
-        "Count Fetch Error:",
+        "Update Cart Error:",
         error.response?.data || error.message,
       );
     }
   };
 
-  const addItem = async (userId, medicineId, quantity) => {
-    await addToCartItem(userId, medicineId, quantity);
-    await fetchCart();
-    await fetchCount();
-  };
-
-  const updateQuantity = async (cartId, quantity) => {
-    await updateCartQuantity(cartId, quantity);
-    await fetchCart();
-    await fetchCount();
-  };
-
   const removeItem = async (cartId) => {
-    await removeCartItem(cartId);
-    setCart((prev) => prev.filter((c) => c.id !== cartId));
-    await fetchCount();
+    try {
+      await removeCartItem(cartId);
+      fetchCart();
+    } catch (error) {
+      console.error(
+        "Remove Cart Error:",
+        error.response?.data || error.message,
+      );
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      await clearCartItem();
+      setCart([]);
+    } catch (error) {
+      console.error("Clear Cart Error:", error.response?.data || error.message);
+    }
   };
 
   useEffect(() => {
     fetchCart();
-    fetchCount();
-    // fetchOrders();
   }, []);
 
   return (
     <CartContext.Provider
       value={{
         cart,
-        count,
-        // orders,
         addItem,
-        updateQuantity,
+        updateItem,
         removeItem,
+        clearCart,
+        fetchCart,
       }}
     >
       {children}

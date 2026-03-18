@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,28 +31,24 @@ public class CartServiceImpl implements CartService {
         }
 
         Medicines medicine = medicineRepo.findById(medicineId).orElseThrow(() -> new MedicineNotFoundException("Medicine not found"));
-        Cart cart = cartRepo.findByUserIdAndMedicines_IdAndStatus(userId, medicineId, "ACTIVE").orElse(new Cart());
 
-        cart.setUserId(userId);
-        cart.setMedicines(medicine);
-        cart.setUpdatedAt(LocalDateTime.now());
-        cart.setPrice(medicine.getPrice());
-        cart.setStatus("ACTIVE");
+        Cart cart = cartRepo.findByUserIdAndMedicines_IdAndStatus(userId, medicineId, "ACTIVE").orElse(null);
 
-        if (cart.getId() == null) {
+        if (cart == null) {
+            cart = new Cart();
+            cart.setUserId(userId);
+            cart.setMedicines(medicine);
             cart.setQuantity(quantity);
             cart.setCreatedAt(LocalDateTime.now());
+            cart.setStatus("ACTIVE");
         } else {
             cart.setQuantity(cart.getQuantity() + quantity);
-            cart.setUpdatedAt(LocalDateTime.now());
         }
 
-        return cartRepo.save(cart);
-    }
+        cart.setPrice(medicine.getPrice());
+        cart.setUpdatedAt(LocalDateTime.now());
 
-    @Override
-    public List<Cart> getUserCart(Long userId) {
-        return cartRepo.findCartByUserId(userId);
+        return cartRepo.save(cart);
     }
 
     @Override
@@ -82,20 +77,14 @@ public class CartServiceImpl implements CartService {
         cartRepo.saveAll(carts);
     }
 
-    @Override
-    public BigDecimal getCartTotal(Long userId) {
-        List<Cart> carts = cartRepo.findCartByUserId(userId);
-        BigDecimal total = carts.stream().map(c -> c.getPrice().multiply(BigDecimal.valueOf(c.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return total;
-    }
-    
-    @Override
-    public Long cartItemCount(Long userId) {
-        return cartRepo.findCartByUserId(userId).stream().count();
-    }
 
     @Override
     public List<Cart> getAllOrders() {
         return cartRepo.findAll();
+    }
+
+    @Override
+    public List<Cart> getCartItemByUserId(Long userId) {
+        return cartRepo.findCartByUserId(userId);
     }
 }

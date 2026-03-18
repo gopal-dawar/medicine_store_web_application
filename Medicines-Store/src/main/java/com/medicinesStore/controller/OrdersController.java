@@ -1,10 +1,13 @@
 package com.medicinesStore.controller;
 
 import com.medicinesStore.entity.Orders;
+import com.medicinesStore.entity.UserInfo;
 import com.medicinesStore.service.OrdersService;
+import com.medicinesStore.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,25 +18,29 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
-    @PostMapping("/checkout/{userId}")
-    public ResponseEntity<Orders> checkout(@PathVariable Long userId, @RequestParam String deliveryAddress) {
-        Orders order = ordersService.checkout(userId, deliveryAddress);
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @PostMapping("/checkout")
+    public ResponseEntity<Orders> checkout(@RequestParam String deliveryAddress, Authentication authentication) {
+        String username = authentication.getName();
+        UserInfo user = userInfoService.getByUsername(username);
+        Orders order = ordersService.checkout(user.getId(), deliveryAddress);
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Orders>> getOrdersByUser(@PathVariable Long userId) {
+    @GetMapping("/myorders")
+    public ResponseEntity<List<Orders>> getOrdersByUser(Authentication authentication) {
+        String username = authentication.getName();
+        UserInfo user = userInfoService.getByUsername(username);
+        Long userId = user.getId();
         return ResponseEntity.ok(ordersService.getOrdersByUser(userId));
     }
 
     @GetMapping("/getorderbyid/{id}")
     public ResponseEntity<Orders> getOrderById(@PathVariable Long id) {
         return new ResponseEntity<>(ordersService.getOrderById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/{orderCode}")
-    public ResponseEntity<Orders> getOrderById(@PathVariable String orderCode) {
-        return ResponseEntity.ok(ordersService.getOrderById(orderCode));
     }
 
     @GetMapping("/allOrders")

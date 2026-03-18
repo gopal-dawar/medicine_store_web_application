@@ -72,18 +72,11 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "User not authenticated"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not authenticated"));
         }
-
         String username = authentication.getName();
-
         UserInfo user = userInfoService.getByUsername(username);
-
-        return ResponseEntity.ok(Map.of(
-                "email", user.getEmail(),
-                "role", user.getRole().name()
-        ));
+        return ResponseEntity.ok(Map.of("email", user.getEmail(), "role", user.getRole().name(), "id", user.getId(), "name", user.getFullName()));
     }
 
     @PostMapping("/otp")

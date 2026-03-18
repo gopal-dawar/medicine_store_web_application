@@ -1,11 +1,14 @@
 // import { useContext } from "react";
 import { FaEye, FaShoppingCart } from "react-icons/fa";
-import { addToCartItem } from "../../api/cartApi";
+import { useContext } from "react";
+import { CartContext } from "../../context/CartContext";
 
 const ProductCard = ({ product, onQuickView }) => {
+  const { addItem } = useContext(CartContext);
+
   const handleAddToCart = async () => {
     try {
-      await addToCartItem(product.id, 1);
+      await addItem(product.id, 1);
       alert("Added to cart");
     } catch (error) {
       console.error("Add to cart error", error);

@@ -1,7 +1,7 @@
 import privateApi from "./privateApi";
 
-export const checkout = (userId, deliveryAddress) => {
-  return privateApi.post(`/orders/checkout/${userId}`, null, {
+export const checkout = (deliveryAddress) => {
+  return privateApi.post(`/orders/checkout`, null, {
     params: { deliveryAddress },
   });
 };
@@ -12,8 +12,8 @@ export const updateorder = (id, orders) => {
 };
 
 // get order by user
-export const getOrdersByUser = (userId) => {
-  return privateApi.get(`/orders/user/${userId}`);
+export const getOrdersByUser = () => {
+  return privateApi.get(`/orders/myorders`);
 };
 
 // get order by id

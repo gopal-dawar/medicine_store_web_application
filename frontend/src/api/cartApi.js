@@ -13,4 +13,4 @@ export const updateCartQuantity = (cartId, quantity) =>
 export const removeCartItem = (cartId) =>
   privateApi.delete(`/cart/remove/${cartId}`);
 
-export const cartItemCounts = () => privateApi.get("/cart/count");
+export const clearCartItem = () => privateApi.delete("/cart/clear");

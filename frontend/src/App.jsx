@@ -11,6 +11,7 @@ import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSe
 import Shop from "./pages/Shop";
 import ProductViewCard from "./components/model/ProductViewCard";
 import OtpVerification from "./static/OtpVerification";
+import MyOrders from "./components/model/MyOrders";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
         <Route index element={<HomeProductsSection />} />
         <Route path="shop" element={<Shop />} />
         <Route path="viewmeddetails/:id" element={<ProductViewCard />} />
+        <Route path="myorders" element={<MyOrders />} />
       </Route>
       <Route
         path="/dashboard/*"
