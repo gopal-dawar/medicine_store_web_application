@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../service/authService";
+import { FiUser, FiMail, FiLock } from "react-icons/fi";
+import { HiOutlineIdentification } from "react-icons/hi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,7 +12,6 @@ const Register = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     username: "",
@@ -44,9 +46,7 @@ const Register = () => {
 
       navigate("/login");
     } catch (error) {
-      setErrorMsg(
-        error.response?.data?.message || "Registration failed"
-      );
+      setErrorMsg(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -55,15 +55,11 @@ const Register = () => {
       <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-8">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-slate-100">
-            Medicine Store
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-100">Medicine Store</h1>
           <p className="text-slate-400 mt-1">
             {successMsg || "Create your account"}
           </p>
-          {errorMsg && (
-            <p className="text-red-500 text-sm mt-2">{errorMsg}</p>
-          )}
+          {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
@@ -72,7 +68,7 @@ const Register = () => {
             <label className="block text-sm font-medium text-slate-300">
               Full Name
             </label>
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex items-center">
               <input
                 type="text"
                 placeholder="Enter full name"
@@ -85,8 +81,8 @@ const Register = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                👤
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiUser />
               </span>
             </div>
           </div>
@@ -96,7 +92,7 @@ const Register = () => {
             <label className="block text-sm font-medium text-slate-300">
               Email
             </label>
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex items-center">
               <input
                 type="email"
                 placeholder="Enter email"
@@ -109,8 +105,8 @@ const Register = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                📧
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiMail />
               </span>
             </div>
           </div>
@@ -120,7 +116,7 @@ const Register = () => {
             <label className="block text-sm font-medium text-slate-300">
               Username
             </label>
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex items-center">
               <input
                 type="text"
                 placeholder="Choose username"
@@ -133,8 +129,8 @@ const Register = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                🆔
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <HiOutlineIdentification />
               </span>
             </div>
           </div>
@@ -144,7 +140,7 @@ const Register = () => {
             <label className="block text-sm font-medium text-slate-300">
               Password
             </label>
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Create password"
@@ -157,15 +153,15 @@ const Register = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                🔒
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiLock />
               </span>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-sm text-slate-400 hover:text-slate-200"
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>
             </div>
           </div>
@@ -175,7 +171,7 @@ const Register = () => {
             <label className="block text-sm font-medium text-slate-300">
               Confirm Password
             </label>
-            <div className="relative mt-1">
+            <div className="relative mt-1 flex items-center">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm password"
@@ -186,14 +182,12 @@ const Register = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">
-                🔒
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiLock />
               </span>
               <button
                 type="button"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-2.5 text-sm text-slate-400 hover:text-slate-200"
               >
                 {showConfirmPassword ? "Hide" : "Show"}
