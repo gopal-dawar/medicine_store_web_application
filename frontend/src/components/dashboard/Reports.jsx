@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllOrders } from "../../api/ordersApi";
-import { countExpireMedicine, countMedStock } from "../../api/medicineApi";
+// import { countExpireMedicine, countMedStock } from "../../api/medicineApi";
 
 const Reports = ({ place }) => {
   const navigate = useNavigate();
@@ -35,11 +35,11 @@ const Reports = ({ place }) => {
         data.filter((order) => order.status === "CANCELLED").length,
       );
 
-      const re2 = await countMedStock();
-      setLowStock(re2.data.data);
+      // const re2 = await countMedStock();
+      // setLowStock(re2.data.data);
 
-      const re3 = await countExpireMedicine();
-      setExpire(re3.data.data);
+      // const re3 = await countExpireMedicine();
+      // setExpire(re3.data.data);
     };
     fetchdata();
   }, []);

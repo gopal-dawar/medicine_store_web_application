@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { countMedStock } from "../../../api/medicineApi";
+import { MedicineContext } from "../../../context/MedicineContext";
 
-const LowStockAlert = ({ limit, place = false }) => {
-  const [medicines, setMedicines] = useState([]);
+const LowStockAlert = ({ place = false }) => {
+  const { medicines } = useContext(MedicineContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      const re1 = await countMedStock();
+  const [lowstockmed, setLowstockmed] = useState([]);
 
-      if (limit) {
-        setMedicines(re1.data.data.slice(0, limit));
-      } else {
-        setMedicines(re1.data.data);
-      }
-    };
-    fetchdata();
-  }, [limit]);
+  const getStockStatus = (stock) => {
+    if (stock === 0) return "OUT";
+    if (stock <= 5) return "CRITICAL";
+    return "LOW";
+  };
+
+  useEffect(() => {
+    if (!medicines) return;
+
+    const lowMed = medicines.filter((med) => med.stock <= 20);
+    setLowstockmed(lowMed);
+  }, [medicines]);
 
   return (
     <div className="bg-slate-800 overflow-x-auto rounded-2xl shadow-lg p-6">
@@ -42,13 +43,13 @@ const LowStockAlert = ({ limit, place = false }) => {
           )}
 
           <span className="text-xs bg-slate-700 text-yellow-400 px-3 py-1 rounded-full">
-            Low Quantity
+            Stock ≤ 20
           </span>
         </div>
       </div>
 
       {/* Empty State */}
-      {medicines.length === 0 ? (
+      {lowstockmed.length === 0 ? (
         <p className="text-sm text-slate-400 text-center py-6">
           ✅ All medicines are sufficiently stocked
         </p>
@@ -64,29 +65,53 @@ const LowStockAlert = ({ limit, place = false }) => {
           </thead>
 
           <tbody className="divide-y divide-slate-700">
-            {medicines.map((med) => (
-              <tr key={med.id} className="hover:bg-slate-700 transition">
-                <td className="py-3 font-medium text-slate-100">{med.name}</td>
+            {lowstockmed.map((med) => {
+              const status = getStockStatus(med.stock);
 
-                <td className="py-3 text-slate-400">{med.stock} left</td>
+              return (
+                <tr key={med.id} className="hover:bg-slate-700 transition">
+                  {/* Medicine Name */}
+                  <td className="py-3 font-medium text-slate-100">
+                    {med.name}
+                  </td>
 
-                <td className="py-3 text-center">
-                  <span className="px-3 py-1 text-xs rounded-full bg-red-500/20 text-red-400">
-                    Low Stock
-                  </span>
-                </td>
+                  {/* Stock */}
+                  <td className="py-3 text-slate-400">{med.stock} left</td>
 
-                <td className="py-3 text-center">
-                  <button
-                    className="px-3 py-1 text-xs rounded-full
-                               bg-slate-700 text-slate-300
-                               hover:bg-blue-600 hover:text-white transition"
-                  >
-                    Order Now
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  {/* Status */}
+                  <td className="py-3 text-center">
+                    <span
+                      className={`px-3 py-1 text-xs rounded-full ${
+                        status === "OUT"
+                          ? "bg-red-600/20 text-red-500"
+                          : status === "CRITICAL"
+                            ? "bg-red-500/20 text-red-400"
+                            : "bg-yellow-500/20 text-yellow-400"
+                      }`}
+                    >
+                      {status === "OUT"
+                        ? "Out of Stock"
+                        : status === "CRITICAL"
+                          ? "Critical"
+                          : "Low"}
+                    </span>
+                  </td>
+
+                  {/* Action */}
+                  <td className="py-3 text-center">
+                    <button
+                      className={`px-3 py-1 text-xs rounded-full transition ${
+                        med.stock === 0
+                          ? "bg-red-600 text-white"
+                          : "bg-slate-700 text-slate-300 hover:bg-blue-600 hover:text-white"
+                      }`}
+                    >
+                      {med.stock === 0 ? "Restock Urgent" : "Order Now"}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

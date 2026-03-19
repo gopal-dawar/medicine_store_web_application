@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllCategories } from "../../api/categoryApi";
-import {
-  addMedicine,
-  getMedicineById,
-  searchMedicineByName,
-  updateMedicine,
-} from "../../api/medicineApi";
 import { addActivity } from "../../api/RecentActivity";
+import { MedicineContext } from "../../context/MedicineContext";
+import { getMedicineById } from "../../api/medicineApi";
 
 const initialMedicineState = {
   name: "",
@@ -25,6 +21,8 @@ const initialMedicineState = {
 };
 
 const AddMedicine = () => {
+  const { addNewMedicine, updateExistingMedicine, searchSuggestions } =
+    useContext(MedicineContext);
   const [medicines, setMedicines] = useState(initialMedicineState);
 
   const [isUpdateMode, setIsUpdateMode] = useState(false);
@@ -35,6 +33,8 @@ const AddMedicine = () => {
   const [selectedMedicineId, setSelectedMedicineId] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
+  let debounceTimer;
+
   // Fetch categories
   useEffect(() => {
     getAllCategories()
@@ -78,28 +78,24 @@ const AddMedicine = () => {
       if (image) {
         formData.append("image", image);
       }
-
       if (selectedMedicineId) {
-        await updateMedicine(selectedMedicineId, formData);
+        await updateExistingMedicine(selectedMedicineId, formData);
 
-        const activitydata = {
+        await addActivity({
           med_id: selectedMedicineId,
           type: "UPDATED",
           activityDateTime: new Date().toISOString(),
-        };
-
-        await addActivity(activitydata);
+        });
 
         alert("Medicine updated successfully");
       } else {
-        const re = await addMedicine(formData);
+        const res = await addNewMedicine(formData);
 
-        const activitydata = {
-          med_id: re.data.id,
+        await addActivity({
+          med_id: res.data.id, // ✅ now works
           type: "ADDED",
           activityDateTime: new Date().toISOString(),
-        };
-        await addActivity(activitydata);
+        });
 
         alert("Medicine added successfully");
       }
@@ -111,44 +107,34 @@ const AddMedicine = () => {
     }
   };
 
-  const handleNameChange = async (e) => {
+  const handleNameChange = (e) => {
     const value = e.target.value;
 
-    if (value.trim() === "") {
-      setMedicines((prev) => ({
-        ...prev,
-        name: "",
-      }));
-      setSelectedMedicineId(null);
-      setIsUpdateMode(false);
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    // Normal typing
     setMedicines((prev) => ({
       ...prev,
       name: value,
     }));
 
-    // Switch back to ADD mode
     setSelectedMedicineId(null);
     setIsUpdateMode(false);
 
-    if (value.length < 2) {
+    if (value.trim().length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
 
-    try {
-      const res = await searchMedicineByName(value);
-      const list = Array.isArray(res.data) ? res.data : [];
-      setSuggestions(list);
-      setShowSuggestions(list.length > 0);
-    } catch (err) {
-      console.error(err);
-    }
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(async () => {
+      try {
+        const list = await searchSuggestions(value);
+        setSuggestions(list);
+        setShowSuggestions(list.length > 0);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 400); // ⏱️ delay
   };
 
   const handleSelectMedicine = (med) => {
@@ -177,11 +163,18 @@ const AddMedicine = () => {
   };
 
   useEffect(() => {
-    const updateMedfromMedicineComponent = async () => {
-      const re = await getMedicineById(id);
-      handleSelectMedicine(re.data);
+    if (!id) return;
+
+    const loadMedicine = async () => {
+      try {
+        const res = await getMedicineById(id);
+        handleSelectMedicine(res.data);
+      } catch (err) {
+        console.error(err);
+      }
     };
-    updateMedfromMedicineComponent();
+
+    loadMedicine();
   }, [id]);
   return (
     <div className="min-h-screen overflow-x-auto mt-10 bg-slate-900">
@@ -218,10 +211,11 @@ const AddMedicine = () => {
                 placeholder="Medicine Name"
                 value={medicines.name}
                 onChange={handleNameChange}
-                className="bg-slate-900 border border-slate-700 text-slate-200
-           px-4 py-2 rounded w-full
-           focus:outline-none focus:ring-2 focus:ring-slate-600"
-                required
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                onFocus={() =>
+                  suggestions.length > 0 && setShowSuggestions(true)
+                }
+                className="bg-slate-900 border border-slate-700 text-slate-200 px-4 py-2 rounded w-full"
               />
 
               {showSuggestions && suggestions.length > 0 && (

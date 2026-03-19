@@ -7,4 +7,3 @@ export const addActivity = (activity) => {
 export const recentActivity = (type) => {
   return privateApi.get(`/recentactivity/${type}`);
 };
-  
