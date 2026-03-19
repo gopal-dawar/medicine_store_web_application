@@ -11,7 +11,7 @@ import HomeProductsSection from "./components/HomeProductsSection/HomeProductsSe
 import Shop from "./pages/Shop";
 import ProductViewCard from "./components/model/ProductViewCard";
 import OtpVerification from "./static/OtpVerification";
-import MyOrders from "./components/model/MyOrders";
+import MyOrders from "./components/HomeProductsSection/MyOrders";
 
 const App = () => {
   return (
