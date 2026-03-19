@@ -7,21 +7,20 @@ import { MedicineProvider } from "./context/MedicineContext.jsx";
 import { CategoryProvider } from "./context/CategoryContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { OrdersProvider } from "./context/OrdersContext.jsx";
-
-import ErrorBoundary from "./components/error/ErrorBoundary.jsx";
+import ErrorBoundary from "./error/ErrorBoundary.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <ErrorBoundary>
-    <MedicineProvider>
-      <CategoryProvider>
-        <CartProvider>
-          <OrdersProvider>
-            <BrowserRouter>
+  <MedicineProvider>
+    <CategoryProvider>
+      <CartProvider>
+        <OrdersProvider>
+          <BrowserRouter>
+            <ErrorBoundary>
               <App />
-            </BrowserRouter>
-          </OrdersProvider>
-        </CartProvider>
-      </CategoryProvider>
-    </MedicineProvider>
-  </ErrorBoundary>,
+            </ErrorBoundary>
+          </BrowserRouter>
+        </OrdersProvider>
+      </CartProvider>
+    </CategoryProvider>
+  </MedicineProvider>,
 );
