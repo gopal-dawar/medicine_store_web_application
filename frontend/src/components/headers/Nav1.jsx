@@ -6,11 +6,15 @@ import {
   FaPinterestP,
   FaRss,
   FaTwitter,
+  FaRupeeSign,
 } from "react-icons/fa";
+import { FiUser, FiGlobe } from "react-icons/fi";
 import { getCurrentUser } from "../../api/userApi";
 import ProfileModal from "../model/ProfileModal";
+import { useNavigate } from "react-router-dom";
 
 const Nav1 = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
@@ -59,25 +63,33 @@ const Nav1 = () => {
               className="flex items-center gap-2 cursor-pointer
                          hover:text-slate-100 transition"
             >
-              <span className="text-base">🇺🇸</span>
+              <FiGlobe className="text-base" />
               <span>English</span>
             </div>
 
             <span className="text-slate-600">|</span>
 
-            <div className="cursor-pointer hover:text-slate-100 transition">
-              USD
+            <div className="flex items-center gap-1 cursor-pointer hover:text-slate-100 transition">
+              <FaRupeeSign size={12} />
+              INR
             </div>
 
             <span className="text-slate-600">|</span>
 
             <div
-              onClick={() => setOpen(true)}
-              className="px-3 py-1 rounded-full border border-slate-700
-                         hover:bg-slate-800 hover:text-slate-100
-                         cursor-pointer transition"
+              onClick={() => {
+                if (name) {
+                  setOpen(true);
+                } else {
+                  navigate("/login");
+                }
+              }}
+              className="flex items-center gap-2 px-3 py-1 rounded-full border border-slate-700
+             hover:bg-slate-800 hover:text-slate-100
+             cursor-pointer transition"
             >
-              👤 {name || "Guest"}
+              <FiUser size={14} />
+              <span>{name || "Guest"}</span>
             </div>
           </div>
         </div>

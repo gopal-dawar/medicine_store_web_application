@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../service/authService";
+import { FiUser, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +22,7 @@ const Login = () => {
 
     try {
       const re = await loginUser(userInfo);
-      setSuccessMsg("OTP sent to your email 📩");
+      setSuccessMsg("OTP sent to your email");
 
       setTimeout(() => {
         navigate("/otpverification", {
@@ -77,7 +78,9 @@ const Login = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">👤</span>
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiUser />
+              </span>
             </div>
           </div>
 
@@ -99,14 +102,16 @@ const Login = () => {
                            focus:ring-2 focus:ring-slate-600 focus:outline-none"
                 required
               />
-              <span className="absolute left-3 top-2.5 text-slate-400">🔒</span>
+              <span className="absolute left-3 top-3.5 text-slate-400">
+                <FiLock />
+              </span>
 
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-sm text-slate-400 hover:text-slate-200"
+                className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-200"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>
             </div>
           </div>

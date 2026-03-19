@@ -1,17 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../service/authService";
+import { FiEdit, FiMapPin, FiSettings, FiLock } from "react-icons/fi";
+
+import { MdOutlineShoppingBag } from "react-icons/md";
+import { GiMedicines } from "react-icons/gi";
 
 const ProfileModal = ({ show, onClose, user }) => {
   const navigate = useNavigate();
 
-  if (!show) return null; // ✅ modal control
+  if (!show) return null;
 
   const handleLogout = async () => {
     try {
       await logoutUser();
       sessionStorage.clear();
-      onClose(); // close modal
+      onClose();
       navigate("/login");
     } catch (err) {
       alert("Logout failed");
@@ -20,86 +24,133 @@ const ProfileModal = ({ show, onClose, user }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-      onClick={onClose} // ✅ click outside close
+      className="fixed inset-0 z-55 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl p-6"
-        onClick={(e) => e.stopPropagation()} // ✅ prevent close on inside click
+        className="w-full max-w-4xl bg-gray-100 rounded-xl shadow-xl p-6"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
+        <div className="flex  justify-center items-center gap-6">
+          <div className="bg-white rounded-xl w-2/3  shadow p-6 text-center">
+            <div className="w-24 h-24 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-3xl font-bold text-blue-600">
+              {user?.name?.charAt(0) || "U"}
+            </div>
+
+            <h2 className="mt-4 text-lg font-semibold">{user?.name}</h2>
+
+            <p className="text-gray-500 text-sm">{user?.email}</p>
+
+            <div className="my-5 border-t"></div>
+
+            <div className="mt-4 text-sm space-y-1">
+              <Option
+                label="Edit Profile"
+                icon={<FiEdit />}
+                onClick={() => navigate("/profile/edit")}
+              />
+
+              <Option
+                label="My Orders"
+                icon={<MdOutlineShoppingBag />}
+                onClick={() => {
+                  onClose();
+                  navigate("/home/myorders");
+                }}
+              />
+
+              <Option
+                label="Addresses"
+                icon={<FiMapPin />}
+                onClick={() => navigate("/addresses")}
+              />
+
+              <Option
+                label="Prescriptions"
+                icon={<GiMedicines />}
+                onClick={() => navigate("/prescriptions")}
+              />
+
+              <Option
+                label="Settings"
+                icon={<FiSettings />}
+                onClick={() => navigate("/settings")}
+              />
+
+              <Option
+                label="Change Password"
+                icon={<FiLock />}
+                onClick={() => navigate("/change-password")}
+              />
+            </div>
+
+            <div className="my-5 border-t"></div>
+
+            <button
+              onClick={handleLogout}
+              className="w-full py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          </div>
+
+          <div className="col-span-2 w-full space-y-4">
+            <div className="bg-white rounded-xl shadow p-6">
+              <h3 className="text-2xl font-semibold mb-4">Profile Details</h3>
+
+              <div className="flex flex-col gap-4 text-sm">
+                <InfoRow label="Full Name" value={user?.name} />
+                <InfoRow label="Email" value={user?.email} />
+                <InfoRow label="Phone" value={user?.phone} />
+                <InfoRow label="Address" value={user?.address} />
+                <InfoRow
+                  label="Member Since"
+                  value={
+                    user?.createdAt
+                      ? new Date(user.createdAt).toLocaleDateString()
+                      : "N/A"
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-black text-lg"
+          className="absolute top-5 right-6 text-gray-500 hover:text-black text-xl"
         >
           ✕
         </button>
-
-        {/* Profile Header */}
-        <div className="flex items-center gap-6">
-          <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center text-3xl font-semibold text-blue-600">
-            {user?.name?.charAt(0) || "U"}
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">
-              {user?.name || "Customer Name"}
-            </h2>
-            <p className="text-gray-500">{user?.role || "USER"}</p>
-          </div>
-        </div>
-
-        <div className="my-5 border-t"></div>
-
-        {/* Info */}
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-          <Info label="Email" value={user?.email} />
-          <Info label="Phone" value={user?.phone} />
-          <Info label="Address" value={user?.address} />
-          <Info label="User ID" value={user?.id} />
-          <Info label="Status" value={user?.active ? "Active" : "Inactive"} />
-          <Info
-            label="Member Since"
-            value={
-              user?.createdAt
-                ? new Date(user.createdAt).toLocaleDateString()
-                : "N/A"
-            }
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="mt-6 flex gap-4 flex-wrap">
-          <button
-            onClick={() => {
-              onClose();
-              navigate("/home/myorders");
-            }}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            My Orders
-          </button>
-
-          <button className="px-4 py-2 border rounded hover:bg-gray-100">
-            Change Password
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );
 };
 
-const Info = ({ label, value }) => (
-  <div className="flex justify-between border-b pb-2">
-    <span className="text-gray-500">{label}</span>
-    <span className="font-medium">{value || "N/A"}</span>
+const InfoRow = ({ label, value }) => (
+  <div
+    className="flex flex-col bg-gradient-to-r from-gray-50 to-white 
+                  p-4 rounded-xl shadow-sm hover:shadow-md transition"
+  >
+    <span className="text-xs text-gray-400 uppercase tracking-wide">
+      {label}
+    </span>
+
+    <span className="text-base font-semibold text-gray-800 mt-1">
+      {value || "N/A"}
+    </span>
+  </div>
+);
+const Option = ({ label, icon, onClick }) => (
+  <div
+    onClick={onClick}
+    className="flex items-center gap-3 px-4 py-2 rounded-lg 
+               cursor-pointer text-gray-700
+               hover:bg-blue-50 hover:text-blue-600 
+               transition group"
+  >
+    <span className="text-lg">{icon}</span>
+    <span className="font-medium">{label}</span>
   </div>
 );
 
