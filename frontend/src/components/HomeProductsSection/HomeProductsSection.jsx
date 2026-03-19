@@ -9,7 +9,7 @@ import Testimonial from "./Testimonial";
 import Slider from "../slider/Slider";
 import TopBrandsSlider from "../slider/TopBrandsSlider";
 import FeatureSection from "../featureSection/FeatureSection";
-import FeatureGroup from "../featureSection/FeatureGroup"
+import FeatureGroup from "../featureSection/FeatureGroup";
 const HomeProductsSection = () => {
   return (
     <div>
@@ -21,18 +21,20 @@ const HomeProductsSection = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
-            <ProductCategorySidebar />
+            {/* <ProductCategorySidebar /> */}
             <HotDealSlider />
             <SubscribeEmail />
             <Testimonial />
           </div>
           <div className="lg:col-span-3 space-y-8">
             <ProductGrid />
-            <NewBlogs />
-            <FeatureSection />
           </div>
         </div>
-        <div>
+        <div className="py-5">
+          <NewBlogs />
+          <div className="py-5">
+            <FeatureSection />
+          </div>
           <FeatureGroup />
         </div>
       </section>

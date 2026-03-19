@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/medicine")
@@ -83,17 +81,12 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getMedicineById(id));
     }
 
-    // GET ALL
     @GetMapping
-    public ResponseEntity<List<Medicines>> getAllMedicines() {
-        return ResponseEntity.ok(medicineService.getAllMedicines());
+    public ResponseEntity<Page<Medicines>> getMedicines(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(required = false) String name, @RequestParam(required = false) String category) {
+        Page<Medicines> medicines = medicineService.getMedicines(page, size, name, category);
+        return ResponseEntity.ok(medicines);
     }
 
-    // SEARCH
-    @GetMapping("/search")
-    public ResponseEntity<List<Medicines>> searchMedicineByName(@RequestParam String name) {
-        return ResponseEntity.ok(medicineService.searchMedicineByName(name));
-    }
 
     // DELETE
     @DeleteMapping("/{id}")
@@ -102,25 +95,5 @@ public class MedicineController {
         return ResponseEntity.ok("Successfully Deleted!");
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> countMedicine() {
-        return new ResponseEntity<>(medicineService.countTotalMedicine(), HttpStatus.OK);
-    }
 
-
-    @GetMapping("/countstock")
-    public ResponseEntity<Map<String, Object>> countLowStock() {
-        return new ResponseEntity<>(medicineService.countLowStock(), HttpStatus.OK);
-    }
-
-    @GetMapping("/expiremed")
-    public ResponseEntity<Map<String, Object>> countExpireMedicine() {
-        return new ResponseEntity<>(medicineService.countExpireMedicine(), HttpStatus.OK);
-    }
-
-    @GetMapping("/searchpagination")
-    public Page<Medicines> searchpagination(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "12") int size, @RequestParam(required = false) String category) {
-
-        return medicineService.medicinewithpagination(page, size, category);
-    }
 }

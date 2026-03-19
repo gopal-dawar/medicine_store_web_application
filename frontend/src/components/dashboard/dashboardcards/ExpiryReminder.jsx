@@ -1,26 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { countExpireMedicine } from "../../../api/medicineApi";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { MedicineContext } from "../../../context/MedicineContext";
 
-const ExpiryReminder = ({ limit, place = false }) => {
-  const [expiringSoon, setExpiringSoon] = useState([]);
+const ExpiryReminder = ({ place = false }) => {
+  const { medicines } = useContext(MedicineContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      const re = await countExpireMedicine();
-      if (limit) {
-        setExpiringSoon(re.data.data.slice(0, limit));
-      } else {
-        setExpiringSoon(re.data.data);
-      }
-    };
-    fetchdata();
-  }, [limit]);
+  const [expire, setExpire] = useState([]);
 
-  const CRITICAL_DAYS = 10;
-  const criticalDate = new Date();
-  criticalDate.setDate(criticalDate.getDate() + CRITICAL_DAYS);
+  const CRITICAL_DAYS = 20;
+
+  useEffect(() => {
+    if (!medicines) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const criticalDate = new Date(today);
+    criticalDate.setDate(criticalDate.getDate() + CRITICAL_DAYS);
+
+    const expiringSoon = medicines.filter((med) => {
+      if (!med.expiryDate) return false;
+
+      const expiry = new Date(med.expiryDate);
+      if (isNaN(expiry)) return false;
+
+      return expiry >= today && expiry <= criticalDate;
+    });
+
+    // Optional: sort by nearest expiry
+    expiringSoon.sort(
+      (a, b) => new Date(a.expiryDate) - new Date(b.expiryDate),
+    );
+
+    setExpire(expiringSoon);
+  }, [medicines]);
 
   return (
     <div
@@ -47,13 +61,12 @@ const ExpiryReminder = ({ limit, place = false }) => {
           )}
 
           <span className="text-xs bg-slate-700 text-yellow-400 px-3 py-1 rounded-full">
-            Next 10 Days
+            Next {CRITICAL_DAYS} Days
           </span>
         </div>
       </div>
 
-      {/* Empty State */}
-      {expiringSoon.length === 0 ? (
+      {expire.length === 0 ? (
         <p className="text-sm text-slate-400 text-center py-6">
           🎉 No medicines expiring soon
         </p>
@@ -69,17 +82,30 @@ const ExpiryReminder = ({ limit, place = false }) => {
           </thead>
 
           <tbody className="divide-y divide-slate-700">
-            {expiringSoon.map((med) => {
-              const isCritical = new Date(med.expiryDate) <= criticalDate;
+            {expire.map((med) => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+
+              const expiry = new Date(med.expiryDate);
+
+              const diffTime = expiry - today;
+              const daysLeft = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+              const isCritical = daysLeft <= 3;
 
               return (
                 <tr key={med.id} className="hover:bg-slate-700 transition">
+                  {/* Name */}
                   <td className="py-3 font-medium text-slate-100">
                     {med.name}
                   </td>
 
-                  <td className="py-3 text-slate-400">{med.expiryDate}</td>
+                  {/* Expiry */}
+                  <td className="py-3 text-slate-400">
+                    {expiry.toLocaleDateString()}
+                  </td>
 
+                  {/* Status */}
                   <td className="py-3 text-center">
                     <span
                       className={`px-3 py-1 text-xs rounded-full ${
@@ -88,10 +114,13 @@ const ExpiryReminder = ({ limit, place = false }) => {
                           : "bg-yellow-500/20 text-yellow-400"
                       }`}
                     >
-                      {isCritical ? "Critical" : "Soon"}
+                      {isCritical
+                        ? `Critical (${daysLeft}d)`
+                        : `Soon (${daysLeft}d)`}
                     </span>
                   </td>
 
+                  {/* Action */}
                   <td className="py-3 text-center">
                     <button
                       className="px-3 py-1 text-xs rounded-full

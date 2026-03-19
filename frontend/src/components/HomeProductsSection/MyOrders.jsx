@@ -1,10 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { OrdersContext } from "../../context/OrdersContext";
 
 const MyOrders = () => {
   const { orders = [] } = useContext(OrdersContext);
+  const [filterOrders, setFilterOrders] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setFilterOrders(orders.filter((med) => med.status !== "CANCELLED"));
+  }, [orders]);
 
   return (
     <div className="w-full min-h-screen bg-gray-50 p-6">
@@ -46,7 +51,7 @@ const MyOrders = () => {
                 </td>
               </tr>
             ) : (
-              orders.map((data) => (
+              filterOrders.map((data) => (
                 <tr
                   key={data.id}
                   className="border-t hover:bg-gray-50 transition"

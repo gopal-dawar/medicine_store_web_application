@@ -7,8 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 public interface MedicineService {
 
@@ -22,23 +20,11 @@ public interface MedicineService {
     Medicines getMedicineById(Long medicineId);
 
     // view all medicine
-    List<Medicines> getAllMedicines();
+    Page<Medicines> getMedicines(int page, int size, String name, String category);
 
-    // search medicine
-    List<Medicines> searchMedicineByName(String name);
 
     // DELETE
     void deleteMedicine(Long medicineId);
 
-    //  count the total medicine
-    Long countTotalMedicine();
-
-    // count low stock
-    Map<String, Object> countLowStock();
-
-    // count expire medicine
-    Map<String, Object> countExpireMedicine();
-
-    Page<Medicines> medicinewithpagination(int page, int size, String category);
 
 }

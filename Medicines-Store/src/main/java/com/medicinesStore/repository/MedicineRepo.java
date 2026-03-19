@@ -4,22 +4,14 @@ import com.medicinesStore.entity.Medicines;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface MedicineRepo extends JpaRepository<Medicines, Long> {
-    List<Medicines> findByNameContainingIgnoreCase(String name);
+    Page<Medicines> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query("SELECT m FROM Medicines m WHERE m.stock <= 10")
-    List<Medicines> countMedicineStock();
+    Page<Medicines> findByCategory_NameIgnoreCase(String category, Pageable pageable);
 
-    @Query("SELECT m FROM Medicines m WHERE m.expiryDate <= :date")
-    List<Medicines> countExpireMedicine(@Param("date") LocalDate date);
-
-    Page<Medicines> findByCategory_Name(String name, Pageable pageable);
+    Page<Medicines> findByNameContainingIgnoreCaseAndCategory_NameIgnoreCase(
+            String name, String category, Pageable pageable);
 }

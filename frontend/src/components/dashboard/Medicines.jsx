@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from "react";
-import {
-  deleteMedicine,
-  getAllMedicines,
-  searchMedicineByName,
-} from "../../api/medicineApi";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { MedicineContext } from "../../context/MedicineContext";
 
 const Medicines = () => {
-  const [medicine, setMedicine] = useState([]);
-  const navigate = useNavigate();
+  const { medicines, removeMedicine, setSearch, loading } =
+    useContext(MedicineContext);
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      const re = await getAllMedicines();
-      setMedicine(re.data);
-    };
-    fetchdata();
-  }, []);
+  const navigate = useNavigate();
 
   const deletemedicine = async (id) => {
     const warning = window.confirm(
@@ -24,17 +14,7 @@ const Medicines = () => {
     );
     if (!warning) return;
 
-    try {
-      await deleteMedicine(id);
-      setMedicine((prev) => prev.filter((med) => med.id !== id));
-    } catch (error) {
-      alert("Failed to delete medicine", error);
-    }
-  };
-
-  const searchmed = async (name) => {
-    const re = await searchMedicineByName(name);
-    setMedicine(re.data);
+    await removeMedicine(id); // ✅ context function
   };
 
   return (
@@ -43,7 +23,7 @@ const Medicines = () => {
         {/* Search */}
         <div className="w-full px-6 py-4 border-b border-slate-700">
           <input
-            onChange={(e) => searchmed(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)} // ✅ FIXED
             type="search"
             placeholder="Search medicines..."
             className="w-full bg-slate-900 border border-slate-700
@@ -52,6 +32,11 @@ const Medicines = () => {
                        focus:outline-none focus:ring-2 focus:ring-slate-600"
           />
         </div>
+
+        {/* Loader */}
+        {loading && (
+          <div className="text-center py-4 text-slate-400">Loading...</div>
+        )}
 
         {/* Table */}
         <table className="w-full text-sm">
@@ -70,7 +55,7 @@ const Medicines = () => {
           </thead>
 
           <tbody className="divide-y divide-slate-700">
-            {medicine.map((med, idx) => (
+            {medicines.map((med, idx) => (
               <tr key={med.id} className="hover:bg-slate-700 transition">
                 <td className="p-3 text-slate-300">{idx + 1}</td>
 
@@ -122,27 +107,21 @@ const Medicines = () => {
                 <td className="p-3 text-center space-x-2">
                   <button
                     onClick={() => navigate(`/dashboard/addmedicine/${med.id}`)}
-                    className="px-3 py-1 text-xs rounded
-                               bg-slate-700 text-slate-200
-                               hover:bg-slate-600 transition"
+                    className="px-3 py-1 text-xs rounded bg-slate-700 text-slate-200 hover:bg-slate-600"
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => deletemedicine(med.id)}
-                    className="px-3 py-1 text-xs rounded
-                               bg-slate-700 text-slate-200
-                               hover:bg-red-600 hover:text-white transition"
+                    className="px-3 py-1 text-xs rounded bg-slate-700 text-slate-200 hover:bg-red-600 hover:text-white"
                   >
                     Delete
                   </button>
 
                   <button
                     onClick={() => navigate(`/dashboard/meddetails/${med.id}`)}
-                    className="px-3 py-1 text-xs rounded
-                               bg-slate-700 text-slate-200
-                               hover:bg-slate-600 transition"
+                    className="px-3 py-1 text-xs rounded bg-slate-700 text-slate-200 hover:bg-slate-600"
                   >
                     View
                   </button>

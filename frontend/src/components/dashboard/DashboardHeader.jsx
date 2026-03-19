@@ -1,36 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { getCurrentUser } from "../../api/userApi";
+import { logoutUser } from "../../service/authService";
 
-const DashboardHeader = ({ title = "Medicine Dashboard" }) => {
+const DashboardHeader = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
 
-  let username = "Admin";
-  const token = sessionStorage.getItem("authToken");
+  useEffect(() => {
+    const fetchuser = async () => {
+      const re = await getCurrentUser();
+      setUser(re.data);
+    };
+    fetchuser();
+  }, []);
 
-  if (token) {
+  const handleLogout = async () => {
     try {
-      const decoded = jwtDecode(token);
-      username = decoded.sub || decoded.username || "Admin";
-    } catch (e) {
-      console.error("Invalid JWT", e);
+      await logoutUser();
+      sessionStorage.clear();
+      navigate("/login");
+    } catch (err) {
+      alert("Logout failed");
     }
-  }
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("role");
-    navigate("/login");
   };
-
   return (
     <div className="bg-slate-900 px-6 py-4 flex justify-between items-center shadow">
       {/* Left */}
-      <h1 className="text-2xl font-semibold text-white">{title}</h1>
+      <h1 className="text-2xl font-semibold text-white">{user.role}</h1>
 
       {/* Right */}
       <div className="flex items-center gap-4">
-        <span className="text-slate-200 font-medium">👋 {username}</span>
+        <span className="text-slate-200 font-medium">👋 {user.name}</span>
 
         <button
           onClick={handleLogout}
