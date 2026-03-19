@@ -1,114 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { FaBoxOpen, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { MdPendingActions } from "react-icons/md";
-import { getOrdersByUser } from "../../api/ordersApi";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { OrdersContext } from "../../context/OrdersContext";
 
 const MyOrders = () => {
-  
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await getOrdersByUser(); 
-        setOrders(res.data);
-      } catch (err) {
-        console.error("Order fetch error", err);
-      }
-    };
-
-    fetchOrders();
-  }, []);
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "DELIVERED":
-        return <FaCheckCircle className="text-green-500 text-xl" />;
-      case "CANCELLED":
-        return <FaTimesCircle className="text-red-500 text-xl" />;
-      default:
-        return <MdPendingActions className="text-yellow-500 text-xl" />;
-    }
-  };
+  const { orders = [] } = useContext(OrdersContext);
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-5">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">My Orders</h1>
-
-      {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center mt-20 text-gray-500">
-          <FaBoxOpen className="text-6xl mb-4" />
-          <p>No orders found</p>
+    <div className="w-full min-h-screen bg-gray-50 p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">My Orders</h1>
+          <p className="text-gray-500">Track all your orders</p>
         </div>
-      ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div
-              key={order.id}
-              className="bg-white rounded-2xl shadow-md p-5 hover:shadow-lg transition"
-            >
-              {/* Header */}
-              <div className="flex justify-between items-center border-b pb-3 mb-3">
-                <div>
-                  <h2 className="font-semibold text-lg text-gray-800">
-                    Order #{order.orderCode}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  {getStatusIcon(order.status)}
-                  <span className="font-medium text-gray-700">
-                    {order.status}
-                  </span>
-                </div>
-              </div>
+        {/* Back Button (optional) */}
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Back
+        </button>
+      </div>
 
-              {/* Items */}
-              <div className="space-y-3">
-                {order.items?.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={item.medicine?.imageUrl}
-                        alt={item.medicine?.name}
-                        className="w-14 h-14 rounded object-cover"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-800">
-                          {item.medicine?.name}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Qty: {item.quantity}
-                        </p>
-                      </div>
+      {/* Table */}
+      <div className="w-full overflow-x-auto bg-white rounded-lg shadow">
+        <table className="w-full min-w-[1100px] border-collapse">
+          <thead className="bg-gray-100 text-gray-700">
+            <tr>
+              <th className="p-4 text-left">Order ID</th>
+              <th className="p-4 text-left">Customer</th>
+              <th className="p-4 text-left">Date</th>
+              <th className="p-4 text-left">Amount</th>
+              <th className="p-4 text-left">Status</th>
+              <th className="p-4 text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {orders.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="text-center p-6 text-gray-500">
+                  No Orders Found
+                </td>
+              </tr>
+            ) : (
+              orders.map((data) => (
+                <tr
+                  key={data.id}
+                  className="border-t hover:bg-gray-50 transition"
+                >
+                  <td className="p-4 font-medium">{data.orderCode}</td>
+
+                  <td className="p-4">{data.user?.fullName}</td>
+
+                  <td className="p-4 text-gray-500">
+                    {new Date(data.orderDate).toLocaleDateString()}
+                  </td>
+
+                  <td className="p-4 text-green-600 font-semibold">
+                    ₹{data.totalAmount}
+                  </td>
+
+                  <td className="p-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium
+                        ${
+                          data.status === "DELIVERED"
+                            ? "bg-green-100 text-green-600"
+                            : data.status === "CANCELLED"
+                              ? "bg-red-100 text-red-600"
+                              : "bg-yellow-100 text-yellow-600"
+                        }`}
+                    >
+                      {data.status}
+                    </span>
+                  </td>
+
+                  <td className="p-4 text-center">
+                    <div className="flex justify-center gap-3">
+                      <button
+                        onClick={() => navigate(`${data.id}`)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      >
+                        View
+                      </button>
+
+                      <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Cancel
+                      </button>
                     </div>
-
-                    <p className="font-semibold text-green-600">
-                      ₹{item.price * item.quantity}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="flex justify-between items-center mt-4 pt-3 border-t">
-                <p className="text-gray-600 text-sm">
-                  Delivery: {order.deliveryAddress}
-                </p>
-
-                <p className="text-lg font-bold text-gray-900">
-                  ₹{order.totalAmount}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

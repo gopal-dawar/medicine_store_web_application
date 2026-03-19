@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import MyOrders from "./MyOrders";
 import { logoutUser } from "../../service/authService";
 
 const ProfileModal = ({ show, onClose, user }) => {
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  if (!show) return null;
+  if (!show) return null; // ✅ modal control
 
   const handleLogout = async () => {
     try {
       await logoutUser();
       sessionStorage.clear();
+      onClose(); // close modal
       navigate("/login");
     } catch (err) {
       alert("Logout failed");
@@ -20,38 +19,43 @@ const ProfileModal = ({ show, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-51 flex items-center justify-center bg-black/30">
-      <div className="relative w-full max-w-md rounded-xl bg-white shadow-2xl p-6">
-        {/* Close */}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={onClose} // ✅ click outside close
+    >
+      <div
+        className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl p-6"
+        onClick={(e) => e.stopPropagation()} // ✅ prevent close on inside click
+      >
+        {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="absolute right-4 top-4 text-gray-500 hover:text-black text-lg"
         >
           ✕
         </button>
 
-        {/* Avatar */}
-        <div className="flex flex-col items-center text-center">
-          <div className="h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl font-semibold text-blue-600">
+        {/* Profile Header */}
+        <div className="flex items-center gap-6">
+          <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center text-3xl font-semibold text-blue-600">
             {user?.name?.charAt(0) || "U"}
           </div>
 
-          <h2 className="mt-4 text-xl font-semibold text-gray-800">
-            {user?.name || "Customer Name"}
-          </h2>
-
-          <p className="text-sm text-gray-500">{user?.role || "USER"}</p>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800">
+              {user?.name || "Customer Name"}
+            </h2>
+            <p className="text-gray-500">{user?.role || "USER"}</p>
+          </div>
         </div>
 
-        {/* Divider */}
         <div className="my-5 border-t"></div>
 
-        {/* Profile Info */}
-        <div className="space-y-3 text-sm text-gray-700">
+        {/* Info */}
+        <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
           <Info label="Email" value={user?.email} />
           <Info label="Phone" value={user?.phone} />
           <Info label="Address" value={user?.address} />
-
           <Info label="User ID" value={user?.id} />
           <Info label="Status" value={user?.active ? "Active" : "Inactive"} />
           <Info
@@ -65,40 +69,24 @@ const ProfileModal = ({ show, onClose, user }) => {
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-6 flex gap-4 flex-wrap">
           <button
             onClick={() => {
-              setOpen(true);
-
+              onClose();
               navigate("/home/myorders");
             }}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
             My Orders
           </button>
-          {open && (
-            <MyOrders show={open} onClose={() => setOpen(false)} user={user} />
-          )}
-          <button
-            onClick={() => navigate("/change-password")}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            Change Password
-          </button>
-        </div>
 
-        {/* Footer */}
-        <div className="mt-6 flex justify-between gap-3">
-          <button
-            onClick={onClose}
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            Close
+          <button className="px-4 py-2 border rounded hover:bg-gray-100">
+            Change Password
           </button>
 
           <button
             onClick={handleLogout}
-            className="rounded-lg bg-red-500 px-4 py-2 text-sm text-white hover:bg-red-600"
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             Logout
           </button>
@@ -109,9 +97,9 @@ const ProfileModal = ({ show, onClose, user }) => {
 };
 
 const Info = ({ label, value }) => (
-  <div className="flex justify-between">
+  <div className="flex justify-between border-b pb-2">
     <span className="text-gray-500">{label}</span>
-    <span className="text-right max-w-[220px] truncate">{value || "N/A"}</span>
+    <span className="font-medium">{value || "N/A"}</span>
   </div>
 );
 

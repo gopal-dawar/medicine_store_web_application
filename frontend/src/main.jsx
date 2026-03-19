@@ -5,13 +5,16 @@ import { BrowserRouter } from "react-router-dom";
 import { MedicineProvider } from "./context/MedicineContext.jsx";
 import { CategoryProvider } from "./context/CategoryContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+import { OrdersProvider } from "./context/OrdersContext.jsx";
 createRoot(document.getElementById("root")).render(
   <MedicineProvider>
     <CategoryProvider>
       <CartProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <OrdersProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </OrdersProvider>
       </CartProvider>
     </CategoryProvider>
   </MedicineProvider>,
