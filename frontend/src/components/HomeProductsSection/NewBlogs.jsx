@@ -4,27 +4,19 @@ import { blogs } from "../../data/blogdata";
 const NewBlogs = () => {
   return (
     <div className="w-full">
-      {/* Header */}
       <div className="mb-6">
         <h2 className="font-semibold tracking-wide mb-2">NEW BLOGS</h2>
 
-        {/* Line */}
         <div className="relative w-full">
-          {/* Gray full width line */}
           <div className="w-full h-[3px] bg-gray-300"></div>
-          {/* Brand accent line */}
+
           <div className="absolute top-0 left-0 w-20 h-[3px] bg-[#4e97fd]"></div>
         </div>
       </div>
 
-      {/* Cards */}
       <div className="grid grid-cols-3 gap-6">
         {blogs.slice(0, 3).map((blog) => (
-          <div
-            key={blog.id}
-            className="bg-white hover:shadow-md transition"
-          >
-            {/* Image */}
+          <div key={blog.id} className="bg-white hover:shadow-md transition">
             <div className="relative overflow-hidden h-52 p-2">
               <img
                 src={blog.img}
@@ -33,7 +25,6 @@ const NewBlogs = () => {
                            hover:scale-110 transition-all duration-300"
               />
 
-              {/* Date Badge */}
               <div
                 className="absolute bottom-4 left-4 bg-[#4e97fd]
                            text-white text-xs px-3 py-2
@@ -44,15 +35,14 @@ const NewBlogs = () => {
               </div>
             </div>
 
-            {/* Content */}
             <div className="p-4">
-              <h3 className="text-sm font-semibold leading-snug mb-2
-                             hover:text-[#4e97fd] transition">
+              <h3
+                className="text-sm font-semibold leading-snug mb-2
+                             hover:text-[#4e97fd] transition"
+              >
                 {blog.title}
               </h3>
-              <p className="text-sm text-gray-600">
-                {blog.desc}
-              </p>
+              <p className="text-sm text-gray-600">{blog.desc}</p>
             </div>
           </div>
         ))}

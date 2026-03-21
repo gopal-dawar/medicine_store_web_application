@@ -55,3 +55,98 @@
   scrollbar-width: thin;
   scrollbar-color: #334155 #0f172a;
 }
+
+/* Loader animation */
+.circle {
+  @apply flex items-center justify-center relative w-5 h-5 border-2 border-gray-300 rounded-full;
+  animation: circle-keys 2s ease-in-out infinite;
+}
+
+.dot {
+  @apply absolute w-4 h-4 bg-gray-300 rounded-full;
+  transform: translate(-50%, -50%);
+  animation: dot-keys 2s ease-in-out infinite;
+}
+
+.outline {
+  @apply absolute w-5 h-5 rounded-full;
+  transform: translate(-50%, -50%);
+  animation: outline-keys 2s ease-in-out infinite;
+}
+
+/* Delay */
+.circle-2 {
+  animation-delay: 0.3s;
+}
+.circle-3 {
+  animation-delay: 0.6s;
+}
+.circle-4 {
+  animation-delay: 0.9s;
+}
+
+.circle-2 .dot {
+  animation-delay: 0.3s;
+}
+.circle-3 .dot {
+  animation-delay: 0.6s;
+}
+.circle-4 .dot {
+  animation-delay: 0.9s;
+}
+
+.circle-1 .outline {
+  animation-delay: 0.9s;
+}
+.circle-2 .outline {
+  animation-delay: 1.2s;
+}
+.circle-3 .outline {
+  animation-delay: 1.5s;
+}
+.circle-4 .outline {
+  animation-delay: 1.8s;
+}
+
+/* Animations */
+@keyframes circle-keys {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-keys {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes outline-keys {
+  0% {
+    transform: scale(0);
+    outline: solid 20px #e5e7eb;
+    outline-offset: 0;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    outline: solid 0 transparent;
+    outline-offset: 20px;
+    opacity: 0;
+  }
+}

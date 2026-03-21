@@ -33,7 +33,6 @@ public class MedicineController {
                                                  @RequestParam Long categoryId, @RequestParam(required = false) MultipartFile image) throws IOException {
 
         Medicines medicine = new Medicines();
-
         medicine.setName(name);
         medicine.setBrand(brand);
         medicine.setManufacturer(manufacturer);

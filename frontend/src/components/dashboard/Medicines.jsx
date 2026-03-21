@@ -14,7 +14,7 @@ const Medicines = () => {
     );
     if (!warning) return;
 
-    await removeMedicine(id); // ✅ context function
+    await removeMedicine(id);
   };
 
   return (
@@ -23,7 +23,7 @@ const Medicines = () => {
         {/* Search */}
         <div className="w-full px-6 py-4 border-b border-slate-700">
           <input
-            onChange={(e) => setSearch(e.target.value)} // ✅ FIXED
+            onChange={(e) => setSearch(e.target.value)}
             type="search"
             placeholder="Search medicines..."
             className="w-full bg-slate-900 border border-slate-700

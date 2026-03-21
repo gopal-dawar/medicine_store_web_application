@@ -45,7 +45,7 @@ const OtpVerification = () => {
         } else if (err.response.status === 404) {
           setErrorMsg("User not found");
         } else if (err.response.status === 500) {
-          setErrorMsg("Server error, try again later");
+          navigate("/500");
         } else {
           setErrorMsg("Failed to resend OTP");
         }
@@ -78,7 +78,7 @@ const OtpVerification = () => {
         } else if (err.response.status === 404) {
           setErrorMsg("User not found");
         } else if (err.response.status === 500) {
-          setErrorMsg("Server error, please try again later");
+          navigate("/500");
         } else {
           setErrorMsg("Verification failed");
         }

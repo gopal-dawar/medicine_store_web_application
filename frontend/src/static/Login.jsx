@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../service/authService";
 import { FiUser, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import Loader from "./Loader";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -19,7 +21,7 @@ const Login = () => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
-
+    setLoading(true);
     try {
       const re = await loginUser(userInfo);
       setSuccessMsg("OTP sent to your email");
@@ -34,7 +36,7 @@ const Login = () => {
         if (error.response.status === 401 || error.response.status === 403) {
           setErrorMsg("Invalid username or password");
         } else if (error.response.status === 500) {
-          setErrorMsg("Server error, please try again later");
+          navigate("/500");
         } else {
           setErrorMsg("Something went wrong");
         }
@@ -43,6 +45,8 @@ const Login = () => {
       } else {
         setErrorMsg("Unexpected error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -128,12 +132,14 @@ const Login = () => {
           </div>
 
           {/* Login Button */}
+          {loading && <Loader />}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-slate-700 text-slate-100 py-2 rounded
-                       font-semibold hover:bg-slate-600 transition"
+                        font-semibold hover:bg-slate-600 transition"
           >
-            Continue
+            {loading ? "Logging in..." : "Continue"}
           </button>
         </form>
 

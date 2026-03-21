@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllCategories } from "../../api/categoryApi";
-import { addActivity } from "../../api/RecentActivity";
+import { addActivity } from "../../api/recentActivityApi";
 import { MedicineContext } from "../../context/MedicineContext";
 import { getMedicineById } from "../../api/medicineApi";
 
@@ -84,7 +84,6 @@ const AddMedicine = () => {
         await addActivity({
           med_id: selectedMedicineId,
           type: "UPDATED",
-          activityDateTime: new Date().toISOString(),
         });
 
         alert("Medicine updated successfully");
@@ -92,9 +91,8 @@ const AddMedicine = () => {
         const res = await addNewMedicine(formData);
 
         await addActivity({
-          med_id: res.data.id, // ✅ now works
+          med_id: res.data.id,
           type: "ADDED",
-          activityDateTime: new Date().toISOString(),
         });
 
         alert("Medicine added successfully");
@@ -134,7 +132,7 @@ const AddMedicine = () => {
       } catch (err) {
         console.error(err);
       }
-    }, 400); // ⏱️ delay
+    }, 400);
   };
 
   const handleSelectMedicine = (med) => {

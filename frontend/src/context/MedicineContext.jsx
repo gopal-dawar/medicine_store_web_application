@@ -10,8 +10,6 @@ export const MedicineContext = createContext();
 
 export const MedicineProvider = ({ children }) => {
   const [medicines, setMedicines] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [count, setCount] = useState(0);
 
   const [category, setCategory] = useState(null);
@@ -22,9 +20,6 @@ export const MedicineProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const fetchMedicines = async () => {
-    setLoading(true);
-    setError(null);
-
     try {
       const res = await getMedicines({
         page,
@@ -38,12 +33,8 @@ export const MedicineProvider = ({ children }) => {
       setCount(res.data.totalElements);
     } catch (err) {
       console.error(err);
-      setError("Failed to load medicines");
-    } finally {
-      setLoading(false);
     }
   };
-  
 
   const searchSuggestions = async (name) => {
     try {
@@ -101,9 +92,6 @@ export const MedicineProvider = ({ children }) => {
       value={{
         medicines,
         count,
-        loading,
-        error,
-
         page,
         totalPages,
         setPage,

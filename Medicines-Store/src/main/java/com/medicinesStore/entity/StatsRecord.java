@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class StatsRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,19 +15,15 @@ public class StatsRecord {
     @JoinColumn(name = "medicine_id")
     private Medicines medicines;
 
-    private Long med_id;
-
-    @Enumerated(EnumType.STRING)
-    private Activity type;
+    private String type; // ADDED, UPDATED, LOW_STOCK, EXPIRED
 
     private LocalDateTime activityDateTime;
 
+    @Transient
+    private Long med_id;
+
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Medicines getMedicines() {
@@ -37,11 +34,11 @@ public class StatsRecord {
         this.medicines = medicines;
     }
 
-    public Activity getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Activity type) {
+    public void setType(String type) {
         this.type = type;
     }
 

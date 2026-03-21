@@ -1,4 +1,3 @@
-import React from "react";
 import ProductCategorySidebar from "./ProductCategorySidebar";
 import PromoBannerSection from "./PromoBannerSection";
 import ProductGrid from "./ProductGrid";
@@ -21,7 +20,7 @@ const HomeProductsSection = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
-            {/* <ProductCategorySidebar /> */}
+            <ProductCategorySidebar />
             <HotDealSlider />
             <SubscribeEmail />
             <Testimonial />

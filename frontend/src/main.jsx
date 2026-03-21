@@ -8,6 +8,8 @@ import { CategoryProvider } from "./context/CategoryContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { OrdersProvider } from "./context/OrdersContext.jsx";
 import ErrorBoundary from "./error/ErrorBoundary.jsx";
+import RouteLoader from "./routes/RouteLoader.jsx";
+import ActivityProvider from "./context/ActivityContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <MedicineProvider>
@@ -15,9 +17,13 @@ createRoot(document.getElementById("root")).render(
       <CartProvider>
         <OrdersProvider>
           <BrowserRouter>
-            <ErrorBoundary>
-              <App />
-            </ErrorBoundary>
+            <RouteLoader>
+              <ErrorBoundary>
+                <ActivityProvider>
+                  <App />
+                </ActivityProvider>
+              </ErrorBoundary>
+            </RouteLoader>
           </BrowserRouter>
         </OrdersProvider>
       </CartProvider>
