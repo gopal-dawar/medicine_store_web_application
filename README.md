@@ -121,6 +121,6 @@ Java Full Stack Developer
 - Admin Dashboard
 - Order Management System
 - Deployment on cloud (AWS / Render)
-
+- OTP Verification 
 ---
 
