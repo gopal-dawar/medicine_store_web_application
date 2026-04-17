@@ -3,8 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { MedicineContext } from "../../context/MedicineContext";
 
 const Medicines = () => {
-  const { medicines, removeMedicine, setSearch, loading } =
-    useContext(MedicineContext);
+  const {
+    medicines,
+    page,
+    setPage,
+    totalPages,
+    removeMedicine,
+    setSearch,
+    loading,
+  } = useContext(MedicineContext);
 
   const navigate = useNavigate();
 
@@ -57,7 +64,7 @@ const Medicines = () => {
           <tbody className="divide-y divide-slate-700">
             {medicines.map((med, idx) => (
               <tr key={med.id} className="hover:bg-slate-700 transition">
-                <td className="p-3 text-slate-300">{idx + 1}</td>
+                <td className="p-3 text-slate-300">{page * 10 + idx + 1}</td>
 
                 <td className="p-3 flex items-center gap-3 text-slate-200">
                   <img
@@ -130,6 +137,29 @@ const Medicines = () => {
             ))}
           </tbody>
         </table>
+        <div>
+          <div className="p-10 flex justify-center gap-5">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 0))}
+              disabled={page === 0}
+              className="px-4 py-2 border text-white  border-white rounded hover:bg-[#acafb5] hover:text-black disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            <span className="px-3 py-2 font-medium text-white">
+              {page + 1} / {totalPages}
+            </span>
+
+            <button
+              onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+              disabled={page + 1 >= totalPages}
+              className="px-4 py-2 border rounded hover:bg-[#fefeff] hover:text-black border-white text-white disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
