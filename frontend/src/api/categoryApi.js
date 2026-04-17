@@ -11,5 +11,4 @@ export const createCategory = (category) =>
 export const updateCategory = (id, category) =>
   privateApi.put(`/categories/${id}`, category);
 
-export const deleteCategory = (id) =>
-  privateApi.delete(`/categories/${id}`);
+export const deleteCategory = (id) => privateApi.delete(`/categories/${id}`);

@@ -1,4 +1,3 @@
-import ProductCategorySidebar from "./ProductCategorySidebar";
 import PromoBannerSection from "./PromoBannerSection";
 import ProductGrid from "./ProductGrid";
 import HotDealSlider from "../slider/HotDealSlider";
@@ -20,7 +19,6 @@ const HomeProductsSection = () => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-5 ">
-            <ProductCategorySidebar />
             <HotDealSlider />
             <SubscribeEmail />
             <Testimonial />

@@ -10,6 +10,12 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
 
+    @ExceptionHandler(AlreadyAddressException.class)
+    public ResponseEntity<ErrorResponse> AlreadyPresentAddressHandler(AlreadyAddressException ex) {
+        ErrorResponse error = new ErrorResponse("Address already present", HttpStatus.FOUND.value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.FOUND);
+    }
+
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ErrorResponse> orderNotFoundExceptionHandler(OrderNotFoundException ex) {
         ErrorResponse error = new ErrorResponse("Order Not Found!", HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
