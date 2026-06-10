@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends RuntimeException {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(AlreadyAddressException.class)
     public ResponseEntity<ErrorResponse> AlreadyPresentAddressHandler(AlreadyAddressException ex) {
@@ -43,9 +43,15 @@ public class GlobalExceptionHandler extends RuntimeException {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex) {
+
+        ex.printStackTrace(); // IMPORTANT
+
         ErrorResponse error = new ErrorResponse(
-                "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now()
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                LocalDateTime.now()
         );
+
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

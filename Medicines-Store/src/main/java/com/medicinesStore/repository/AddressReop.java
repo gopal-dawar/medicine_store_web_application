@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @Repository
 public interface AddressReop extends JpaRepository<Address, Long> {
-    Optional<Address> findByAddressLineAndPincodeAndUserInfo_Id(
-            String addressLine,
-            String pincode,
-            Long userId
-    );
 
+    // Get all addresses of a user
     List<Address> findByUserInfo_Id(Long userId);
+
+    // Get default address of user
+    Optional<Address> findByUserInfo_IdAndIsDefaultTrue(Long userId);
+
 }

@@ -64,16 +64,28 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void removeFromCart(Long cartId) {
-        cartRepo.deleteById(cartId);
+
+        Cart cart = cartRepo.findById(cartId)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart Item Not Found"));
+
+        cart.setStatus("REMOVED");
+        cart.setUpdatedAt(LocalDateTime.now());
+
+        cartRepo.save(cart);
     }
 
     @Override
     public void clearCart(Long userId) {
-        List<Cart> carts = cartRepo.findCartByUserId(userId);
+
+        List<Cart> carts =
+                cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
+
         for (Cart cart : carts) {
             cart.setStatus("REMOVED");
             cart.setUpdatedAt(LocalDateTime.now());
         }
+
         cartRepo.saveAll(carts);
     }
 
@@ -85,6 +97,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> getCartItemByUserId(Long userId) {
-        return cartRepo.findCartByUserId(userId);
+        return cartRepo.findByUserIdAndStatus(userId, "ACTIVE");
     }
 }

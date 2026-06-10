@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/medicine")
+@RequestMapping("/api/medicine")
 public class MedicineController {
 
     @Autowired

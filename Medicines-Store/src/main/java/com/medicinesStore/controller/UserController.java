@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     private final UserInfoService userInfoService;
@@ -31,8 +32,13 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserInfo userInfo) {
-        return ResponseEntity.ok(userInfoService.register(userInfo));
+    public ResponseEntity<?> register(@RequestBody UserInfo userInfo) {
+        try {
+            return ResponseEntity.ok(userInfoService.register(userInfo));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
 

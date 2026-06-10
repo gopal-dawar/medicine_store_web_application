@@ -12,10 +12,14 @@ import java.util.Optional;
 @Repository
 public interface CartRepo extends JpaRepository<Cart, Long> {
 
-    Optional<Cart> findByUserIdAndMedicines_IdAndStatus(Long userId, Long medicineId, String status);
 
     @Query("SELECT c FROM Cart c WHERE c.userId = :userId")
     List<Cart> findCartByUserId(@Param("userId") Long userId);
 
+
     public void deleteByUserId(Long userId);
+
+    Optional<Cart> findByUserIdAndMedicines_IdAndStatus(Long userId, Long medicineId, String status);
+
+    List<Cart> findByUserIdAndStatus(Long userId, String status);
 }
