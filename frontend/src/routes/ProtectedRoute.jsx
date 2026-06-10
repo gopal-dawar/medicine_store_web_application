@@ -11,12 +11,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
     const checkAuth = async () => {
       try {
-        const res = await publicApi.get("/me", {
+        const res = await publicApi.get("/api/me", {
           withCredentials: true,
         });
 
         if (isMounted) setUser(res.data);
-      } catch (err) {
+      } catch {
         if (isMounted) setUser(null);
       } finally {
         if (isMounted) setLoading(false);

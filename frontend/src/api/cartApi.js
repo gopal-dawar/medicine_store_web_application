@@ -1,16 +1,18 @@
 import privateApi from "./privateApi";
 
 export const addToCartItem = (medicineId, quantity = 1) =>
-  privateApi.post("/cart/add", null, {
+  privateApi.post("/api/cart/add", null, {
     params: { medicineId, quantity },
   });
 
-export const getCartItems = () => privateApi.get("/cart/cartdata");
+export const getCartItems = () => privateApi.get("/api/cart/cartdata");
 
 export const updateCartQuantity = (cartId, quantity) =>
-  privateApi.put(`/cart/update/${cartId}?quantity=${quantity}`);
+  privateApi.put(`/api/cart/update/${cartId}`, null, {
+    params: { quantity },
+  });
 
 export const removeCartItem = (cartId) =>
-  privateApi.delete(`/cart/remove/${cartId}`);
+  privateApi.delete(`/api/cart/remove/${cartId}`);
 
-export const clearCartItem = () => privateApi.delete("/cart/clear");
+export const clearCartItem = () => privateApi.delete("/api/cart/clear");

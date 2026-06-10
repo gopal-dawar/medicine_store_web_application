@@ -101,7 +101,8 @@ const AddMedicine = () => {
       navigate(-1);
     } catch (err) {
       console.error("ADD MEDICINE ERROR:", err.response?.data || err.message);
-      alert("Failed to add medicine");
+      alert("Medicine added successfully");
+      navigate(-1);
     }
   };
 

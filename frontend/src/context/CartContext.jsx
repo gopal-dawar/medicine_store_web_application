@@ -18,6 +18,10 @@ export const CartProvider = ({ children }) => {
       setCart(res.data);
     } catch (error) {
       console.error("Cart Fetch Error:", error.response?.data || error.message);
+      // If 401/403, return empty cart (user not authenticated)
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        setCart([]);
+      }
     }
   };
 
@@ -27,6 +31,7 @@ export const CartProvider = ({ children }) => {
       fetchCart();
     } catch (error) {
       console.error("Add Cart Error:", error.response?.data || error.message);
+      throw error;
     }
   };
 
@@ -39,6 +44,7 @@ export const CartProvider = ({ children }) => {
         "Update Cart Error:",
         error.response?.data || error.message,
       );
+      throw error;
     }
   };
 
@@ -51,6 +57,7 @@ export const CartProvider = ({ children }) => {
         "Remove Cart Error:",
         error.response?.data || error.message,
       );
+      throw error;
     }
   };
 
@@ -60,6 +67,7 @@ export const CartProvider = ({ children }) => {
       setCart([]);
     } catch (error) {
       console.error("Clear Cart Error:", error.response?.data || error.message);
+      throw error;
     }
   };
 

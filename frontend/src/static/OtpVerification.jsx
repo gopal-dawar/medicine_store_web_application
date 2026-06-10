@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { setAuth } from "../utils/tokenService";
 import { verifyOtp, sendOtp } from "../service/authService";
-import publicApi from "../api/publicApi";
 
 const OtpVerification = () => {
   const navigate = useNavigate();

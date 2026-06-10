@@ -10,25 +10,52 @@ export const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
+  const [_loading, setLoading] = useState(true);
+  const [_error, setError] = useState(null);
 
   const fetchCategories = async () => {
-    const res = await getAllCategories();
-    setCategories(res.data);
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await getAllCategories();
+      setCategories(res.data);
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+      setError(err.response?.data?.message || err.message || "Failed to load categories");
+      setCategories([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const addCategory = async (category) => {
-    await createCategory(category);
-    fetchCategories();
+    try {
+      await createCategory(category);
+      fetchCategories();
+    } catch (err) {
+      console.error("Error adding category:", err);
+      throw err;
+    }
   };
 
   const editCategory = async (id, category) => {
-    await updateCategory(id, category);
-    fetchCategories();
+    try {
+      await updateCategory(id, category);
+      fetchCategories();
+    } catch (err) {
+      console.error("Error updating category:", err);
+      throw err;
+    }
   };
 
   const removeCategory = async (id) => {
-    await deleteCategory(id);
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await deleteCategory(id);
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error("Error removing category:", err);
+      throw err;
+    }
   };
 
   useEffect(() => {

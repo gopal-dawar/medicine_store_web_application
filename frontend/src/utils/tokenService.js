@@ -8,8 +8,8 @@ export const getRole = () => sessionStorage.getItem("role");
 
 export const logout = async () => {
   try {
-    await publicApi.post("/auth/logout"); 
-  } catch (err) {
+    await publicApi.post("/api/auth/logout"); 
+  } catch {
     console.log("Logout failed");
   }
 

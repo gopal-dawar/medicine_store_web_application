@@ -20,29 +20,46 @@ const ProductGrid = () => {
   } = useContext(MedicineContext);
 
   const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, _setActiveCategory] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [_categoryLoading, setCategoryLoading] = useState(false);
+  const [_categoryError, setCategoryError] = useState(null);
 
   useEffect(() => {
     AOS.init({ duration: 700, once: true });
   }, []);
 
+
+
   useEffect(() => {
     const loadCategories = async () => {
-      const res = await getAllCategories();
-      setCategories(res.data);
+      try {
+
+        setCategoryLoading(true);
+        setCategoryError(null);
+        const res = await getAllCategories();
+        setCategories(res.data);
+      } catch (err) {
+        console.error("Error loading categories:", err);
+        setCategoryError("Failed to load categories");
+        setCategories([]);
+      } finally {
+        setCategoryLoading(false);
+      }
     };
     loadCategories();
   }, []);
 
   useEffect(() => {
+
     setIsTransitioning(true);
     const timer = setTimeout(() => setIsTransitioning(false), 300);
     return () => clearTimeout(timer);
   }, [page, activeCategory]);
 
   useEffect(() => {
+
     document.body.style.overflow = selectedProduct ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [selectedProduct]);
@@ -65,10 +82,9 @@ const ProductGrid = () => {
         <button
           onClick={() => handleCategoryChange(null)}
           className={`px-2 py-2 rounded-full border text-sm font-medium transition
-            ${
-              activeCategory === null
-                ? "bg-[#4e97fd] text-white"
-                : "bg-white hover:bg-blue-100"
+            ${activeCategory === null
+              ? "bg-[#4e97fd] text-white"
+              : "bg-white hover:bg-blue-100"
             }`}
         >
           All
@@ -79,10 +95,9 @@ const ProductGrid = () => {
             key={cat.id}
             onClick={() => handleCategoryChange(cat.name)}
             className={`px-5 py-2 rounded-full border text-sm font-medium transition
-              ${
-                activeCategory === cat.name
-                  ? "bg-[#4e97fd] text-white"
-                  : "bg-white hover:bg-blue-100"
+              ${activeCategory === cat.name
+                ? "bg-[#4e97fd] text-white"
+                : "bg-white hover:bg-blue-100"
               }`}
           >
             {cat.name}

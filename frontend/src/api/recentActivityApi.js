@@ -1,13 +1,14 @@
-import privateApi from "./privateApi";
+import publicApi from "./publicApi";
 
+// Activity endpoints are publicly accessible (no authentication required)
 export const addActivity = (activity) => {
-  return privateApi.post("/activity", activity);
+  return publicApi.post("/api/activity", activity);
 };
 
 export const recentActivity = () => {
-  return privateApi.get("/activity/recent");
+  return publicApi.get("/api/activity/recent");
 };
 
 export const getActivityByType = (type) => {
-  return privateApi.get(`/activity/type/${type}`);
+  return publicApi.get(`/api/activity/type/${type}`);
 };
